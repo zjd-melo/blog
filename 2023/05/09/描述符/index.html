@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Python描述符机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="描述符">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2023/05/09/%E6%8F%8F%E8%BF%B0%E7%AC%A6/index.html">
+<meta property="og:site_name" content="我的外置大脑">
+<meta property="og:description" content="Python描述符机制">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-09T10:52:04.000Z">
+<meta property="article:modified_time" content="2023-05-09T10:52:04.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2023/05/09/%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>描述符 | 我的外置大脑</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">我的外置大脑</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">1</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">1</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">2</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/05/09/%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我的外置大脑">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          描述符
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-09 18:52:04" itemprop="dateCreated datePublished" datetime="2023-05-09T18:52:04+08:00">2023-05-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">编程语言</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>11 mins.</span>
+            </span>
+            <div class="post-description">Python描述符机制</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>FROM <a target="_blank" rel="noopener" href="https://docs.python.org/3/howto/descriptor.html">python how to descriptor</a></strong></p>
+<h3 id="描述符是什么"><a href="#描述符是什么" class="headerlink" title="描述符是什么?"></a>描述符是什么?</h3><p>A descriptor is what we call any object that defines <code>__get__()</code>, <code>__set__()</code>, or <code>__delete__()</code>.<br>只要某个对象有如上三个特殊方法之一，就是一个描述符对象。</p>
+<h3 id="描述符的目的"><a href="#描述符的目的" class="headerlink" title="描述符的目的"></a>描述符的目的</h3><p>The main motivation for descriptors is to provide a hook allowing objects stored in class variables to control what happens during attribute lookup.</p>
+<h3 id="只有类属性时才有起作用"><a href="#只有类属性时才有起作用" class="headerlink" title="只有类属性时才有起作用"></a>只有类属性时才有起作用</h3><p>Descriptors only work when used as class variables. When put in instances, they have no effect.</p>
+<h3 id="set-name-self-owner-name"><a href="#set-name-self-owner-name" class="headerlink" title="__set_name__(self, owner, name)"></a><code>__set_name__(self, owner, name)</code></h3><p>Optionally, descriptors can have a <code>__set_name__()</code> method. This is only used in cases where a descriptor needs to know either the class where it was created or the name of class variable it was assigned to.<br>(This method, if present, is called even if the class is not a descriptor.)</p>
+<p><code>__set_name__()</code>有两个目的</p>
+<ul>
+<li>一是告诉 [描述符] 对象它在哪个类里面被实例化了</li>
+<li>二是 [描述符] 对象被分配到哪个类变量名中</li>
+</ul>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><p>通过成员运算符会触发描述符相关方法的调用<br>Descriptors get invoked by the dot operator during attribute lookup. If a descriptor is accessed indirectly with vars(some_class)[descriptor_name], the descriptor instance is returned without invoking it.</p>
+<p><strong>Descriptors are used throughout the language. It is how functions turn into bound methods. Common tools like classmethod(), staticmethod(), property(), and functools.cached_property() are all implemented as descriptors.</strong></p>
+<hr>
+<h3 id="Demos"><a href="#Demos" class="headerlink" title="Demos"></a>Demos</h3><h4 id="simple-example"><a href="#simple-example" class="headerlink" title="simple example"></a>simple example</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Ten</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, obj, objtype</span>):</span><br><span class="line">        <span class="built_in">print</span>(obj, objtype)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># To use the descriptor, it must be stored as a class variable in another class:</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>:</span><br><span class="line">    x = <span class="number">5</span>  <span class="comment"># regular class attribute</span></span><br><span class="line">    y = Ten()  <span class="comment"># Descriptor instance</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t1</span>():</span><br><span class="line">    a = A()</span><br><span class="line">    a.x  <span class="comment"># normal attribute lookup, class dictionary</span></span><br><span class="line">    a.y  <span class="comment"># descriptor lookup, not in class dictionnary and not in instance dictionary, the value is computed on demand</span></span><br></pre></td></tr></table></figure>
+<h4 id="Dynamic-lookups"><a href="#Dynamic-lookups" class="headerlink" title="Dynamic lookups"></a>Dynamic lookups</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DirectorySize</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, instance, owner</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(os.listdir(instance.dirname))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Direcory</span>:</span><br><span class="line">    size = DirectorySize()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, dirname</span>):</span><br><span class="line">        self.dirname = dirname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t2</span>():</span><br><span class="line">    s = Direcory(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">    ss = Direcory(<span class="string">&#x27;..&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(s.size)</span><br><span class="line">    <span class="built_in">print</span>(ss.size)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Managed-attributes"><a href="#Managed-attributes" class="headerlink" title="Managed attributes"></a>Managed attributes</h4><p>A popular use for descriptors is managing access to instance data. The descriptor is assigned to a public attribute in the class dictionary while the actual data is stored as a private attribute in the instance dictionary. The descriptor’s <code>__get__()</code> and <code>__set__()</code> methods are triggered when the public attribute is accessed.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line">logging.basicConfig(level=logging.INFO)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoggedAgeAccess</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, instance, owner</span>):</span><br><span class="line">        value = instance._age</span><br><span class="line">        logging.info(<span class="string">&#x27;Accessing %r giving %r&#x27;</span>, <span class="string">&#x27;age&#x27;</span>, value)</span><br><span class="line">        <span class="keyword">return</span> value</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__set__</span>(<span class="params">self, instance, value</span>):</span><br><span class="line">        logging.info(<span class="string">&#x27;Updating %r to %r &#x27;</span>, <span class="string">&#x27;age&#x27;</span>, value)</span><br><span class="line">        instance._age = value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>:</span><br><span class="line">    age = LoggedAgeAccess()  <span class="comment"># managed attribute</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age  <span class="comment"># Calls __set__()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">birthday</span>(<span class="params">self</span>):</span><br><span class="line">        self.age += <span class="number">1</span>  <span class="comment"># Calls both __get__() and __set()___</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">t3</span>():</span><br><span class="line">    <span class="comment">#  all access to the managed attribute age is logged, but that the regular attribute name is not logged</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; marry = Person(&quot;Marry M&quot;, 30)</span></span><br><span class="line"><span class="string">    INFO:root:Updating &#x27;age&#x27; to 30</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; dave = Person(&#x27;David D&#x27;, 40)</span></span><br><span class="line"><span class="string">    INFO:root:Updating &#x27;age&#x27; to 40</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; vars(marry)  # The actual data is in a private attribute</span></span><br><span class="line"><span class="string">    &#123;&#x27;name&#x27;: &#x27;Marry M&#x27;, &#x27;_age&#x27;: 30&#125;</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; marry.birthday()</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Customized-names"><a href="#Customized-names" class="headerlink" title="Customized names"></a>Customized names</h4><p>When a class uses descriptors, it can inform each descriptor about which variable name was used. In this example, the Person class has two descriptor instances, name and age. When the Person class is defined, it makes a callback to <code>__set_name__()</code> in LoggedAccess so that the field names can be recorded, giving each descriptor its own public_name and private_name</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line">logging.basicConfig(level=logging.INFO)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoggedAccess</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__set_name__</span>(<span class="params">self, owner, name</span>):</span><br><span class="line">        <span class="built_in">print</span>(owner, name)</span><br><span class="line">        self.public_name = name</span><br><span class="line">        self.private_name = <span class="string">&#x27;_&#x27;</span> + name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, instance, owner</span>):</span><br><span class="line">        value = <span class="built_in">getattr</span>(instance, self.private_name)</span><br><span class="line">        logging.info(<span class="string">&#x27;Accessing %r giving %r&#x27;</span>, self.public_name, value)</span><br><span class="line">        <span class="keyword">return</span> value</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__set__</span>(<span class="params">self, instance, value</span>):</span><br><span class="line">        logging.info(<span class="string">&#x27;Updating %r to %r&#x27;</span>, self.public_name, value)</span><br><span class="line">        <span class="built_in">setattr</span>(instance, self.private_name, value)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person2</span>:</span><br><span class="line">    name = LoggedAccess()</span><br><span class="line">    age = LoggedAccess()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整的字段校验的例子"><a href="#完整的字段校验的例子" class="headerlink" title="完整的字段校验的例子"></a>完整的字段校验的例子</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Validator</span>(<span class="title class_ inherited__">ABC</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__set_name__</span>(<span class="params">self, owner, name</span>):</span><br><span class="line">        self.private_name = <span class="string">&#x27;_&#x27;</span> + name</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, instance, owner</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">getattr</span>(instance, self.private_name)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__set__</span>(<span class="params">self, instance, value</span>):</span><br><span class="line">        self.validate(value)</span><br><span class="line">        <span class="built_in">setattr</span>(instance, self.private_name, value)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @abstractmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">validate</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OneOf</span>(<span class="title class_ inherited__">Validator</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, *options</span>):</span><br><span class="line">        self.options = <span class="built_in">set</span>(options)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">validate</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="keyword">if</span> value <span class="keyword">not</span> <span class="keyword">in</span> self.options:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">f&#x27;Expected <span class="subst">&#123;value!r&#125;</span> to be one of <span class="subst">&#123;self.options!r&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Number</span>(<span class="title class_ inherited__">Validator</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, minvalue=<span class="literal">None</span>, maxvalue=<span class="literal">None</span></span>):</span><br><span class="line">        self.minvalue = minvalue</span><br><span class="line">        self.maxvalue = maxvalue</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">validate</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(value, (<span class="built_in">int</span>, <span class="built_in">float</span>)):</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">f&#x27;Expected <span class="subst">&#123;value!r&#125;</span> to be an int or float&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> self.minvalue <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> value &lt; self.minvalue:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">f&#x27;Expected <span class="subst">&#123;value!r&#125;</span> to be at least <span class="subst">&#123;self.minvalue!r&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> self.maxvalue <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> value &gt; self.maxvalue:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">f&#x27;Expected <span class="subst">&#123;value!r&#125;</span> to be no more than <span class="subst">&#123;self.maxvalue!r&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">String</span>(<span class="title class_ inherited__">Validator</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, minsize=<span class="literal">None</span>, maxsize=<span class="literal">None</span>, predicate=<span class="literal">None</span></span>):</span><br><span class="line">        self.minsize = minsize</span><br><span class="line">        self.maxsize = maxsize</span><br><span class="line">        self.predicate = predicate</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">validate</span>(<span class="params">self, value</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(value, <span class="built_in">str</span>):</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">f&#x27;Expected <span class="subst">&#123;value!r&#125;</span> to be an str&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> self.minsize <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> <span class="built_in">len</span>(value) &lt; self.minsize:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">f&#x27;Expected <span class="subst">&#123;value!r&#125;</span> to be no smaller than <span class="subst">&#123;self.minsize!r&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> self.maxsize <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> <span class="built_in">len</span>(value) &gt; self.maxsize:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">f&#x27;Expected <span class="subst">&#123;value!r&#125;</span> to be no bigger than <span class="subst">&#123;self.maxsize!r&#125;</span>&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> self.predicate <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> <span class="keyword">not</span> self.predicate(value):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">f&#x27;Expected <span class="subst">&#123;self.predicate&#125;</span> to be true for <span class="subst">&#123;value!r&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Component</span>:</span><br><span class="line">    name = String(minsize=<span class="number">3</span>, maxsize=<span class="number">10</span>, predicate=<span class="built_in">str</span>.isupper)</span><br><span class="line">    kind = OneOf(<span class="string">&#x27;wood&#x27;</span>, <span class="string">&#x27;metal&#x27;</span>, <span class="string">&#x27;plastic&#x27;</span>)</span><br><span class="line">    quantity = Number(minvalue=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, kind, quantity</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.kind = kind</span><br><span class="line">        self.quantity = quantity</span><br></pre></td></tr></table></figure>
+
+<h3 id="技术细节-⭐"><a href="#技术细节-⭐" class="headerlink" title="技术细节 ⭐"></a>技术细节 ⭐</h3><p>类属性中某个属性值定义了 descriptor protocol 中某个方法，这个属性就是个描述符对象。<br>The default behavior for attribute access is to get, set, or delete the attribute from an object’s dictionary.</p>
+<p>For instance, <code>a.x</code> has a lookup chain starting with <code>a.__dict__[&#39;x&#39;]</code>, then <code>type(a).__dict__[&#39;x&#39;]</code>, and continuing through the method resolution order of <code>type(a)</code>. If the looked-up value (应该是类属性) is an object defining one of the descriptor methods, then Python may override the default behavior and invoke the descriptor method instead.</p>
+<p>Where this occurs in the precedence chain depends on which descriptor methods were defined.</p>
+<p><strong><code>a.x</code> lookup chain <code>a.__dict__[&#39;x&#39;]</code> &#x3D;&#x3D;&gt; <code>type(a).__dict__[&#39;x&#39;]</code> &#x3D;&#x3D;&gt; <code>mro(a).__dict__[&#39;x&#39;]</code></strong></p>
+<h4 id="protocol"><a href="#protocol" class="headerlink" title="protocol"></a>protocol</h4><ul>
+<li><code>descr.__get__(self, obj, type=None) -&gt; value</code></li>
+<li><code>descr.__set__(self, obj, value) -&gt; None</code></li>
+<li><code>descr.__delete__(self, obj) -&gt; None</code></li>
+</ul>
+<p><strong>data descriptor</strong>  define <code>__set__</code> or <code>__delete__</code></p>
+<p><strong>non-data descriptor</strong> only define <code>__get__</code></p>
+<p><strong>DIFFS</strong></p>
+<p>Data and non-data descriptors differ in how overrides are calculated with respect to entries in an instance’s dictionary.</p>
+<ul>
+<li>If an instance’s dictionary has an entry with the same name as a data descriptor, the data descriptor takes precedence.</li>
+<li>If an instance’s dictionary has an entry with the same name as a non-data descriptor, the dictionary entry takes precedence.</li>
+</ul>
+<p>To make a read-only data descriptor, define both <code>__get__()</code> and <code>__set__()</code>with the <code>__set__()</code> raising an AttributeError<br>when called. Defining the <code>__set__()</code> method with an exception raising placeholder is enough to make it a data descriptor.</p>
+<h3 id="描述符的调用-⭐"><a href="#描述符的调用-⭐" class="headerlink" title="描述符的调用 ⭐"></a>描述符的调用 ⭐</h3><p>obj.x 关于描述符的调用顺序取决obj是什么，object, class, or instance of super？</p>
+<h4 id="invocation-from-an-object-⭐"><a href="#invocation-from-an-object-⭐" class="headerlink" title="invocation from an object ⭐"></a>invocation from an object ⭐</h4><p>instance.x 表达式会发生如下操作，数据描述符描述符具有最高优先级</p>
+<ol>
+<li>data descriptors</li>
+<li>instance variables</li>
+<li>non-data descriptors</li>
+<li>class variables</li>
+<li><code>__getattr__()</code></li>
+</ol>
+<p><strong>The logic for a dotted lookup is in <code>object.__getattribute__()</code></strong></p>
+<p>注意：<code>__getattribute__</code> 中没有 <code>__getattr__()</code> hook </p>
+<p>That is why calling <code>__getattribute__()</code> directly or with <code>super().__getattribute__</code> will bypass <code>__getattr__()</code> entirely.</p>
+<p>dot operator 和 getattr() 函数负责当 <code>__getarribute__()</code> 抛出 AttributeError 时调用 <code>__getattr__</code>. 这些逻辑封装在一个helper function中</p>
+<p>⭐</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">find_name_in_mro</span>(<span class="params">cls, name, default</span>):</span><br><span class="line">    <span class="keyword">for</span> base <span class="keyword">in</span> cls.__mro__:</span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">in</span> <span class="built_in">vars</span>(base):</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">vars</span>(base)[name]</span><br><span class="line">    <span class="keyword">return</span> default</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">object_getattribute</span>(<span class="params">obj, name</span>):</span><br><span class="line">    null = <span class="built_in">object</span>()</span><br><span class="line">    objtype = <span class="built_in">type</span>(obj)  <span class="comment"># 对象的类</span></span><br><span class="line">    cls_var = find_name_in_mro(objtype, name, null)  <span class="comment"># 类的属性</span></span><br><span class="line">    descr_get = <span class="built_in">getattr</span>(<span class="built_in">type</span>(cls_var), <span class="string">&#x27;__get__&#x27;</span>, null)  <span class="comment"># 是否定义 __get__</span></span><br><span class="line">    <span class="keyword">if</span> descr_get <span class="keyword">is</span> <span class="keyword">not</span> null:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">hasattr</span>(<span class="built_in">type</span>(cls_var), <span class="string">&#x27;__set__&#x27;</span>) <span class="keyword">or</span> (<span class="built_in">hasattr</span>(<span class="built_in">type</span>(cls_var), <span class="string">&#x27;__delete__&#x27;</span>)):</span><br><span class="line">            <span class="keyword">return</span> descr_get(cls_var, obj, objtype)  <span class="comment"># 数据描述符</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">hasattr</span>(obj, <span class="string">&#x27;__dict__&#x27;</span>) <span class="keyword">and</span> name <span class="keyword">in</span> <span class="built_in">vars</span>(obj):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">vars</span>(obj)[name]  <span class="comment"># instance variable</span></span><br><span class="line">    <span class="keyword">if</span> descr_get <span class="keyword">is</span> <span class="keyword">not</span> null:</span><br><span class="line">        <span class="keyword">return</span> descr_get(cls_var, obj, objtype)  <span class="comment"># 非数据描述符</span></span><br><span class="line">    <span class="keyword">if</span> cls_var <span class="keyword">is</span> <span class="keyword">not</span> null:</span><br><span class="line">        <span class="keyword">return</span> cls_var  <span class="comment"># class variable</span></span><br><span class="line">    <span class="keyword">raise</span> AttributeError(name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># helper function</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getattr_hook</span>(<span class="params">obj, name</span>):</span><br><span class="line">    <span class="string">&quot;Emulate slot_tp_getattr_hook() in Objects/typeobject.c&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> obj.__getattribute__(name)</span><br><span class="line">    <span class="keyword">except</span> AttributeError:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">hasattr</span>(<span class="built_in">type</span>(obj), <span class="string">&#x27;__getattr__&#x27;</span>):</span><br><span class="line">            <span class="keyword">raise</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">type</span>(obj).__getattr__(obj, name)  <span class="comment"># __getattr__</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="invocation-from-a-class"><a href="#invocation-from-a-class" class="headerlink" title="invocation from a class"></a>invocation from a class</h4><p><code>desc.__get__(None, A)</code></p>
+<h4 id="invocation-from-super"><a href="#invocation-from-super" class="headerlink" title="invocation from super"></a>invocation from super</h4><p><code>B.__dict__[&#39;m&#39;].__get__(obj, A)</code></p>
+<h3 id="总结-⭐"><a href="#总结-⭐" class="headerlink" title="总结 ⭐"></a>总结 ⭐</h3><p>描述符的机制嵌入在 object、type、super()的 <code>__getattribute__</code> 方法中</p>
+<ol>
+<li>Descriptors are invoked by the <code>__getattribute__()</code> method.</li>
+<li>Classes inherit this machinery from object, type, or super().</li>
+<li>Overriding <code>__getattribute__()</code> prevents automatic descriptor calls because all the descriptor logic is in that method.</li>
+<li><code>object.__getattribute__()</code> and <code>type.__getattribute__()</code> make different calls to <code>__get__()</code>. The first includes the<br> instance and may include the class. The second puts in None for the instance and always includes the class.</li>
+<li>Data descriptors always override instance dictionaries.</li>
+<li>Non-data descriptors may be overridden by instance dictionaries.</li>
+</ol>
+<h3 id="Automatic-name-notification"><a href="#Automatic-name-notification" class="headerlink" title="Automatic name notification"></a>Automatic name notification</h3><p>发生在类定义的时候由元类调用 <code>__set_name__()</code>，如果在类定义后手动添加descriptor，则需要手动调用 <code>__set_name__</code>.</p>
+<p>Sometimes it is desirable for a descriptor to know what class variable name it was assigned to.</p>
+<p>When a new class is created, the type metaclass scans the dictionary of the new class. If any of the entries are descriptors and if they define <code>__set_name__()</code>, that method is called with two arguments. The owner is the class where the descriptor is used, and the name is the class variable the descriptor was assigned to.</p>
+<p>Since the update logic is in <code>type.__new__()</code>, notifications only take place at the time of class creation.<br>If descriptors are added to the class afterwards, <code>__set_name__()</code> will need to be called manually.</p>
+<h3 id="python-中使用描述符的例子"><a href="#python-中使用描述符的例子" class="headerlink" title="python 中使用描述符的例子"></a>python 中使用描述符的例子</h3><p>The descriptor protocol is simple and offers exciting possibilities. Several use cases are so common that they have been prepackaged into built-in tools. Properties, bound methods, static methods, class methods, and <code>__slots__</code> are all based on the descriptor protocol.</p>
+<ol>
+<li><p>properties</p>
+<p>  Calling property() is a succinct(简洁) way of building a data descriptor that triggers a function call upon access to an attribute. Its signature is: property(fget&#x3D;None, fset&#x3D;None, fdel&#x3D;None, doc&#x3D;None) -&gt; property</p>
+</li>
+<li><p>Functions and methods</p>
+<p> Python’s object oriented features are built upon a function based environment. Using non-data descriptors, the two are merged seamlessly.<br> Functions stored in class dictionaries get turned into methods when invoked. Methods only differ from regular functions in that the object instance is prepended to the other arguments. By convention, the instance is called self but could be called this or any other variable name.</p>
+</li>
+<li><p>Static method</p>
+<p> 不需要访问实例的属性</p>
+</li>
+<li><p>Class method</p>
+<p> 仅仅需要访问类的属性</p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MethodType</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, func, obj</span>):</span><br><span class="line">        self.__func__ = func</span><br><span class="line">        self.__self__ = obj</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, *args, **kwargs</span>):</span><br><span class="line">        func = self.__func__</span><br><span class="line">        obj = self.__self__</span><br><span class="line">        <span class="keyword">return</span> func(obj, *args, **kwargs)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Function</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, instance, owner</span>):</span><br><span class="line">        <span class="keyword">if</span> instance <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> self  <span class="comment"># 普通函数</span></span><br><span class="line">        <span class="keyword">return</span> MethodType(self, instance) <span class="comment"># 方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">StaticMethod</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, f</span>):</span><br><span class="line">        self.f = f</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, instance, owner=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">return</span> self.f</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">return</span> self.f(*args, **kwargs)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ClassMethod</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, f</span>):</span><br><span class="line">        self.f = f</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__get__</span>(<span class="params">self, instance, cls=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            cls = <span class="built_in">type</span>(instance)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">hasattr</span>(<span class="built_in">type</span>(self.f), <span class="string">&#x27;__get__&#x27;</span>):</span><br><span class="line">            <span class="keyword">return</span> self.f.__get__(cls, cls)</span><br><span class="line">        <span class="keyword">return</span> MethodType(self.f, cls)</span><br></pre></td></tr></table></figure>
+
+<h3 id="slots"><a href="#slots" class="headerlink" title="__slots__"></a><code>__slots__</code></h3><p>当一个class定义了 <code>__slots__</code> 属性后，它会用一个定长的数组替代对象的字典来保存数据，从用户的角度看有几点影响：</p>
+<ol>
+<li>快速定位属性名拼写错误, because only attribute names specified in <code>__slots__</code> are allowd</li>
+<li>Helps create immutable objects where descriptors manage access to private attributes stored in <code>__slots__</code></li>
+<li>Saves memory On a 64-bit Linux build, an instance with two attributes takes 48 bytes with <code>__slots__</code> and 152 bytes without.</li>
+<li>Improves speed</li>
+<li>Blocks tools like functools.cached_property() which require an instance dictionary to function correctly 拦截某些工具</li>
+</ol>
+<p>我们不可能使用python来实现 <code>__slots__</code> 的功能，因为需要涉及到c的数据结构和内存分配，但是可以使用描述符模拟这种行为。代码略</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/05/09/hello-world/" rel="prev" title="hello world">
+      <i class="fa fa-chevron-left"></i> hello world
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E7%AC%A6%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">描述符是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E7%AC%A6%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">描述符的目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E6%9C%89%E7%B1%BB%E5%B1%9E%E6%80%A7%E6%97%B6%E6%89%8D%E6%9C%89%E8%B5%B7%E4%BD%9C%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">只有类属性时才有起作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set-name-self-owner-name"><span class="nav-number">4.</span> <span class="nav-text">__set_name__(self, owner, name)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Demos"><span class="nav-number">6.</span> <span class="nav-text">Demos</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#simple-example"><span class="nav-number">6.1.</span> <span class="nav-text">simple example</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dynamic-lookups"><span class="nav-number">6.2.</span> <span class="nav-text">Dynamic lookups</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Managed-attributes"><span class="nav-number">6.3.</span> <span class="nav-text">Managed attributes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Customized-names"><span class="nav-number">6.4.</span> <span class="nav-text">Customized names</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84%E5%AD%97%E6%AE%B5%E6%A0%A1%E9%AA%8C%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">7.</span> <span class="nav-text">完整的字段校验的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82-%E2%AD%90"><span class="nav-number">8.</span> <span class="nav-text">技术细节 ⭐</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#protocol"><span class="nav-number">8.1.</span> <span class="nav-text">protocol</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E7%AC%A6%E7%9A%84%E8%B0%83%E7%94%A8-%E2%AD%90"><span class="nav-number">9.</span> <span class="nav-text">描述符的调用 ⭐</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#invocation-from-an-object-%E2%AD%90"><span class="nav-number">9.1.</span> <span class="nav-text">invocation from an object ⭐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#invocation-from-a-class"><span class="nav-number">9.2.</span> <span class="nav-text">invocation from a class</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#invocation-from-super"><span class="nav-number">9.3.</span> <span class="nav-text">invocation from super</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-%E2%AD%90"><span class="nav-number">10.</span> <span class="nav-text">总结 ⭐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Automatic-name-notification"><span class="nav-number">11.</span> <span class="nav-text">Automatic name notification</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python-%E4%B8%AD%E4%BD%BF%E7%94%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">12.</span> <span class="nav-text">python 中使用描述符的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#slots"><span class="nav-number">13.</span> <span class="nav-text">__slots__</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">12k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">11 mins.</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
