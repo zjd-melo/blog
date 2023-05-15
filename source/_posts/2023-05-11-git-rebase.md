@@ -116,7 +116,7 @@ git add .
 git commit -m "5. i cant' typ goods"
 
 # seventh
-echo "remove" >> utils.py
+touch index.html
 git add .
 git commit -m "7. something to move before patch B"
 ```
