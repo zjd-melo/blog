@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="Dying Memory">
 <meta property="og:description" content="HBase">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/HBase.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/10/hbase/hbase.png">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/10/hbase/Table.png">
 <meta property="article:published_time" content="2023-07-10T03:35:38.000Z">
 <meta property="article:modified_time" content="2023-07-10T03:35:38.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="HBase">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zjd-melo.github.io/blog/HBase.png">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2023/07/10/hbase/hbase.png">
 
 <link rel="canonical" href="https://zjd-melo.github.io/blog/2023/07/10/hbase/">
 
@@ -252,7 +252,7 @@
 <p> 对于为空(null)的列，并不占用存储空间，因此，表可以设计的非常稀疏</p>
 </li>
 </ol>
-<h3 id="逻辑视图"><a href="#逻辑视图" class="headerlink" title="逻辑视图"></a>逻辑视图</h3><p><img src="/blog/HBase.png" alt="HBase逻辑视图"></p>
+<h3 id="逻辑视图"><a href="#逻辑视图" class="headerlink" title="逻辑视图"></a>逻辑视图</h3><p><img src="/blog/2023/07/10/hbase/hbase.png" alt="HBase逻辑视图"></p>
 <h4 id="row-key"><a href="#row-key" class="headerlink" title="row key"></a>row key</h4><p>访问 HBase 中的数据只有三种方式</p>
 <ol>
 <li>by single row key</li>
@@ -260,11 +260,11 @@
 <li>scan entire table</li>
 </ol>
 <p>Row key 可以是任意字符串（最大长度64KB）， 在 HBase 内部 row key 保存为字节数组，存储时，数据按照 row key 的字典序（byte order）排序存储。</p>
-<p>注意：字典序对int的排序结果如下，1，10，100，11，12，2，20，21，…，9，91，要保持整型的自然序，row key<br>必须用0作左填充。</p>
+<p>注意：字典序对int的排序结果如下，1，10，100，11，12，2，20，21，…，9，91，要保持整型的自然序，row key 必须用0作左填充。</p>
 <p>行的一次读写是原子操作。</p>
 <h4 id="列族"><a href="#列族" class="headerlink" title="列族"></a>列族</h4><p>HBase 表中的每个列都归属于某个列族，列族是表 schema 的一部分，而列不是，必须在使用之前定义，列名都以列族作为前缀。</p>
 <p><strong>访问控制、磁盘和内存的使用统计都是在列族层面进行的</strong>。实际应用中，列族上的控制权限能帮助管理不同类型的应用。</p>
-<h4 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h4><p>HBase 中通过 row key 和 column 确定的一个存储单元称为 cell，每个 cell 都保存同一份数据的多个版本。版本通过时间戳来索引。时间戳的类型是64<br>位整型，时间戳可以由 HBase 在写入时自动生成，也可以由客户端显示赋值。如果应用程序要避免数据版本冲突，就必须自己生成具有唯一性的时间戳，每个 cell<br>中，不同版本的数据按照时间倒序排列，即最新的数据在最前面。为了避免过多的版本造成管理（存储和索引）负担，Hbase 提供了两种数据版本回收方式<br><strong>保存数据的最后N个版本</strong>、<strong>保存最近一段时间内的版本（近七天）</strong>，可以针对每个列族进行设置。</p>
+<h4 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h4><p>HBase 中通过 row key 和 column 确定的一个存储单元称为 cell，每个 cell 都保存同一份数据的多个版本。版本通过时间戳来索引。时间戳的类型是64位整型，时间戳可以由 HBase 在写入时自动生成，也可以由客户端显示赋值。如果应用程序要避免数据版本冲突，就必须自己生成具有唯一性的时间戳，每个 cell 中，不同版本的数据按照时间倒序排列，即最新的数据在最前面。为了避免过多的版本造成管理（存储和索引）负担，Hbase 提供了两种数据版本回收方式<strong>保存数据的最后N个版本</strong>、<strong>保存最近一段时间内的版本（近七天）</strong>，可以针对每个列族进行设置。</p>
 <h4 id="cell"><a href="#cell" class="headerlink" title="cell"></a>cell</h4><p>由 （row key，column&#x3D;cf+column qualifier，version）唯一确定的单元，cell 中的数据没有数据类型，全部是字节码形式存储。</p>
 <h3 id="物理存储"><a href="#物理存储" class="headerlink" title="物理存储"></a>物理存储</h3><p><img src="/blog/2023/07/10/hbase/Table.png" alt="HBase"></p>
 <ol>
@@ -280,11 +280,11 @@
 <h5 id="3-File-info-段"><a href="#3-File-info-段" class="headerlink" title="3. File info 段"></a>3. File info 段</h5><p>Hfile 元信息，不被压缩，用户可以在这一部分添加自己的元信息</p>
 <h5 id="4-Data-Block-Index-段"><a href="#4-Data-Block-Index-段" class="headerlink" title="4. Data Block Index 段"></a>4. Data Block Index 段</h5><p>Data Block 的索引，每条索引的 key 是被索引的 block 的第一条记录的 key</p>
 <h5 id="5-Meta-Block-Index-段"><a href="#5-Meta-Block-Index-段" class="headerlink" title="5. Meta Block Index 段"></a>5. Meta Block Index 段</h5><p>可选的，Meta Block 的索引</p>
-<h5 id="6-Trailer"><a href="#6-Trailer" class="headerlink" title="6. Trailer"></a>6. Trailer</h5><p>这一段是定长的，保存了每一段的偏移量，读取一个 Hfile 时，会优先读取 Trailer，Trailer 保存了每个段的起始位置（段的 Magic Number 用来做安全check），然后<br>，Data Block Index 会被读取到内存中，这样当检索某个 key 时，不需要扫描整个 Hfile，而只需从内存中找到 key 所在的 block，通过一次磁盘 IO 将整个 block 读<br>取到内存中，再找需要的 key，Data Block Index 采用 LRU 机制淘汰。</p>
+<h5 id="6-Trailer"><a href="#6-Trailer" class="headerlink" title="6. Trailer"></a>6. Trailer</h5><p>这一段是定长的，保存了每一段的偏移量，读取一个 Hfile 时，会优先读取 Trailer，Trailer 保存了每个段的起始位置（段的 Magic Number 用来做安全check），然后 ，Data Block Index 会被读取到内存中，这样当检索某个 key 时，不需要扫描整个 Hfile，而只需从内存中找到 key 所在的 block，通过一次磁盘 IO 将整个 block 读取到内存中，再找需要的 key，Data Block Index 采用 LRU 机制淘汰。</p>
 <p>Hfile 的 Data Block，Meta Block 通常采用压缩方式存储，压缩之后可以大大减少网络和磁盘 IO，随之而来的开销当然是需要花费 CPU 进行压缩和解压缩。</p>
 <h3 id="HLog-（WAL-log）"><a href="#HLog-（WAL-log）" class="headerlink" title="HLog （WAL log）"></a>HLog （WAL log）</h3><p>WAL Write-ahead logging 预写式日志，类似 MySQL 中的 binlog，用来做灾难恢复，HLog 记录数据的所有变更，一旦数据修改，就可以从 log 中恢复。</p>
-<p>每个 Region Server 维护一个 HLog 而不是每个 Region 一个，这样不同 Region （来自不同的 table）的日志会混在一起，这样做的目的是不断追加单个文件相对于<br>写多个文件而言，可以减少磁盘寻址次数，因此可以提高对 table 的写性能，带来的麻烦是，如果一台 Region Server 下线，为了恢复其上的 Region，需要将 Region<br>Server 上的 log 进行拆分，然后分发到其它 Region Server 上进行恢复。</p>
-<p>HLog 文件就是一个普通的 Hadoop Sequence File，Sequence File 的 key 是 HLogKey 对象，记录了写入数据的归属信息，除了 table 和 Region 名外，<br>同时还包括 Sequence number 和 timestamp（写入时间），Sequence number 的起始值为0，或者是最近一次存入文件系统中 Sequence number，HLogSequenceFile<br>的 Value 是 HBase 的 KeyValue 对象。</p>
+<p>每个 Region Server 维护一个 HLog 而不是每个 Region 一个，这样不同 Region （来自不同的 table）的日志会混在一起，这样做的目的是不断追加单个文件相对于写多个文件而言，可以减少磁盘寻址次数，因此可以提高对 table 的写性能，带来的麻烦是，如果一台 Region Server 下线，为了恢复其上的 Region，需要将 Region Server 上的 log 进行拆分，然后分发到其它 Region Server 上进行恢复。</p>
+<p>HLog 文件就是一个普通的 Hadoop Sequence File，Sequence File 的 key 是 HLogKey 对象，记录了写入数据的归属信息，除了 table 和 Region 名外，同时还包括 Sequence number 和 timestamp（写入时间），Sequence number 的起始值为0，或者是最近一次存入文件系统中 Sequence number，HLogSequenceFile 的 Value 是 HBase 的 KeyValue 对象。</p>
 
     </div>
 
