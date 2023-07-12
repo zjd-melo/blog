@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="HBase">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/10/hbase/hbase.png">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/10/hbase/Table.png">
 <meta property="article:published_time" content="2023-07-10T03:35:38.000Z">
-<meta property="article:modified_time" content="2023-07-10T03:35:38.000Z">
+<meta property="article:modified_time" content="2023-07-12T12:35:38.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="HBase">
 <meta name="twitter:card" content="summary">
@@ -197,6 +197,13 @@
 
               <time title="Created: 2023-07-10 11:35:38" itemprop="dateCreated datePublished" datetime="2023-07-10T11:35:38+08:00">2023-07-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-12 20:35:38" itemprop="dateModified" datetime="2023-07-12T20:35:38+08:00">2023-07-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -220,14 +227,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.4k</span>
+              <span>3.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>3 mins.</span>
             </span>
             <div class="post-description">HBase</div>
 
@@ -282,9 +289,41 @@
 <h5 id="5-Meta-Block-Index-段"><a href="#5-Meta-Block-Index-段" class="headerlink" title="5. Meta Block Index 段"></a>5. Meta Block Index 段</h5><p>可选的，Meta Block 的索引</p>
 <h5 id="6-Trailer"><a href="#6-Trailer" class="headerlink" title="6. Trailer"></a>6. Trailer</h5><p>这一段是定长的，保存了每一段的偏移量，读取一个 Hfile 时，会优先读取 Trailer，Trailer 保存了每个段的起始位置（段的 Magic Number 用来做安全check），然后 ，Data Block Index 会被读取到内存中，这样当检索某个 key 时，不需要扫描整个 Hfile，而只需从内存中找到 key 所在的 block，通过一次磁盘 IO 将整个 block 读取到内存中，再找需要的 key，Data Block Index 采用 LRU 机制淘汰。</p>
 <p>Hfile 的 Data Block，Meta Block 通常采用压缩方式存储，压缩之后可以大大减少网络和磁盘 IO，随之而来的开销当然是需要花费 CPU 进行压缩和解压缩。</p>
-<h3 id="HLog-（WAL-log）"><a href="#HLog-（WAL-log）" class="headerlink" title="HLog （WAL log）"></a>HLog （WAL log）</h3><p>WAL Write-ahead logging 预写式日志，类似 MySQL 中的 binlog，用来做灾难恢复，HLog 记录数据的所有变更，一旦数据修改，就可以从 log 中恢复。</p>
+<h4 id="HLog-（WAL-log）"><a href="#HLog-（WAL-log）" class="headerlink" title="HLog （WAL log）"></a>HLog （WAL log）</h4><p>WAL Write-ahead logging 预写式日志，类似 MySQL 中的 binlog，用来做灾难恢复，HLog 记录数据的所有变更，一旦数据修改，就可以从 log 中恢复。</p>
 <p>每个 Region Server 维护一个 HLog 而不是每个 Region 一个，这样不同 Region （来自不同的 table）的日志会混在一起，这样做的目的是不断追加单个文件相对于写多个文件而言，可以减少磁盘寻址次数，因此可以提高对 table 的写性能，带来的麻烦是，如果一台 Region Server 下线，为了恢复其上的 Region，需要将 Region Server 上的 log 进行拆分，然后分发到其它 Region Server 上进行恢复。</p>
 <p>HLog 文件就是一个普通的 Hadoop Sequence File，Sequence File 的 key 是 HLogKey 对象，记录了写入数据的归属信息，除了 table 和 Region 名外，同时还包括 Sequence number 和 timestamp（写入时间），Sequence number 的起始值为0，或者是最近一次存入文件系统中 Sequence number，HLogSequenceFile 的 Value 是 HBase 的 KeyValue 对象。</p>
+<h3 id="物理架构"><a href="#物理架构" class="headerlink" title="物理架构"></a>物理架构</h3><h4 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h4><p>包含访问 HBase 的接口，client 维护着一些 cache 来加快对 HBase 的访问，比如 region 的位置信息</p>
+<h4 id="Zookeeper"><a href="#Zookeeper" class="headerlink" title="Zookeeper"></a>Zookeeper</h4><ol>
+<li>保证任何时候集群中只有一个 master</li>
+<li>存储所有 region 的寻址入口</li>
+<li>实时监控 region servers 的状态，将 region server 的上线和下线信息实时通知给 master</li>
+<li>存储 HBase 的 schema，包括有哪些 table，每个 table 有哪些 column family</li>
+</ol>
+<h4 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h4><ol>
+<li>为 region server 分配 region</li>
+<li>负责 region server 的负责均衡</li>
+<li>发现失效的 region server，并重新分配其上的 region</li>
+<li>HDFS 上垃圾文件的回收</li>
+<li>处理 schema 更新请求</li>
+</ol>
+<h4 id="Region-Server"><a href="#Region-Server" class="headerlink" title="Region Server"></a>Region Server</h4><ol>
+<li>region server 维护 master 分配给它的 region，处理对这些 region 的 IO 请求</li>
+<li>负责切分运行过程中变得过大的 region</li>
+</ol>
+<p>可以看到，client 访问 HBase 上的数据的过程并不需要 Master 的参与（寻址访问 zookeeper 和 region server，数据读写访问 region server），master 仅仅维护 table 和 region 的元信息，负载很低</p>
+<h3 id="关键算法-x2F-流程"><a href="#关键算法-x2F-流程" class="headerlink" title="关键算法&#x2F;流程"></a>关键算法&#x2F;流程</h3><h4 id="读写过程"><a href="#读写过程" class="headerlink" title="读写过程"></a>读写过程</h4><p>数据在更新时首先写入 HLog （WAL）和内存（memStore）中，memStore 中的数据是排序的，当 memStore 累计到一定阈值时，就会创建一个新的 memStore，并将老的添加到 flush 队列，由单独的线程 flush 到磁盘上成为一个 StoreFile，于此同时，系统会在 zookeeper 中记录一个 redo point，表示这个时刻之前的变更已经持久化了。</p>
+<p>当系统发现意外时，可能导致内存（memStore）中的数据丢失，此时使用 HLog 来恢复 checkpoint 后的数据。</p>
+<p>StoreFile 是只读的，一旦创建之后不可在修改，因此对 HBase 的更新操作都是不断追加的操作，当一个 Store 中的 StoreFile 达到一定量后就会进行合并（minor compact），将对同一个 key 的修改合并在一起，此时不会删除数据，major compact 会删除数据。</p>
+<ol>
+<li>client 向 region server 提交写请求</li>
+<li>region server 找到目标 region</li>
+<li>region 检查数据是否于 schema 一致</li>
+<li>如果客户端未指定版本，则获取当前系统时间作为数据版本</li>
+<li>将更新写入 WAL log</li>
+<li>将更新写入 memStore</li>
+<li>判断 memStore 是否需要 flush</li>
+</ol>
+<h4 id="Region-分配"><a href="#Region-分配" class="headerlink" title="Region 分配"></a>Region 分配</h4><p>任何时刻，一个 Region 只能分配给一个 Region Server，HMaster 记录了当前有哪些 Region Server，以及当前哪些 Region 分配给了哪些 Region server，哪些 Region 还未分配，当存在未分配的 Region，并且有一个 Region Server 上有可用空间时，HMaster 就给这个 Region Server  发送一个装载请求，把 Region 分配给这个 Region Server</p>
 
     </div>
 
@@ -366,7 +405,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Features"><span class="nav-number">2.</span> <span class="nav-text">Features</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E8%A7%86%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">逻辑视图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#row-key"><span class="nav-number">3.1.</span> <span class="nav-text">row key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E6%97%8F"><span class="nav-number">3.2.</span> <span class="nav-text">列族</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%88%B3"><span class="nav-number">3.3.</span> <span class="nav-text">时间戳</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cell"><span class="nav-number">3.4.</span> <span class="nav-text">cell</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%AD%98%E5%82%A8"><span class="nav-number">4.</span> <span class="nav-text">物理存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HFile"><span class="nav-number">4.1.</span> <span class="nav-text">HFile</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Data-Block-%E6%AE%B5"><span class="nav-number">4.1.1.</span> <span class="nav-text">1. Data Block 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Meta-Block-%E6%AE%B5"><span class="nav-number">4.1.2.</span> <span class="nav-text">2. Meta Block 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-File-info-%E6%AE%B5"><span class="nav-number">4.1.3.</span> <span class="nav-text">3. File info 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-Data-Block-Index-%E6%AE%B5"><span class="nav-number">4.1.4.</span> <span class="nav-text">4. Data Block Index 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-Meta-Block-Index-%E6%AE%B5"><span class="nav-number">4.1.5.</span> <span class="nav-text">5. Meta Block Index 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-Trailer"><span class="nav-number">4.1.6.</span> <span class="nav-text">6. Trailer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HLog-%EF%BC%88WAL-log%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">HLog （WAL log）</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Features"><span class="nav-number">2.</span> <span class="nav-text">Features</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E8%A7%86%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">逻辑视图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#row-key"><span class="nav-number">3.1.</span> <span class="nav-text">row key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E6%97%8F"><span class="nav-number">3.2.</span> <span class="nav-text">列族</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%88%B3"><span class="nav-number">3.3.</span> <span class="nav-text">时间戳</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cell"><span class="nav-number">3.4.</span> <span class="nav-text">cell</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%AD%98%E5%82%A8"><span class="nav-number">4.</span> <span class="nav-text">物理存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HFile"><span class="nav-number">4.1.</span> <span class="nav-text">HFile</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Data-Block-%E6%AE%B5"><span class="nav-number">4.1.1.</span> <span class="nav-text">1. Data Block 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Meta-Block-%E6%AE%B5"><span class="nav-number">4.1.2.</span> <span class="nav-text">2. Meta Block 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-File-info-%E6%AE%B5"><span class="nav-number">4.1.3.</span> <span class="nav-text">3. File info 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-Data-Block-Index-%E6%AE%B5"><span class="nav-number">4.1.4.</span> <span class="nav-text">4. Data Block Index 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-Meta-Block-Index-%E6%AE%B5"><span class="nav-number">4.1.5.</span> <span class="nav-text">5. Meta Block Index 段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-Trailer"><span class="nav-number">4.1.6.</span> <span class="nav-text">6. Trailer</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HLog-%EF%BC%88WAL-log%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">HLog （WAL log）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E6%9E%B6%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">物理架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Client"><span class="nav-number">5.1.</span> <span class="nav-text">Client</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zookeeper"><span class="nav-number">5.2.</span> <span class="nav-text">Zookeeper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Master"><span class="nav-number">5.3.</span> <span class="nav-text">Master</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Region-Server"><span class="nav-number">5.4.</span> <span class="nav-text">Region Server</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%AE%97%E6%B3%95-x2F-%E6%B5%81%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">关键算法&#x2F;流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E8%BF%87%E7%A8%8B"><span class="nav-number">6.1.</span> <span class="nav-text">读写过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Region-%E5%88%86%E9%85%8D"><span class="nav-number">6.2.</span> <span class="nav-text">Region 分配</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -440,13 +479,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">22k</span>
+    <span title="Symbols count total">23k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">20 mins.</span>
+    <span title="Reading time total">21 mins.</span>
 </div>
 
         
@@ -475,7 +514,7 @@
 <script src="/blog/js/motion.js"></script>
 
 
-<script src="/blog/js/schemes/muse.js"></script>
+<script src="/blog/js/schemes/pisces.js"></script>
 
 
 <script src="/blog/js/next-boot.js"></script>
