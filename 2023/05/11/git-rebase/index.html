@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="about git rebase">
+  <meta name="description" content="About git rebase">
 <meta property="og:type" content="article">
 <meta property="og:title" content="git rebase">
 <meta property="og:url" content="https://zjd-melo.github.io/blog/2023/05/11/git-rebase/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="about git rebase">
+<meta property="og:description" content="About git rebase">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-11T10:09:01.000Z">
-<meta property="article:modified_time" content="2023-05-11T10:09:01.000Z">
+<meta property="article:modified_time" content="2023-07-26T11:32:02.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="Git">
 <meta name="twitter:card" content="summary">
@@ -194,6 +194,13 @@
 
               <time title="Created: 2023-05-11 18:09:01" itemprop="dateCreated datePublished" datetime="2023-05-11T18:09:01+08:00">2023-05-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-26 19:32:02" itemprop="dateModified" datetime="2023-07-26T19:32:02+08:00">2023-07-26</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -208,7 +215,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.3k</span>
+              <span>4.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -217,7 +224,7 @@
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               <span>4 mins.</span>
             </span>
-            <div class="post-description">about git rebase</div>
+            <div class="post-description">About git rebase</div>
 
         </div>
       </header>
@@ -265,11 +272,11 @@
 </tr>
 <tr>
 <td>squash</td>
-<td>把多个 commit 合并成一个，会把当前命令之上的 commit 合并到当前 squash 的 commit 上</td>
+<td>把多个 commit 合并成一个，会把当前命令之上的一行 commit 合并到当前 squash 的 commit 上</td>
 </tr>
 <tr>
 <td>fixup</td>
-<td>和 squash 很像</td>
+<td>和 squash 很像，把当前行合并到上一行</td>
 </tr>
 <tr>
 <td>exec</td>
@@ -303,13 +310,14 @@
 <p>定义 rebase 行为</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pick 0777897 1. Patch A</span><br><span class="line">squash bd089b9 5. something to add to patch A, reword commit message</span><br><span class="line">pick 792fdd1 7. something to move before patch B</span><br><span class="line">pick 2d01a11 2. Patch B</span><br><span class="line">fixup 02ba6e9 4. A fix for Patch B</span><br><span class="line">edit bd089b9 5. something to add to patch A</span><br><span class="line">reword f691b1d 5. i cant&#x27; typ goods</span><br></pre></td></tr></table></figure>
 <ol>
-<li>This file is Git’s way of saying, “Hey, here’s what I’m about to do with this squash.” It lists the first commit’s message (“Patch A”), and the second commit’s message (“something to add to patch A”). If you’re happy with these commit messages, you can save the file, and close the editor. Otherwise, yo</li>
-</ol>
-<p>When the editor is closed, the rebase continues:</p>
-<ol start="2">
-<li>Git processes the two pick commands, It also processes the fixup command, since it doesn’t require any interaction,fixup merges the changes from 02ba6e9 into the commit before it, 2d01a11. Both changes will have the same commit message: “Patch B”.</li>
-<li>Git gets to the edit opration, stop, prints the following message to the terminal <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">You can amend the commit now, with</span><br><span class="line"></span><br><span class="line">     git commit --amend</span><br><span class="line"></span><br><span class="line"> Once you are satisfied with your changes, run</span><br><span class="line"></span><br><span class="line">     git rebase --continue</span><br><span class="line"></span><br><span class="line">此时可以对代码做任意的修改，添加 commit，然后 git commit --amend，git rebase --continue继续进行rebase</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>Git then gets to the reword command, 打开编辑器让你修改 commit message</li>
+<li><p>This file is Git’s way of saying, “Hey, here’s what I’m about to do with this squash.” It lists the first commit’s message (“Patch A”), and the second commit’s message (“something to add to patch A”). If you’re happy with these commit messages, you can save the file, and close the editor. Otherwise, you can edit commit message. When the editor is closed, the rebase continues.</p>
+</li>
+<li><p>Git processes the two pick commands, It also processes the fixup command, since it doesn’t require any interaction,fixup merges the changes from 02ba6e9 into the commit before it, 2d01a11. Both changes will have the same commit message: “Patch B”.</p>
+</li>
+<li><p>Git gets to the edit opration, stop, prints the following message to the terminal</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">You can amend the commit now, with</span><br><span class="line"></span><br><span class="line">     git commit --amend</span><br><span class="line"></span><br><span class="line"> Once you are satisfied with your changes, run</span><br><span class="line"></span><br><span class="line">     git rebase --continue</span><br><span class="line"></span><br><span class="line">此时可以对代码做任意的修改，添加 commit，然后 git commit --amend 修改当前 commit 的提交信息，git rebase --continue继续进行rebase</span><br><span class="line"></span><br><span class="line">git commit --amend 可以修改提交信息</span><br></pre></td></tr></table></figure></li>
+<li><p>Git then gets to the reword command, 打开编辑器让你修改 commit message</p>
+</li>
 </ol>
 <h3 id="推送-rebase-到-远程"><a href="#推送-rebase-到-远程" class="headerlink" title="推送 rebase 到 远程"></a>推送 rebase 到 远程</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Don<span class="string">&#x27;t override changes</span></span></span><br><span class="line">git push origin main --force-with-lease</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="string">Override changes</span></span></span><br><span class="line">git push origin main --force</span><br></pre></td></tr></table></figure>
 
