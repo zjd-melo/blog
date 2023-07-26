@@ -1,9 +1,9 @@
 ---
 title: git rebase
 date: 2023-05-11 18:09:01
-updated: 2023-05-11 18:09:01
+updated: 2023-07-26 19:32:02
 tags: Git
-description: about git rebase
+description: About git rebase
 ---
 
 ----
@@ -30,14 +30,14 @@ description: about git rebase
 
 ---
 
-| command | desc                                                                                                    | 
-|---------|---------------------------------------------------------------------------------------------------------|
-| pick    | pick commits，此时可以 delte 、reorder commits                                                                |
-| reword  | 和 pick 很像，但是会停止 rebase，给你修改 commit message 的机会， 任何当前 commit 做的代码修改都不受影响                                 |
+| command | desc                                                                                                      | 
+|---------|-----------------------------------------------------------------------------------------------------------|
+| pick    | pick commits，此时可以 delte 、reorder commits                                                                  |
+| reword  | 和 pick 很像，但是会停止 rebase，给你修改 commit message 的机会， 任何当前 commit 做的代码修改都不受影响                                   |
 | edit    | 如果选择 edit commit，此时有机会 amend commit，也就是说，可以增加或改变当前 commit ，甚至在继续进行 rebase 时，添加更多commit或者删除当前 commit 的错误代码 |
-| squash  | 把多个 commit 合并成一个，会把当前命令之上的 commit 合并到当前 squash 的 commit 上                                               |
-| fixup   | 和 squash 很像                                                                                             |
-| exec    | This lets you run arbitrary shell commands against a commit.                                            |
+| squash  | 把多个 commit 合并成一个，会把当前命令之上的一行 commit 合并到当前 squash 的 commit 上                                               |
+| fixup   | 和 squash 很像，把当前行合并到上一行                                                                                    |
+| exec    | This lets you run arbitrary shell commands against a commit.                                              |
 
 ### An example of using `git rebase`
 
@@ -155,9 +155,7 @@ fixup 02ba6e9 4. A fix for Patch B
 edit bd089b9 5. something to add to patch A
 reword f691b1d 5. i cant' typ goods
 ```
-1. This file is Git's way of saying, "Hey, here's what I'm about to do with this squash." It lists the first commit's message ("Patch A"), and the second commit's message ("something to add to patch A"). If you're happy with these commit messages, you can save the file, and close the editor. Otherwise, yo
-
-When the editor is closed, the rebase continues:
+1. This file is Git's way of saying, "Hey, here's what I'm about to do with this squash." It lists the first commit's message ("Patch A"), and the second commit's message ("something to add to patch A"). If you're happy with these commit messages, you can save the file, and close the editor. Otherwise, you can edit commit message. When the editor is closed, the rebase continues.
 
 2. Git processes the two pick commands, It also processes the fixup command, since it doesn't require any interaction,fixup merges the changes from 02ba6e9 into the commit before it, 2d01a11. Both changes will have the same commit message: "Patch B".
 3. Git gets to the edit opration, stop, prints the following message to the terminal
@@ -170,8 +168,9 @@ When the editor is closed, the rebase continues:
 
         git rebase --continue
    
-   此时可以对代码做任意的修改，添加 commit，然后 git commit --amend，git rebase --continue继续进行rebase
+   此时可以对代码做任意的修改，添加 commit，然后 git commit --amend 修改当前 commit 的提交信息，git rebase --continue继续进行rebase
    
+   git commit --amend 可以修改提交信息
    ```
 4. Git then gets to the reword command, 打开编辑器让你修改 commit message
 
