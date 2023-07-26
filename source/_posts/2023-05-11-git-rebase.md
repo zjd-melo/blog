@@ -170,7 +170,7 @@ reword f691b1d 5. i cant' typ goods
    
    此时可以对代码做任意的修改，添加 commit，然后 git commit --amend 修改当前 commit 的提交信息，git rebase --continue继续进行rebase
    
-   git commit --amend 可以修改提交信息
+   git commit --amend 可以修改最新提交信息
    ```
 4. Git then gets to the reword command, 打开编辑器让你修改 commit message
 
