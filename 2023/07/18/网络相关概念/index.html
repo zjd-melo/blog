@@ -219,14 +219,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.3k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>4 mins.</span>
             </span>
             <div class="post-description">网络相关术语及理解</div>
 
@@ -245,7 +245,7 @@
 <h3 id="LAN"><a href="#LAN" class="headerlink" title="LAN"></a>LAN</h3><p>local area network</p>
 <h3 id="WAN"><a href="#WAN" class="headerlink" title="WAN"></a>WAN</h3><p>wide area network</p>
 <h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>domain name system</p>
-<h3 id="MTU"><a href="#MTU" class="headerlink" title="MTU"></a>MTU</h3><p>Maximum transmission unit 最大传输单元</p>
+<h3 id="MTU"><a href="#MTU" class="headerlink" title="MTU"></a>MTU</h3><p>Maximum Transmission nit 最大传输单元</p>
 <p><strong>数据链路层的最大载荷上限</strong>（即IP数据报最大长度），每段链路的 MTU 可能都不相同，一条端到端路径的 MTU 由这条路径上 MTU 最小的那段链路的 MTU 决定。</p>
 <p>MTU 是链路层中的网络对数据帧的一个限制，以以太网为例，MTU 通常为1500字节，采用巨帧（Jumbo Frame）时可达到9000字节。所谓的 MTU 是二层协议的一个限制，对不同的二层协议可能有不同的值，只有二层协议是以太网时，MTU 一般才取1500字节，<strong>不是物理链路介质的限制</strong>，只有工作在二层的设备才需要指定 MTU 的值，如网卡、转发设备端口（网络接口）等，通过一段线缆直连的通信端口或网卡，MTU 一定相同。</p>
 <p>一个IP数据报在以太网中传输，如果它的长度大于当前链路的 MTU值，就要进行分片（IP层分片）传输，使得每片数据报的长度不超过 MTU，分片传输的IP数据报不一定按序到达，但IP首部中的信息能让这些数据报按需组装，<strong>IP数据报的分片和重组都是在网络IP层完成的</strong></p>
@@ -254,7 +254,7 @@
 <p>最大报文段长度，为<strong>TCP 传输层的最大载荷上限（应用层数据最大长度）</strong>，TCP 三次握手期间通过 TCP 首部选项中的 MSS 字段通知对端，通常一条 TCP 连接的 MSS 取通信双方较小的值。</p>
 <p>在以太网中 <code>MSS = 以太网MTU - TCP首部长度 - IPv4首部长度 = 1500 - 20 - 20 = 1460 bytes</code></p>
 <p>未指定 MSS 时默认536 bytes，这是因为在 Internet 中标准的 MTU 值为 576 bytes。</p>
-<p>一个应用程序如果要发送超过 MSS 大小的数据，就要进行**分段传输(TCP 分段)**，使得每个报文长度都不超过 MSS，分段传输的 TCP 报文不一定按序到达，但实现可靠传输的 TCP 协议中有处理乱序的机制，即利用报文段序列号在接收缓冲区进行数据重排以实现重组，TCP 分段的重组是在 TCP 传输层完成的。</p>
+<p>一个应用程序如果要发送超过 MSS 大小的数据，就要进行<strong>分段传输</strong>(TCP 分段)，使得每个报文长度都不超过 MSS，分段传输的 TCP 报文不一定按序到达，但实现可靠传输的 TCP 协议中有处理乱序的机制，即利用报文段序列号在接收缓冲区进行数据重排以实现重组，TCP 分段的重组是在 TCP 传输层完成的。</p>
 <p><img src="/blog/2023/07/18/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/MTU_MSS.png" alt="MTU_MSS"></p>
 <h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>socket 是什么？socket 就是一个内存对象，保存了一些控制信息（ip、端口、MTU、MSS…），协议栈是通过 socket 中记录的控制信息而工作的。</p>
 <p>控制信息分为两部分：一是头部信息，而是套接字（内存）中保存的信息。</p>
@@ -277,6 +277,21 @@
 <p>由于一直有 MSS &lt; MTU 的存在，很明显分段后的每一个 TCP 报文段加上 IP 首部后的长度构造成的 IP 数据报长度都不可能超过 MTU，因此也就不需要在网络层进行 IP 分片了。</p>
 <p>相比于为实现面向连接、提供可靠传输服务而具备各种复杂机制的TCP，UDP 是简单至极的传输协议，就是在 IP 协议基础上增加了些特性以实现端到端的数据传输服务，因此 UDP 是不可靠的，UDP 协议并不会自行分段，所以 MSS 的限制对其没有作用，因此最终的 IP 数据报的长度超过 MTU 时，网络层会负责执行 IP 分片，同样没有分段功能的 ICMP 数据在网络层中同样会出现 IP 分片的情况。</p>
 <p>结论：<strong>UDP 不会分段，由 IP 来分片，TCP 会分段，不用 IP 来分片</strong></p>
+<p>在分片的数据中，传输层的首部只会出现在第一个分片中，IP数据报分片后，只有第一片带有传输层首部（UDP 或 ICMP等），后续分片只有 IP 首部和应用数据，到了目的地后根据 IP 首部中的信息在网络层进行重组，这一步骤对上层是透明的，即传输层根本不知到 IP 层发生了分片与重组。而 TCP 报文段的每个分段中都有 TCP 首部，到了目的地后根据 TCP 首部的信息在传输层进行重组。</p>
+<p><strong>IP 分片只有第一片有 TCP 首部，而 TCP 分段，每一段都有 TCP 首部</strong></p>
+<p>TCP 分段仅发生在发送端，这是因为在传输过程中，TCP 分段是先封装成 IP 数据报，在封装在以太网帧中被链路所传输的，并且在端到端的路径上通常不会有工作在三层以上（传输层）的设备，故 TCP 分段不会发生在传输路径中间的某个设备中，<strong>在发送端 TCP 传输层分段后，在接收端 TCP 传输层重组</strong>。</p>
+<p>IP 分片不仅会发生在使用 UDP、ICMP 等没有分段功能的传输层协议的数据发送方，还会发生在传输途中，甚至可能都会发生，这是因为原本的大数据报被分片后很可能会经过不同 MTU 大小的链路，一旦链路 MTU 小于当前当前 IP 分片大小，则需要在当前转发设备（如路由器）中再次分片，但是各个分片只有到达目的地后才会在其网络层重组，而不是像其他网络协议在下一跳就要进行重组。</p>
+<blockquote>
+<p>发送端在进行 TCP 分段后就一定不会在 IP 层进行分片，因为 MSS 本身就是基于 MTU 推导而来，TCP 层分段满足了 MSS 限制，也就满足了 MTU 的物理限制，但在 TCP 分段发生后仍然可能发生 IP 分片，这是因为 TCP 分段仅满足了通信两端的 MTU 要求，传输路径上如果经过 MTU 值比较小的链路，那么在分片到该条链路的设备中仍然会以更小的 MTU 值作为依据再次分片。如果两个通信主机直连，那么 TCP 连接协商得到的 MTU 就是端到端的路径 MTU 值，故发送端只要做了 TCP 分段，在整个通信过程中一定不会发生 IP 分片。</p>
+</blockquote>
+<p>对途中发生分片的数据报而言，即使只丢失其中一片数据也要重传整个数据报（这里既然有重传说明传输层使用的是具有重传功能的协议，如 TCP 协议，而 UDP 协议不可靠，即使丢包了也不在意更不会重传，所以必须在应用层实现可靠通信的逻辑），这是因为 IP 本身没有重传机制，只能由更高层来负责重传以确保可靠传输，于是当来自同一个 TCP 报文段封装得到的原始 IP 数据报中某一片丢失后，接收段 TCP 迟迟接受不到完整的报文段，它就会认为该报文段（包括全部 IP 分片）已丢失，TCP 之后由于超时会收到三个冗余 ACK 就会重传整个 TCP 报文段，该报文段对应于一份IP数据报，可能有多个IP分片，但没有办法单独重传其中某一个数据分片，只能重传整个报文段。</p>
+<p>分段或分片发生的根源都在于 MTU 这一数据链路层的限制，由于更靠近数据链路层的 IP 层在感知 MTU 方面相比于传输层具备天然的优势，在大小超过 MTU 的大数据报传输问题出现伊始，IP 层分片技术就成为主流解决方案，而分片带来的诸多开销（额外首部，复杂处理逻辑）以及其甚至可能在端到端的传输过程中多次发生网络转发设备（路由器）的问题，让网络协议设计者们又要费劲心思地在端到端通信过程中避免 IP 分片。</p>
+<p>TCP 分段技术被提出后，在一定程度上减少了 IP 分片，但如上所诉，TCP 分段仅在发送端避免了 IP 分片，但是却不能保证整个端到端通信路径上不会发送 IP 分片，因为路径上经常会有 MTU 值小于该 TCP 连接协商得到的 MTU 值的链路，在转发至该段链路之前转发设备仍需要分片，所以 TCP 分段并不能完全避免 IP 分片。</p>
+<p>如何才能彻底避免分片呢？</p>
+<h3 id="Path-MTU"><a href="#Path-MTU" class="headerlink" title="Path MTU"></a>Path MTU</h3><p>路径 MTU</p>
+<h3 id="Path-MTU-Discovery"><a href="#Path-MTU-Discovery" class="headerlink" title="Path MTU Discovery"></a>Path MTU Discovery</h3><p>路径 MTU 发现 略</p>
+<p>路径MTU发现看似完美避免了IP分片的问题，但同时又带来了新的问题：如果ICMP消息最终没能到达源主机怎么办？很显然该IP数据报就被静静丢弃了，TCP连接超时而被断开。ICMP为什么回不来？一般是被防火墙或路由器的访问控制列表(Access Control List, ACL)给无情拒绝了。</p>
+<p>分段是为了避免分片，分片不可避免。</p>
 
     </div>
 
@@ -361,7 +376,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%EF%BC%88Internet-Protocol%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">IP （Internet Protocol）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">IP表示方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LAN"><span class="nav-number">2.</span> <span class="nav-text">LAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WAN"><span class="nav-number">3.</span> <span class="nav-text">WAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS"><span class="nav-number">4.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MTU"><span class="nav-number">5.</span> <span class="nav-text">MTU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSS"><span class="nav-number">6.</span> <span class="nav-text">MSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket"><span class="nav-number">7.</span> <span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%BF%E5%BA%A6%EF%BC%88MSS%EF%BC%89-or-%E6%97%B6%E9%97%B4-%EF%BC%88Nagle%E7%AE%97%E6%B3%95%EF%BC%89"><span class="nav-number">9.</span> <span class="nav-text">长度（MSS） or 时间 （Nagle算法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E6%98%AF%E5%8D%8F%E8%AE%AE%E6%A0%88%E8%B4%9F%E8%B4%A3%E6%A0%B9%E6%8D%AE-MTU-%E5%88%86%E7%89%87%E8%BF%98%E6%98%AF%E8%B7%AF%E7%94%B1%E5%99%A8%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">问题：是协议栈负责根据 MTU 分片还是路由器？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E5%88%86%E6%AE%B5-Segmentation-IP%E5%88%86%E7%89%87-Fragmentation"><span class="nav-number">10.1.</span> <span class="nav-text">TCP分段 Segmentation IP分片 Fragmentation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%96%91%E9%97%AE%EF%BC%9A%E5%88%86%E6%AE%B5%E5%92%8C%E5%88%86%E7%89%87%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%90%8C%E6%97%B6%E5%8F%91%E7%94%9F"><span class="nav-number">10.2.</span> <span class="nav-text">疑问：分段和分片会不会同时发生</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%EF%BC%88Internet-Protocol%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">IP （Internet Protocol）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">IP表示方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LAN"><span class="nav-number">2.</span> <span class="nav-text">LAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WAN"><span class="nav-number">3.</span> <span class="nav-text">WAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS"><span class="nav-number">4.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MTU"><span class="nav-number">5.</span> <span class="nav-text">MTU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSS"><span class="nav-number">6.</span> <span class="nav-text">MSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket"><span class="nav-number">7.</span> <span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%BF%E5%BA%A6%EF%BC%88MSS%EF%BC%89-or-%E6%97%B6%E9%97%B4-%EF%BC%88Nagle%E7%AE%97%E6%B3%95%EF%BC%89"><span class="nav-number">9.</span> <span class="nav-text">长度（MSS） or 时间 （Nagle算法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E6%98%AF%E5%8D%8F%E8%AE%AE%E6%A0%88%E8%B4%9F%E8%B4%A3%E6%A0%B9%E6%8D%AE-MTU-%E5%88%86%E7%89%87%E8%BF%98%E6%98%AF%E8%B7%AF%E7%94%B1%E5%99%A8%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">问题：是协议栈负责根据 MTU 分片还是路由器？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E5%88%86%E6%AE%B5-Segmentation-IP%E5%88%86%E7%89%87-Fragmentation"><span class="nav-number">10.1.</span> <span class="nav-text">TCP分段 Segmentation IP分片 Fragmentation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%96%91%E9%97%AE%EF%BC%9A%E5%88%86%E6%AE%B5%E5%92%8C%E5%88%86%E7%89%87%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%90%8C%E6%97%B6%E5%8F%91%E7%94%9F"><span class="nav-number">10.2.</span> <span class="nav-text">疑问：分段和分片会不会同时发生</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path-MTU"><span class="nav-number">11.</span> <span class="nav-text">Path MTU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path-MTU-Discovery"><span class="nav-number">12.</span> <span class="nav-text">Path MTU Discovery</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -435,13 +450,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">37k</span>
+    <span title="Symbols count total">39k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">34 mins.</span>
+    <span title="Reading time total">36 mins.</span>
 </div>
 
         
