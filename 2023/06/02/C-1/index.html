@@ -77,6 +77,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -238,7 +240,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;hellow world\n&quot;</span> </span><br></pre></td></tr></table></figure>
+        <figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"hellow world\n"</span> </span><br></pre></td></tr></tbody></table></figure>
 <p>双引号包起来的叫做 <code>character string</code> 或者 <code>string constant</code></p>
 <p>C中所有的变量必须在使用前声明，通常在函数的开头位置，其他语句之前，声明语句宣布了变量的属性。</p>
 <h3 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h3><table>
@@ -284,10 +286,10 @@
 <p>formal argument</p>
 <p>actual argument</p>
 <h4 id="old-version-function-declare-and-define"><a href="#old-version-function-declare-and-define" class="headerlink" title="old version function declare and define"></a>old version function declare and define</h4><p>不在推荐使用，编辑器不能做检查</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义</span></span><br><span class="line">sum(i, j)</span><br><span class="line"><span class="type">int</span> i, j; <span class="comment">//参数类型，未声明的当作 int</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> i + j;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义</span></span><br><span class="line">sum(i, j)</span><br><span class="line"><span class="type">int</span> i, j; <span class="comment">//参数类型，未声明的当作 int</span></span><br><span class="line">{</span><br><span class="line">    <span class="keyword">return</span> i + j;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="Arguments-Call-by-Value"><a href="#Arguments-Call-by-Value" class="headerlink" title="Arguments - Call by Value"></a>Arguments - Call by Value</h3><h3 id="External-Variables-and-Scope"><a href="#External-Variables-and-Scope" class="headerlink" title="External Variables and Scope"></a>External Variables and Scope</h3><p>函数内部的变量</p>
-<p>local variables &#x3D;&#x3D; automatic variables</p>
+<p>local variables == automatic variables</p>
 <p>函数外的变量在函数内部使用需要用关键字 <code>extern</code> 声明</p>
 <p>一般不使用 <code>extern</code>， 通常做法是把变量放在文件开头，然后在函数里面使用。</p>
 <blockquote>

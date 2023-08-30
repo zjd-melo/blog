@@ -77,6 +77,8 @@
   </style>
 </noscript>
 
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -269,10 +271,10 @@
 <h3 id="网桥（brige）"><a href="#网桥（brige）" class="headerlink" title="网桥（brige）"></a>网桥（brige）</h3><p>简单来说，网桥就是一个硬件网络协议翻译器，假如 windows 和 mac os 使用的网络协议不同，就像两个外国人使用不同的语言，此时需要一个翻译，网桥就是翻译。</p>
 <p>在 386、486时代网桥可能是一台安装了协议转化程序的电脑，如今交换机也包含这个功能，如今的操作系统为了互相交流，支持更多的协议，操作系统自己就可以是网桥。</p>
 <p>现在网桥这个概念已经淡出了。更多是所谓的桥接、转发、协议二次封装。网桥也可以说相当一个端口少的二层交换机，再者网桥主要由软件实现，交换机主要由硬件实现！</p>
-<h3 id="网关（gateway）"><a href="#网关（gateway）" class="headerlink" title="网关（gateway）"></a>网关（gateway）</h3><p>按照不同的分类标准网关也有很多种，这里的网关是 TCP&#x2F;IP 协议下的网关。</p>
-<p>网关实质上是一个网络通向其他网络的 IP 地址，比如网络A和网络B的网段不同，在没有路由器的情况下，两个网络之间是不能进行 TCP&#x2F;IP 通信的，即使两个网络连接在同一台交换机（或集线器）上，要实现通信必须通过网关。</p>
+<h3 id="网关（gateway）"><a href="#网关（gateway）" class="headerlink" title="网关（gateway）"></a>网关（gateway）</h3><p>按照不同的分类标准网关也有很多种，这里的网关是 TCP/IP 协议下的网关。</p>
+<p>网关实质上是一个网络通向其他网络的 IP 地址，比如网络A和网络B的网段不同，在没有路由器的情况下，两个网络之间是不能进行 TCP/IP 通信的，即使两个网络连接在同一台交换机（或集线器）上，要实现通信必须通过网关。</p>
 <p>如果网络A中的主机发现数据包的目的主机不在本地网络中，就把数据发送给自己的网关，再由网关发送给网络B的网关，网络B的网关再转发给网络B中的主机。</p>
-<p>所以只有设置好网关的 IP 地址，TCP&#x2F;IP 协议才能实现不同网络之间的相互通信，那么这个 IP 是哪台机器的 IP 地址呢，网关的 IP 地址是具有路由功能的设备的 IP 地址，具有路由功能的设备有路由器、启用了路由协议的服务器（实际上相当于一台路由器）、代理服务器。</p>
+<p>所以只有设置好网关的 IP 地址，TCP/IP 协议才能实现不同网络之间的相互通信，那么这个 IP 是哪台机器的 IP 地址呢，网关的 IP 地址是具有路由功能的设备的 IP 地址，具有路由功能的设备有路由器、启用了路由协议的服务器（实际上相当于一台路由器）、代理服务器。</p>
 <h4 id="网关的分类"><a href="#网关的分类" class="headerlink" title="网关的分类"></a>网关的分类</h4><ul>
 <li>协议网关 在使用不同的协议的网络区域间做协议转换</li>
 <li>应用网关 使用不同数据格式间翻译数据的系统</li>
@@ -280,7 +282,7 @@
 </ul>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
 <li>Hub 工作在1层，只起信号再生功能（多端口中继器）</li>
-<li>网桥、交换机工作在2层，靠物理地址工作，解决 CSMA&#x2F;CD 的冲突问题，网桥基于软件，现在用的不多，只有概念，交换机是基于硬件的网桥 （ASIC）</li>
+<li>网桥、交换机工作在2层，靠物理地址工作，解决 CSMA/CD 的冲突问题，网桥基于软件，现在用的不多，只有概念，交换机是基于硬件的网桥 （ASIC）</li>
 <li>路由器工作在3层，靠逻辑地址工作，提供逻辑寻址，解决广播等问题</li>
 <li>网关是3层及以上的概念，是个笼统的概念，比如路由器、防火墙都可以叫网关，它是某个网络的出口的意思</li>
 </ol>
