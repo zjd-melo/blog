@@ -106,3 +106,12 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+githubEmojis:
+  enable: true
+  className: github-emoji
+  unicode: true
+  styles:
+    display: inline
+    vertical-align: middle # Freemind适用
+  localEmojis:
