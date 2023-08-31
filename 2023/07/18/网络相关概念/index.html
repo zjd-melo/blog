@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/18/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/MTU_MSS.png">
 <meta property="article:published_time" content="2023-07-18T02:46:40.000Z">
-<meta property="article:modified_time" content="2023-07-18T02:46:40.000Z">
+<meta property="article:modified_time" content="2023-08-31T02:39:20.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="网络">
 <meta name="twitter:card" content="summary">
@@ -199,6 +199,13 @@
 
               <time title="Created: 2023-07-18 10:46:40" itemprop="dateCreated datePublished" datetime="2023-07-18T10:46:40+08:00">2023-07-18</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-31 10:39:20" itemprop="dateModified" datetime="2023-08-31T10:39:20+08:00">2023-08-31</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -222,7 +229,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.9k</span>
+              <span>4.2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -295,6 +302,10 @@
 <h3 id="Path-MTU-Discovery"><a href="#Path-MTU-Discovery" class="headerlink" title="Path MTU Discovery"></a>Path MTU Discovery</h3><p>路径 MTU 发现 略</p>
 <p>路径MTU发现看似完美避免了IP分片的问题，但同时又带来了新的问题：如果ICMP消息最终没能到达源主机怎么办？很显然该IP数据报就被静静丢弃了，TCP连接超时而被断开。ICMP为什么回不来？一般是被防火墙或路由器的访问控制列表(Access Control List, ACL)给无情拒绝了。</p>
 <p>分段是为了避免分片，分片不可避免。</p>
+<p>有了tcp的确认重传机制，网卡、集线器、路由器就不需要有补偿机制了。</p>
+<h3 id="混杂模式-Promiscuous-Mode"><a href="#混杂模式-Promiscuous-Mode" class="headerlink" title="混杂模式 Promiscuous Mode"></a>混杂模式 Promiscuous Mode</h3><p>是指一台机器的网卡能够接收所有经过它的数据流，而不论其目的地址是否是它。 一般计算机网卡都工作在非混杂模式下，此时网卡只接受来自网络端口的目的地址指向自己的数据。当网卡工作在混杂模式下时，网卡将来自接口的所有数据都捕获并交给相应的驱动程序。 </p>
+<h3 id="plug-and-play"><a href="#plug-and-play" class="headerlink" title="plug and play"></a>plug and play</h3><p>热拔插，在过去是需要手动设置网卡中断号的</p>
+<h3 id="数据链路层帧报头的作用-（时钟同步）"><a href="#数据链路层帧报头的作用-（时钟同步）" class="headerlink" title="数据链路层帧报头的作用 （时钟同步）"></a>数据链路层帧报头的作用 （时钟同步）</h3><p>数据信号、时钟信号，通过时钟信号区分连续的1数据信号，这就是数据链路层报头的作用，保持时钟同步，通过观察报头的信号变化确保同步。</p>
 
     </div>
 
@@ -379,7 +390,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%EF%BC%88Internet-Protocol%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">IP （Internet Protocol）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">IP表示方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LAN"><span class="nav-number">2.</span> <span class="nav-text">LAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WAN"><span class="nav-number">3.</span> <span class="nav-text">WAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS"><span class="nav-number">4.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MTU"><span class="nav-number">5.</span> <span class="nav-text">MTU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSS"><span class="nav-number">6.</span> <span class="nav-text">MSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket"><span class="nav-number">7.</span> <span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%BF%E5%BA%A6%EF%BC%88MSS%EF%BC%89-or-%E6%97%B6%E9%97%B4-%EF%BC%88Nagle%E7%AE%97%E6%B3%95%EF%BC%89"><span class="nav-number">9.</span> <span class="nav-text">长度（MSS） or 时间 （Nagle算法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E6%98%AF%E5%8D%8F%E8%AE%AE%E6%A0%88%E8%B4%9F%E8%B4%A3%E6%A0%B9%E6%8D%AE-MTU-%E5%88%86%E7%89%87%E8%BF%98%E6%98%AF%E8%B7%AF%E7%94%B1%E5%99%A8%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">问题：是协议栈负责根据 MTU 分片还是路由器？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E5%88%86%E6%AE%B5-Segmentation-IP%E5%88%86%E7%89%87-Fragmentation"><span class="nav-number">10.1.</span> <span class="nav-text">TCP分段 Segmentation IP分片 Fragmentation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%96%91%E9%97%AE%EF%BC%9A%E5%88%86%E6%AE%B5%E5%92%8C%E5%88%86%E7%89%87%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%90%8C%E6%97%B6%E5%8F%91%E7%94%9F"><span class="nav-number">10.2.</span> <span class="nav-text">疑问：分段和分片会不会同时发生</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path-MTU"><span class="nav-number">11.</span> <span class="nav-text">Path MTU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path-MTU-Discovery"><span class="nav-number">12.</span> <span class="nav-text">Path MTU Discovery</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%EF%BC%88Internet-Protocol%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">IP （Internet Protocol）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IP%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">IP表示方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LAN"><span class="nav-number">2.</span> <span class="nav-text">LAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WAN"><span class="nav-number">3.</span> <span class="nav-text">WAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS"><span class="nav-number">4.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MTU"><span class="nav-number">5.</span> <span class="nav-text">MTU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSS"><span class="nav-number">6.</span> <span class="nav-text">MSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket"><span class="nav-number">7.</span> <span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%BF%E5%BA%A6%EF%BC%88MSS%EF%BC%89-or-%E6%97%B6%E9%97%B4-%EF%BC%88Nagle%E7%AE%97%E6%B3%95%EF%BC%89"><span class="nav-number">9.</span> <span class="nav-text">长度（MSS） or 时间 （Nagle算法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E6%98%AF%E5%8D%8F%E8%AE%AE%E6%A0%88%E8%B4%9F%E8%B4%A3%E6%A0%B9%E6%8D%AE-MTU-%E5%88%86%E7%89%87%E8%BF%98%E6%98%AF%E8%B7%AF%E7%94%B1%E5%99%A8%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">问题：是协议栈负责根据 MTU 分片还是路由器？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E5%88%86%E6%AE%B5-Segmentation-IP%E5%88%86%E7%89%87-Fragmentation"><span class="nav-number">10.1.</span> <span class="nav-text">TCP分段 Segmentation IP分片 Fragmentation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%96%91%E9%97%AE%EF%BC%9A%E5%88%86%E6%AE%B5%E5%92%8C%E5%88%86%E7%89%87%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%90%8C%E6%97%B6%E5%8F%91%E7%94%9F"><span class="nav-number">10.2.</span> <span class="nav-text">疑问：分段和分片会不会同时发生</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path-MTU"><span class="nav-number">11.</span> <span class="nav-text">Path MTU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path-MTU-Discovery"><span class="nav-number">12.</span> <span class="nav-text">Path MTU Discovery</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F-Promiscuous-Mode"><span class="nav-number">13.</span> <span class="nav-text">混杂模式 Promiscuous Mode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#plug-and-play"><span class="nav-number">14.</span> <span class="nav-text">plug and play</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E5%B8%A7%E6%8A%A5%E5%A4%B4%E7%9A%84%E4%BD%9C%E7%94%A8-%EF%BC%88%E6%97%B6%E9%92%9F%E5%90%8C%E6%AD%A5%EF%BC%89"><span class="nav-number">15.</span> <span class="nav-text">数据链路层帧报头的作用 （时钟同步）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
