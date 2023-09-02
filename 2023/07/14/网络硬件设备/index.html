@@ -22,14 +22,17 @@
 
   <meta name="description" content="中继器（repeater）、集线器（Hub）、交换机（switch）、路由器（router）、网桥（brige）、网关（gateway）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络硬件设备">
+<meta property="og:title" content="网络相关概念-01">
 <meta property="og:url" content="https://zjd-melo.github.io/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/index.html">
 <meta property="og:site_name" content="Dying Memory">
 <meta property="og:description" content="中继器（repeater）、集线器（Hub）、交换机（switch）、路由器（router）、网桥（brige）、网关（gateway）">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/switcher.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/%E8%B7%AF%E7%94%B1%E8%A1%A8.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/%E8%B7%AF%E7%94%B1%E8%81%9A%E5%90%88.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2.png">
 <meta property="article:published_time" content="2023-07-14T03:27:13.000Z">
-<meta property="article:modified_time" content="2023-07-14T03:27:13.000Z">
+<meta property="article:modified_time" content="2023-09-02T10:26:17.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="硬件设备">
 <meta name="twitter:card" content="summary">
@@ -48,7 +51,7 @@
   };
 </script>
 
-  <title>网络硬件设备 | Dying Memory</title>
+  <title>网络相关概念-01 | Dying Memory</title>
   
 
 
@@ -187,7 +190,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          网络硬件设备
+          网络相关概念-01
         </h1>
 
         <div class="post-meta">
@@ -199,6 +202,13 @@
 
               <time title="Created: 2023-07-14 11:27:13" itemprop="dateCreated datePublished" datetime="2023-07-14T11:27:13+08:00">2023-07-14</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-02 18:26:17" itemprop="dateModified" datetime="2023-09-02T18:26:17+08:00">2023-09-02</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -222,14 +232,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.3k</span>
+              <span>10k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>9 mins.</span>
             </span>
             <div class="post-description">中继器（repeater）、集线器（Hub）、交换机（switch）、路由器（router）、网桥（brige）、网关（gateway）</div>
 
@@ -309,6 +319,77 @@
 <h4 id="六类-CAT-6"><a href="#六类-CAT-6" class="headerlink" title="六类 (CAT-6)"></a>六类 (CAT-6)</h4><p>支持最高 250 MHz 的信号传输，用于 1000BASE-TX 规格的千 兆以太网和 10GBASE-T 规格的万兆以太网，同时向下兼容 10BASE-T、100BASE-TX 和 1000BASE-T </p>
 <h4 id="超六类-CAT-6A"><a href="#超六类-CAT-6A" class="headerlink" title="超六类 (CAT-6A)"></a>超六类 (CAT-6A)</h4><p>对六类网线进行了改良，改善了外部串扰，兼容 10GBASE-T、 1000BASE-TX、1000BASE-T、100BASE-TX 和 10BASE-T</p>
 <h4 id="七类-CAT-7"><a href="#七类-CAT-7" class="headerlink" title="七类 (CAT-7)"></a>七类 (CAT-7)</h4><p>支 持 最 高 600 MHz 的 高 速 信 号 传 输， 兼 容 10GBASE-T、1000BASE-TX、1000BASE-T、100BASE-TX 和 10BASE-T</p>
+<h3 id="广播地址-broadcast-address"><a href="#广播地址-broadcast-address" class="headerlink" title="广播地址 broadcast address"></a>广播地址 broadcast address</h3><p>广播地址是一种特殊的地址，将广播地址设为接入方地址时，包会发送到网络中所有的设备，MAC 地址中的 <code>FF:FF:FF:FF:FF:FF</code> 和 IP 地址中的 <code>255.255.255.255</code> 都是广播地址。</p>
+<h3 id="全双工模式"><a href="#全双工模式" class="headerlink" title="全双工模式"></a>全双工模式</h3><p>单工模式（电脑 –&gt; 打印机）<br>可以同时接收和发送数据，全双工模式是交换机特有的工作模式，集线器不具备这个特性。</p>
+<p>使用集线器时，如果多台计算机同时发送信号，信号就会在集线器内部混杂在一起，进而无法使用，这种现象称为碰撞，是以太网的一个重要特征。（CSMA/CD）</p>
+<p>使用双绞线时，发送和接收的信号线是各自独立的，因此在双绞线中信号不会发生碰撞。</p>
+<p>如果不存在碰撞，也就不需要半双工模式中的碰撞处理机制了，也就是说发送和接收可以同时进行，然而，以太网规范中规定了在网络中有信号时要等该信号结束后再发送信号，因此发送和接收还是无法同时进行，于是人们对以太网规范进行了修订，增加了一个无论网络中有没有信号，都可以发送信号的工作模式，同时规定在这一工作模式下停用碰撞检测，这种工作模式就是全双工模式，在全双工模式下，无需等待其他信号结束就可以发送信号，因此它比半双工模式速度快（如果网络中包的数量很少，不会出现等待其他传输结束的情况，那么全双工模式和半双工模式的速度是一样的），由于双方可以同时发送数据，所以可同时传输的数据量也更大，性能也就提高了。</p>
+<p>原本以太网并没有工作模式的概念，也没有表示工作模式的专业术语，后来在全双工模式出现时，人们将通信技术中一直使用的全双工，半双工两个词搬到网络技术中，于是就出现了这种叫法。</p>
+<h3 id="自动协商：确定最优的传输速率和工作模式"><a href="#自动协商：确定最优的传输速率和工作模式" class="headerlink" title="自动协商：确定最优的传输速率和工作模式"></a>自动协商：确定最优的传输速率和工作模式</h3><p>随着全双工模式的出现，如何在全双工和半双工模式之间进行切换的问题也产生了，在全双工模式刚刚出现的时候，还需要手动进行切换，太麻烦了，后来出现了自动切换工作模式的功能，这一功能可以由相互连接的双方探测对方是否支持全双工模式，并自动切换成相应的工作模式，此外除了能自动切换工作模式之外，还能探测对方的传输速率并进行自动切换，这种自动切换的功能称为自动协商。</p>
+<p>在以太网中当没有数据在传输时，网络中会填充一种被称为连接脉冲的脉冲信号，在没有数据信号时就填充连接脉冲，这使得网络中一直都有一定的信号流过，从而能检测对方是否在正常工作，或者说网线有没有正常连接，以太网设备的网线接口周围有一个绿色的 LED 指示灯，它表明是否检测到正常的脉冲信号，如果绿灯亮，说明网卡和交换机连接正常。</p>
+<p>在双绞线以太网规范最初制定的时候，只规定了按一定间隔发送脉冲信号，这种信号只能用来确认网络是否正常，后来人们又设计出了具有特定排列的脉冲信号，通过这种信号可以将自身的状态告知对方。</p>
+<p>自动协商功能就利用了这样的脉冲信号，即通过这种信号将自己能支持的工作模式和传输速率相互告知对方，并选择一个最优的组合。</p>
+<p>自动协商功能是后来才写入以太网规范中的，因此会出现支持这一功能和不支持这一功能的设备混用的情况。现在基本上已经没有不支持自动协商的旧设备了。</p>
+<h3 id="交换机同时执行多个转发操作"><a href="#交换机同时执行多个转发操作" class="headerlink" title="交换机同时执行多个转发操作"></a>交换机同时执行多个转发操作</h3><h3 id="路由器"><a href="#路由器" class="headerlink" title="路由器"></a>路由器</h3><p>网络包在经过集线器和交换机之后，到达了路由器，并在此被转发到了下一个路由器。<br>路由器是基于 IP 设计的，交换机是基于以太网设计的。</p>
+<p>路由器由转发模块和端口模块组成，端口模块支持各种协议的网络，如以太网、无线局域网、ADSL等。</p>
+<p>端口模块会根据相应通信技术规范来执行包收发操作，这意味着端口模块是以实际的发送方或者接收方的身份来收发网络包的，以以太网端口为例，路由器的端口具有 MAC 地址（三层交换机），因此它就能够成为以太网的发送方和接收方。端口还具有 IP 地址，从这个意义上来说，它和计算机的网卡是一样的。当转发包时，首先路由器端口会接收发给自己的以太网包，然后查询转发目标，再由相应的端口作为发送方将以太网包转发出去，这一点和交换机不同，交换机只是将进来的包转发出去而已，它自己不会成为发送方或接收方。</p>
+<p><strong>路由器的各个端口都具有 MAC 地址和 IP 地址</strong></p>
+<h3 id="路由表"><a href="#路由表" class="headerlink" title="路由表"></a>路由表</h3><p><img src="/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/%E8%B7%AF%E7%94%B1%E8%A1%A8.png" alt="路由表"></p>
+<p>在查表判断转发目标这一点上，路由器和交换机的大体思路是类似的，具体的工作过程不同，交换机通过 MAC 头部中的接收方 MAC 地址来判断转发目标，而路由器根据 IP 头部中的 IP 地址来判断。</p>
+<p>最左侧的目标地址列记录的是接收方的信息，实际上这里的 IP 地址只包含表示子网的网络号部分比特值，而表示主机号部分的比特全为0，路由器会将接收到的网络包的接收方 IP 地址与路由表中的目标地址进行比较，并找到相应的记录，交换机在地址表中只匹配完全一致的记录，而路由器则会忽略主机号部分，只匹配网路号部分。打个比方，路由器在转发包的时候只看接收方地址属于哪个区。</p>
+<h4 id="路由聚合"><a href="#路由聚合" class="headerlink" title="路由聚合"></a>路由聚合</h4><p>上面说过，目标地址列中的 IP 地址表示的是子网，但也有一些例外，有时地址本身的子网掩码和路由表中的子网掩码是不一致的，这是路由聚合的结果，<strong>路由聚合会将几个子网合并成一个子网，并在路由表中只产生一条记录</strong><br><img src="/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/%E8%B7%AF%E7%94%B1%E8%81%9A%E5%90%88.png" alt="路由聚合"></p>
+<p>比如有3个子网，分别为 <code>10.10.1.0/24</code>，<code>10.10.2.0/24</code>，<code>10.10.3.0/24</code>，路由器 B 需要将包发往这 3 个子网，这种情况下，路由器 B 的路由表中原本应该有对应这三个子网的三条记录，但是无论发往任何一个子网，都是通过 A 来进行转发的，因此可以在路由表中将三个子网合并成 <code>10.10.0.0/16</code>，这样也可以正确地进行转发，这样能减少了路由表中的记录数量。经过路由聚合，多个子网被合并成一个子网，子网掩码会发生变化，同时目标地址也会改成聚合后的地址。</p>
+<p>相对地，还有另外一些情况，如将一个子网进行细分并注册在路由表上，然后拆分成多条记录，从结果上看，路由表的子网掩码列只是用来在匹配目标地址时告诉路由器应该匹配多少个比特，而且目标地址中的地址和实际子网的网络号可能并不完全相同，但即便如此，路由器依然可以正常工作。</p>
+<p><strong>路由表的子网掩码列只表示在匹配网络包目的地址时需要对比的比特数量</strong></p>
+<p>最后一列是跃点计数，它表示距离目标 IP 地址的距离远近，数字越小越近。</p>
+<p>路由表记录维护的方式和交换机也有所不同，交换机中对 MAC 地址表的维护是包转发操作中的一个步骤，而路由表的维护是与包转发操作相互独立的，也就是说，在转发包的过程中不需要对路由表进行维护。</p>
+<p>对路由表的维护有两类：</p>
+<ol>
+<li>人工维护</li>
+<li>根据路由协议机制，通过路由器之间的信息交换由路由器自行维护路由表的记录（路由协议有 RIP、OSPC、BGP等）</li>
+</ol>
+<h4 id="路由器包的接收操作"><a href="#路由器包的接收操作" class="headerlink" title="路由器包的接收操作"></a>路由器包的接收操作</h4><p>信号到达网线接口部分，PHY（MAU）模块和 MAC 模块将信号转换为数字信息，然后进行 FCS 错误校验，如果没有问题检查 MAC 地址是不是发给自己的，如果是则放入缓冲区，否则丢弃，完成包接收操作之后，路由器就会丢弃包开头的 MAC 地址，MAC 头部的作用就是将包送达路由器，接收方 MAC 地址就是路由器端口的 MAC 地址，因此，当包到达路由器后，MAC 头部的任务就完成了，于是 MAC 头部就会被丢弃。</p>
+<p>接下来，路由器会根据 MAC 头部后方的 IP 头部中的内容进行包的转发。路由匹配可能会匹配多条记录，<strong>最长匹配原则</strong>，路由器首先寻找网络号比特数最长的一条记录，网络号比特越长，说明主机号比特数越短，意味着该子网内可分配的主机数量越少，即子网中可能存在在主机数量越少，这一规则的目的是尽量缩小范围。</p>
+<p>然而，有时候路由表中会存在网络号长度相同的多条记录，例如考虑到路由器或网线故障而设置的备用路由器就属于这种情况，这时需要根据跃点计数值来进行判断，越小越好。</p>
+<p>如果路由表中无法找到匹配记录，路由器会丢弃这个包，并通过 ICMP 消息通知发送方，这里的处理方式和交换机不同，原因在于网络规模的大小，交换机最多几千台设备，如果只有几千台设备，遇到不知道应该转发到哪里的包，交换机可以将包发送到所有端口，虽然简单粗暴，但不会引发什么问题，然而路由器工作的环境是互联网，它的规模远远大于以太网，如果也这样会产生大量的网路包，造成网络拥赛，因此，路由器在遇到不知道该转发到哪里的包时就会直接丢弃。</p>
+<p>找不到匹配路由时选择<strong>默认路由</strong>，是不是所有转发目标都需要配置在路由表中才行呢？如果是公司或者家庭网络，这样也没什么问题，但在互联网中不太现实。上方路由表中最后一行的作用就相当于把所有目标都配置好了，这一行的子网掩码是 <code>0.0.0.0</code>，意味着网络包接收方 IP 地址和路由表目标地址的匹配中需要匹配的比特数是0，换句话说就是根本不需要匹配，只要将子网掩码设置为 <code>0.0.0.0</code>，那么无论任何地址都能匹配到这一条记录，这样就不会发生不知道要转发到哪里的问题了。只要这一条记录的网关列中写入互联网路由器地址，当匹配不到其他路由时，网络包就会被转发到互联网接入路由器，因此这条记录被称为默认路由，这一行配置的网关地址叫做默认网关，在计算机的 TCP/IP 设置窗口中也有填写默认网关的地方，是一个意思，计算机中也有一种和路由器一样的路由表，这样一来无论目标地址是一个子网还是表示某台设备，都可以用相同的方法查找出转发目标，而且也避免了不知道转发到哪里的问题。</p>
+<h4 id="TTL"><a href="#TTL" class="headerlink" title="TTL"></a>TTL</h4><p>防止网络出现循环，TTL 字段表示包的有效期，包每经过一个路由器的转发，这个值就会减一，当这个值变成0时，这个包就会被丢弃。</p>
+<h4 id="分片"><a href="#分片" class="headerlink" title="分片"></a>分片</h4><p>路由器的端口并不只有以太网一种，也可以支持其他局域网或专线通信技术，不同的线路和局域网类型各自能传输的最大包长度也不同，因此输出端口的最大包长度可能会小于输入端口，遇到这种情况就需要使用 IP 协议中定义的分片功能对包进行拆分，缩小每个包的长度。</p>
+<p>通过查看 MTU 决定是否分片，一般都是可以分片的，但是有两种情况不能分片：</p>
+<ol>
+<li>发送方应用程序等设置了不允许分片</li>
+<li>当前包已经是经过分片后的包</li>
+</ol>
+<h4 id="IP-检验和"><a href="#IP-检验和" class="headerlink" title="IP 检验和"></a>IP 检验和</h4><p>在 IP 头部中有一个用于错误校验的字段”校验和”，在路由器更新 TTL 和 分片的过程中，IP 头部的内容发生了改变，因此必须重新计算校验和，书中未详细介绍是因为和以太网以及通信线路本身的校验机制相比，IP 校验和的可靠性很低，因此大多数路由器都不去校验这个值，当它不存在一样。</p>
+<h4 id="添加-MAC-地址"><a href="#添加-MAC-地址" class="headerlink" title="添加 MAC 地址"></a>添加 MAC 地址</h4><p>路由器判断下一个转发目标的方法：</p>
+<ol>
+<li>如果路由表的网关列内容为 IP 地址，则该 IP 地址就是下一个转发目标。</li>
+<li>如果路由表的网关列内容为空，则 IP 头部中的接收方 IP 地址就是下一个转发目标。</li>
+</ol>
+<p>知道对方的 IP 地址之后，接下来需要通过 ARP 根据 IP 地址查询 MAC 地址，并将查询的结果作为接收方 MAC 地址。路由器也有 ARP 缓存，因此首先会在 ARP 缓存中查询，如果找不到则发送 ARP 查询请求。</p>
+<p>通过层层转发，网络包就到达了最终的目的地。</p>
+<h3 id="路由器与交换机的关系"><a href="#路由器与交换机的关系" class="headerlink" title="路由器与交换机的关系"></a>路由器与交换机的关系</h3><p>要理解两者之间的关系，关键点在于计算机在发送网络包时，或者是路由器在转发网络包时，都需要在前面加上 MAC 头部，准确说法应该是将 IP 包装进以太网包的数据部分中，委托以太网去传输这些数据，<strong>IP 协议本身没有传输包的功能</strong>，因此包的实际传输要委托以太网来进行，路由器是基于 IP 设计的，而交换机是基于以太网设计的，因此 <strong>IP 与以太网的关系也就是路由器与交换机的关系</strong>。这里说的内容只适用于原原本本实现 IP 和以太网机制的纯粹的路由器和交换机，实际的路由器有内置交换机的功能，比如用于连接互联网的家用路由器就属于这一种，对于这种路由器，上面内容就不适用了，但是，如果把这种不纯粹的路由器拆分成纯粹的路由器和纯粹的交换机，则他们各自都适用上面的内容。</p>
+<p>从包的转发目标也可以看出路由器和交换机之间的委托关系，IP 并不是委托以太网把包传输到最终目的地，而是传输到下一个路由器，在创建 MAC 头部时，也是从 IP 的路由表中查找下一个路由器的 IP 地址，并通过 ARP 查询出 MAC 地址，然后将 MAC 地址写入 MAC 头部中，这表示 IP 对以太网的委托只是将包传输到下一个路由器就行。当包到达下一个路由器后，下一个路由器又会重新委托以太网将包传输到再下一个路由器，随着这一过程的反复执行，包就会最终到达 IP 的目的地。</p>
+<p>简单来说，IP （路由器）负责将包发送给通信对象这一过程，而其中将包传输到下一个路由器的过程则是由以太网（交换机）来负责的。</p>
+<p>当然，网络并非只有以太网一种，还有无线局域网等，它们和 IP 之间的关系又是如何呢？其实只要将以太网替换成无线局域网就行，世界上还有其他的网络，IP 只是委托他们发送而已。</p>
+<p>IP 本身不负责包的传输，而是委托各种通信技术将包传输到下一个路由器，这样的设计有重要意义，即可以根据需要灵活运用各种通信技术，这也是 IP 的最大特点，正是有了这一特点，我们才能够构建出互联网这一规模巨大的网络。</p>
+<h3 id="路由器的附加功能"><a href="#路由器的附加功能" class="headerlink" title="路由器的附加功能"></a>路由器的附加功能</h3><h4 id="通过地址转换有效利用-IP-地址"><a href="#通过地址转换有效利用-IP-地址" class="headerlink" title="通过地址转换有效利用 IP 地址"></a>通过地址转换有效利用 IP 地址</h4><p>地址转换功能出现的背景：所谓地址，就是用来识别每一台设备的标志，因此每台设备都应该有一个唯一不重复的地址，本来互联网中所有的设备都应该有自己的固定地址，而且最早也确实是这样做的，比如，公司内网需要接入互联网的时候，应该向地址管理机构申请 IP 地址，并将他们分配给公司里的每台设备，在互联网的早期，是没有内网和外网的区别的，所有的客户端都是直接连接到互联网的。</p>
+<p>随着互联网的发展，可分配的地址就用光了，如果不能保证每台设备有唯一不重复地址，就会从根本上影响网络包的传输，这是一个非常严重的问题。</p>
+<p>解决这个问题的关键在于固定地址分配方式，比如 A、B 两家公司，它们的内网是完全独立的，这种情况下，两家公司之间不会有网络包流动，即使 A 公司的服务器和 B 公司的某个客户端具有相同 IP 地址也没关系，因为他们之间不会进行通信，只要在每家公司自己的范围内，能够明确判断包的目的地就可以了。</p>
+<p>解决地址不足的问题，就是利用这样的性质，于是诞生了公有地址和私有地址。</p>
+<p>在内网中可用作私有地址的范围仅限以下这些：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10.0.0.0 ~ 10.255.255.255</span><br><span class="line">172.16.0.0 ~ 172.31.255.255</span><br><span class="line">192.168.0.0 ~ 192.168.255.255 </span><br></pre></td></tr></tbody></table></figure>
+<p>在制定私有地址时，这些地址属于公有地址中还未分配的范围。换句话说，私有地址本身并没有什么特别的结构，只不过是把公有地址中未分配的一部分拿出来规定只能在内网使用它们而已，这个范围的地址和其他公司重复也没关系，所以对这些地址不作统一管理，不需要申请，任何人都可以自由使用。但在一个内网内不能重复。</p>
+<p>尽管这样的确能节省一部分地址，但仅凭这一点还无法完全解决问题。内网需要和互联网通信，这样问题就来了，不同内网相同地址包无法传输。于是，当公司内网和互联网连接的时候，需要将公司内网分成两个部分，一部分对互联网开放的服务器，另一部分是公司内部设备，对互联网开放的部分分配公有地址，可以和互联网直接进行通信，相对地，内网部分则分配私有地址，内网中的设备不能和互联网直接收发网络包，而是通过一种特别的机制进行连接，这个机制就叫<strong>地址转换</strong>。</p>
+<h5 id="地址转换的基本原理"><a href="#地址转换的基本原理" class="headerlink" title="地址转换的基本原理"></a>地址转换的基本原理</h5><p>地址转换的基本原理是在转发网络包时对 IP 头部中的 IP 地址和端口号进行改写。私有地址改写成公有地址。<br><img src="/blog/2023/07/14/%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87/%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2.png" alt="地址转换"></p>
+<p>具有地址转换功能的设备不仅有路由器，有些防火墙也有地址转换功能。</p>
+<p>改写发送方 IP 地址和端口号之后，包被发往互联网，最终到达服务器，然后服务器会返回一个包，这包的接收方是改写后的公有地址和端口号，这个公有地址其实是地址转换设备的地址，地址转换设备会从地址表中通过公有地址和端口号找到相对应的私有地址和端口号，并再次改写，然后将包发给公司内网，这样包就能到达原始的发送方了。数据发送完成，对应的转换记录会被删除。</p>
+<p>通过这种机制，具有私有地址的设备也可以访问互联网了，从互联网一端来看，实际的通信对象是地址转换设备（路由器）。家庭网络亦是如此。</p>
+<h6 id="改写端口号的原因"><a href="#改写端口号的原因" class="headerlink" title="改写端口号的原因"></a>改写端口号的原因</h6><p>现在我们使用的地址转换机制是同时改写地址和端口号，但早期的地址转换机制只改写地址，不改写端口号，这种方法更简单，但是，使用这种方法的前提是私有地址和公有地址必须一一对应，也就是说，有多少台设备要上网，就需要多少个公有地址，当然，访问动作结束后可以删除对应表中的记录，这时同一个公有地址分配给其他设备使用，这样是不行的，需要很多公有地址，改写端口正是为了解决这个问题，这里端口代表了一个设备。端口号有几万个，大大提高了公有地址的利用率。</p>
+<h6 id="从互联网访问内网"><a href="#从互联网访问内网" class="headerlink" title="从互联网访问内网"></a>从互联网访问内网</h6><p>对于没有访问互联网的内网设备，是无法从互联网向其发送网络包的，而且即便是正在访问的设备，也只能向和互联网通信中使用的那个端口发送网络包，无法向其他端口发送包，也就是说除非公司允许，否则无法从互联网向公司内网发送网络包，这种机制具有防止非法入侵的效果。不过有时我们希望能从互联网访问内网，这需要进行一些设置才能实现，之所以无法从互联网访问内网，是因为对应转换表里没有相应的记录，我们可以手动添加。</p>
+<p>一般来说，用于外网访问的服务器可以放在地址转换设备的外面并为它分配一个公有地址。也可以将服务器的私有地址手动添加到地址转换设备中，这样就可以从互联网访问到这台具有私有地址的服务器了（这种配置需要将地址转换设备的公有地址添加到 DNS 服务器中）。</p>
+<h4 id="路由器的包过滤功能"><a href="#路由器的包过滤功能" class="headerlink" title="路由器的包过滤功能"></a>路由器的包过滤功能</h4><p>在对包进行转发时，可以根据 MAC 头部、IP 头部、TCP 头部的内容，按照事先设置好的规则决定是转发这个包，还是丢弃这个包。防火墙设备或软件大多数都是利用这一机制来防止非法入侵的。</p>
+<p>为什么有的叫交换机，有的叫二层交换机呢？小型廉价的普及型产品一般叫交换机，大型的高性能的产品一般叫二层交换机。</p>
 
     </div>
 
@@ -332,8 +413,8 @@
       <i class="fa fa-chevron-left"></i> HBase 常用操作
     </a></div>
       <div class="post-nav-item">
-    <a href="/blog/2023/07/18/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/" rel="next" title="网络相关概念">
-      网络相关概念 <i class="fa fa-chevron-right"></i>
+    <a href="/blog/2023/07/18/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/" rel="next" title="网络相关概念-02">
+      网络相关概念-02 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -393,7 +474,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E7%BB%A7%E5%99%A8%EF%BC%88repeater-%E7%89%A9%E7%90%86%E5%B1%82"><span class="nav-number">1.</span> <span class="nav-text">中继器（repeater) 物理层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BA%BF%E5%99%A8-%E5%A4%9A%E5%8F%A3%E4%B8%AD%E7%BB%A7%E5%99%A8-%EF%BC%88Hub%EF%BC%89%E7%89%A9%E7%90%86%E5%B1%82"><span class="nav-number">2.</span> <span class="nav-text">集线器 - 多口中继器 （Hub）物理层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RJ45-Registered-jack"><span class="nav-number">2.1.</span> <span class="nav-text">RJ45 (Registered jack)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA-%EF%BC%88switch%EF%BC%89%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="nav-number">3.</span> <span class="nav-text">交换机 （switch）数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%89%B9%E6%AE%8A%E6%93%8D%E4%BD%9C"><span class="nav-number">3.1.</span> <span class="nav-text">交换机的三种特殊操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8-%EF%BC%88router%EF%BC%89%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="nav-number">4.</span> <span class="nav-text">路由器 （router）网络层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E6%A1%A5%EF%BC%88brige%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">网桥（brige）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%EF%BC%88gateway%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">网关（gateway）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">6.1.</span> <span class="nav-text">网关的分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E7%BB%9E%E7%BA%BF"><span class="nav-number">8.</span> <span class="nav-text">双绞线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BA%BF%E5%88%86%E7%B1%BB"><span class="nav-number">9.</span> <span class="nav-text">网线分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%94%E7%B1%BB-CAT-5"><span class="nav-number">9.1.</span> <span class="nav-text">五类 (CAT-5)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B6%85%E4%BA%94%E7%B1%BB-CAT-5e"><span class="nav-number">9.2.</span> <span class="nav-text">超五类 (CAT-5e)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AD%E7%B1%BB-CAT-6"><span class="nav-number">9.3.</span> <span class="nav-text">六类 (CAT-6)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B6%85%E5%85%AD%E7%B1%BB-CAT-6A"><span class="nav-number">9.4.</span> <span class="nav-text">超六类 (CAT-6A)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%83%E7%B1%BB-CAT-7"><span class="nav-number">9.5.</span> <span class="nav-text">七类 (CAT-7)</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E7%BB%A7%E5%99%A8%EF%BC%88repeater-%E7%89%A9%E7%90%86%E5%B1%82"><span class="nav-number">1.</span> <span class="nav-text">中继器（repeater) 物理层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BA%BF%E5%99%A8-%E5%A4%9A%E5%8F%A3%E4%B8%AD%E7%BB%A7%E5%99%A8-%EF%BC%88Hub%EF%BC%89%E7%89%A9%E7%90%86%E5%B1%82"><span class="nav-number">2.</span> <span class="nav-text">集线器 - 多口中继器 （Hub）物理层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RJ45-Registered-jack"><span class="nav-number">2.1.</span> <span class="nav-text">RJ45 (Registered jack)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA-%EF%BC%88switch%EF%BC%89%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="nav-number">3.</span> <span class="nav-text">交换机 （switch）数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9A%84%E4%B8%89%E7%A7%8D%E7%89%B9%E6%AE%8A%E6%93%8D%E4%BD%9C"><span class="nav-number">3.1.</span> <span class="nav-text">交换机的三种特殊操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8-%EF%BC%88router%EF%BC%89%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="nav-number">4.</span> <span class="nav-text">路由器 （router）网络层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E6%A1%A5%EF%BC%88brige%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">网桥（brige）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%EF%BC%88gateway%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">网关（gateway）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">6.1.</span> <span class="nav-text">网关的分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E7%BB%9E%E7%BA%BF"><span class="nav-number">8.</span> <span class="nav-text">双绞线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BA%BF%E5%88%86%E7%B1%BB"><span class="nav-number">9.</span> <span class="nav-text">网线分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%94%E7%B1%BB-CAT-5"><span class="nav-number">9.1.</span> <span class="nav-text">五类 (CAT-5)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B6%85%E4%BA%94%E7%B1%BB-CAT-5e"><span class="nav-number">9.2.</span> <span class="nav-text">超五类 (CAT-5e)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AD%E7%B1%BB-CAT-6"><span class="nav-number">9.3.</span> <span class="nav-text">六类 (CAT-6)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B6%85%E5%85%AD%E7%B1%BB-CAT-6A"><span class="nav-number">9.4.</span> <span class="nav-text">超六类 (CAT-6A)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%83%E7%B1%BB-CAT-7"><span class="nav-number">9.5.</span> <span class="nav-text">七类 (CAT-7)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BF%E6%92%AD%E5%9C%B0%E5%9D%80-broadcast-address"><span class="nav-number">10.</span> <span class="nav-text">广播地址 broadcast address</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%8F%8C%E5%B7%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">11.</span> <span class="nav-text">全双工模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8D%8F%E5%95%86%EF%BC%9A%E7%A1%AE%E5%AE%9A%E6%9C%80%E4%BC%98%E7%9A%84%E4%BC%A0%E8%BE%93%E9%80%9F%E7%8E%87%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-number">12.</span> <span class="nav-text">自动协商：确定最优的传输速率和工作模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%90%8C%E6%97%B6%E6%89%A7%E8%A1%8C%E5%A4%9A%E4%B8%AA%E8%BD%AC%E5%8F%91%E6%93%8D%E4%BD%9C"><span class="nav-number">13.</span> <span class="nav-text">交换机同时执行多个转发操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">14.</span> <span class="nav-text">路由器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%A1%A8"><span class="nav-number">15.</span> <span class="nav-text">路由表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%81%9A%E5%90%88"><span class="nav-number">15.1.</span> <span class="nav-text">路由聚合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E5%8C%85%E7%9A%84%E6%8E%A5%E6%94%B6%E6%93%8D%E4%BD%9C"><span class="nav-number">15.2.</span> <span class="nav-text">路由器包的接收操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TTL"><span class="nav-number">15.3.</span> <span class="nav-text">TTL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%89%87"><span class="nav-number">15.4.</span> <span class="nav-text">分片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP-%E6%A3%80%E9%AA%8C%E5%92%8C"><span class="nav-number">15.5.</span> <span class="nav-text">IP 检验和</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-MAC-%E5%9C%B0%E5%9D%80"><span class="nav-number">15.6.</span> <span class="nav-text">添加 MAC 地址</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8E%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">16.</span> <span class="nav-text">路由器与交换机的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E9%99%84%E5%8A%A0%E5%8A%9F%E8%83%BD"><span class="nav-number">17.</span> <span class="nav-text">路由器的附加功能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E6%9C%89%E6%95%88%E5%88%A9%E7%94%A8-IP-%E5%9C%B0%E5%9D%80"><span class="nav-number">17.1.</span> <span class="nav-text">通过地址转换有效利用 IP 地址</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">17.1.1.</span> <span class="nav-text">地址转换的基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%94%B9%E5%86%99%E7%AB%AF%E5%8F%A3%E5%8F%B7%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">17.1.1.1.</span> <span class="nav-text">改写端口号的原因</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BB%8E%E4%BA%92%E8%81%94%E7%BD%91%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%91"><span class="nav-number">17.1.1.2.</span> <span class="nav-text">从互联网访问内网</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E5%8C%85%E8%BF%87%E6%BB%A4%E5%8A%9F%E8%83%BD"><span class="nav-number">17.2.</span> <span class="nav-text">路由器的包过滤功能</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -467,13 +548,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">52k</span>
+    <span title="Symbols count total">59k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">47 mins.</span>
+    <span title="Reading time total">54 mins.</span>
 </div>
 
         
