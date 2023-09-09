@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="IP 相关知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IP">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2023/09/09/IP/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="IP 相关知识">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2023/09/09/IP/IPv4%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB.png">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2023/09/09/IP/subnet.png">
+<meta property="article:published_time" content="2023-09-09T01:52:34.000Z">
+<meta property="article:modified_time" content="2023-09-09T01:52:34.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="IP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2023/09/09/IP/IPv4%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2023/09/09/IP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>IP | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">14</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/09/09/IP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-09 09:52:34" itemprop="dateCreated datePublished" datetime="2023-09-09T09:52:34+08:00">2023-09-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+            <div class="post-description">IP 相关知识</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="IPv4简介"><a href="#IPv4简介" class="headerlink" title="IPv4简介"></a>IPv4简介</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>IPv4 (Internet Protocol Version 4) 协议族是 TCP/IP 协议族中最为核心的协议族。它工作在 TCP/IP 协议栈的网络层，该层与 OSI 参考模型的网络层相对应，网络层提供了无连接数据传输服务，即网络在发送分组时不需要先建立连接，每一个分组（也就是 IP 数据报文）独立发送。</p>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>网络层的 IPv4 协议族为数据链路层和传输层实现互通提供了保障。IPv4 协议族可以屏蔽各链路层的差异，为传输层提供统一的网络层传输标准。</p>
+<h2 id="IPv4-协议族"><a href="#IPv4-协议族" class="headerlink" title="IPv4 协议族"></a>IPv4 协议族</h2><p>IPv4 协议族是 TCP/IP 协议族中最为核心的协议族，IPv4 协议族主要包括以下协议。</p>
+<h3 id="ARP"><a href="#ARP" class="headerlink" title="ARP"></a>ARP</h3><p>Address Resolution Protocol 地址解析协议。</p>
+<p>ARP 是用来将 IP 地址解析为 MAC 地址的协议，可以分为动态和静态两种类型。另外 ARP 还有扩展应用功能，包括 Proxy ARP 功能、免费 ARP、ARP 安全以及 ARP-Ping</p>
+<h3 id="RARP"><a href="#RARP" class="headerlink" title="RARP"></a>RARP</h3><p>Reverse Address Resolution Protocol 逆地址解析协议</p>
+<p>RARP 和 ARP 正好相反，是将 MAC 地址解析为 IP 地址的协议。</p>
+<h3 id="ICMP"><a href="#ICMP" class="headerlink" title="ICMP"></a>ICMP</h3><p>Internet Control Message Protocol 互联网控制报文协议</p>
+<p>为了更有效地转发 IP 数据报文和提高数据报文交付成功的机会，在网络层使用 ICMP 协议。ICMP 允许主机或设备报告差错情况和提供有关异常情况的报告。ICMP 报文作为 IP 报文的数据部分，再封装上 IP 报文首部，组成完整的 IP 报文发送出去。</p>
+<h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>Transmission Control Protocol 传输控制协议</p>
+<h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>User Datagram Protocol 用户数据报协议</p>
+<table>
+<thead>
+<tr>
+<th>分层</th>
+<th>协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>传输层</td>
+<td>TCP、UDP</td>
+</tr>
+<tr>
+<td>网络层</td>
+<td>ICMP、IP、RARP、ARP</td>
+</tr>
+<tr>
+<td>数据链路层</td>
+<td>各种网络接口</td>
+</tr>
+</tbody></table>
+<p>ARP 和 RARP 的功能是地址解析，介于数据链路层和网络层之间。ICMP 协议的功能是为了更有效地转发 IP 数据报文和提高 IP 数据报文交付成功的机会，是介于网络层和传输层之间的协议。</p>
+<h2 id="IPv4-地址"><a href="#IPv4-地址" class="headerlink" title="IPv4 地址"></a>IPv4 地址</h2><h3 id="IPv4-地址表示"><a href="#IPv4-地址表示" class="headerlink" title="IPv4 地址表示"></a>IPv4 地址表示</h3><p>在 IP 网络中，如果用户要将一台计算机连接到 Internet 上，就需要向因特网服务提供商 ISP（Internet Service Provider）申请一个 IP 地址。</p>
+<p>IP 地址是计算机网络中被用来唯一标识一台设备的一组数字，IPv4 地址由 32 位二进制数值组成，但为了便于用户识别和记忆，采用了<strong>点分十进制表示法</strong>，采用这种表示法的 IPv4 地址由 4 个点分十进制整数来表示，每个十进制整数对应一个字节。</p>
+<p>比如 IPv4 地址使用二进制表示形式为 <code>00001010 00000001 00000001 00000010</code>，采用点分十进制表示法则为 <code>10.1.1.2</code></p>
+<p>IPv4 地址由如下两部分组成</p>
+<ol>
+<li>网络号码字段（Net-id）：用来标识一个网络</li>
+<li>主机号码字段（Host-id）：用来区分一个网络内的主机，对于网络号相同的设备，无论实际所处的物理位置如何，它们都是处在同一个网络中。</li>
+</ol>
+<h3 id="IPv4-的特点"><a href="#IPv4-的特点" class="headerlink" title="IPv4 的特点"></a>IPv4 的特点</h3><p>主要特点有：</p>
+<ul>
+<li>IP 地址不能反映任何有关主机位置的地理信息，只能通过网络号码字段判断出主机属于哪个网络。</li>
+<li>当一台主机同时连接到两个网络上时，该主机就必须同时具有两个相应的 IP 地址，其网络号码 Net-id 是不同的，这种主机称为多地址主机（Multihomed Host）。</li>
+<li>在 IP 地址中，所有分配到网络号码 Net-id 的网络都是平等的。</li>
+</ul>
+<h3 id="IPv4-地址分类"><a href="#IPv4-地址分类" class="headerlink" title="IPv4 地址分类"></a>IPv4 地址分类</h3><p>为了方便 IP 地址的管理及组网，IP 地址分成五类。<br><img src="/blog/2023/09/09/IP/IPv4%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB.png" alt="IPv4地址分类"></p>
+<p>目前大量使用的 IP 地址属于 A、B、C 三类 IP 地址中的一种，D 类地址是组播地址，E 类地址保留。A、B、C、D、E类的类别字段分别是二进制数 <code>0</code>、<code>10</code>、<code>110</code>、<code>1110</code>、<code>1111</code>，通过网络号码字段的前几个比特就可以判断 IP 地址属于哪一类，这是区分各类地址最简单的方法。</p>
+<p>在使用 IP 地址时要注意，一些 IP 地址是保留作为特殊用途的，一般用户不能使用。</p>
+<table>
+<thead>
+<tr>
+<th>网络类型</th>
+<th>地址范围</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td><code>0.0.0.0~127.255.255.255</code></td>
+<td>全0的主机号码表示该 IP 地址就是网络的地址，用于网络路由；全1的主机号码表示广播地址，即对该网络上所有主机进行广播</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>128.0.0.0~191.255.255.255</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td>C</td>
+<td><code>192.0.0.0~223.255.255.255</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td>D</td>
+<td><code>224.0.0.0~239.255.255.255</code></td>
+<td>D类地址是一种组播地址</td>
+</tr>
+<tr>
+<td>E</td>
+<td><code>240.0.0.0~255.255.255.255</code></td>
+<td>保留。<code>255.255.255.255</code>用于局域网广播地址</td>
+</tr>
+</tbody></table>
+<h3 id="特殊-IPv4-地址"><a href="#特殊-IPv4-地址" class="headerlink" title="特殊 IPv4 地址"></a>特殊 IPv4 地址</h3><table>
+<thead>
+<tr>
+<th>IP地址网络号</th>
+<th>IP地址主机号</th>
+<th>能否作为源端地址</th>
+<th>能否作为目的端地址</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全0</td>
+<td>全0</td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>✅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>❌</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td>用于网络上的本主机</td>
+</tr>
+<tr>
+<td>全0</td>
+<td>主机号</td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>✅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>❌</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td>用于网络上的特定主机</td>
+</tr>
+<tr>
+<td>127</td>
+<td>非全0或全1的任何值</td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>✅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>✅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td>用于环回地址</td>
+</tr>
+<tr>
+<td>全1</td>
+<td>全1</td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>❌</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>✅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td>用于受限的广播（永远不被转发）</td>
+</tr>
+<tr>
+<td>Net-id</td>
+<td>全1</td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>❌</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/274c.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td><span class="github-emoji" style="display:inline;vertical-align:middle"><span>✅</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></td>
+<td>用于向以 Net-id 为目的的网络广播</td>
+</tr>
+</tbody></table>
+<p>Net-id表示不全为0和不全为1以及不为127的对应字段。</p>
+<h3 id="私有-IPv4-地址"><a href="#私有-IPv4-地址" class="headerlink" title="私有 IPv4 地址"></a>私有 IPv4 地址</h3><p>为了解决 IP 地址短缺的问题，提出了私有地址的概念，私有地址是指内部网络或主机地址，这些地址只能用于某个内部网络，不能用于公用网络。</p>
+<table>
+<thead>
+<tr>
+<th>网络类型</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td><code>10.0.0.0~10.255.255.255</code></td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>172.16.0.0~172.31.255.255</code></td>
+</tr>
+<tr>
+<td>C</td>
+<td><code>192.168.0.0.0~192.168.255.255</code></td>
+</tr>
+</tbody></table>
+<h3 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h3><p>通过将 IP 地址的网络号部分进一步划分为若干个子网，解决了 IP 地址空间利用率低和两级 IP 地址不够灵活的问题。</p>
+<p>当一个单位的主机很多时，为了便于管理，可将单位内部的主机号码再进一步划分为多个子网。通过子网划分整个网络地址可以划分成更多的小网络。</p>
+<p>子网的划分是网络内部的行为，从外部看，这个单位只有一个网络号码，只有当外部的报文进入到本单位范围后，本单位的路由设备才根据子网号码再进行选路，找到目的主机。</p>
+<p><img src="/blog/2023/09/09/IP/subnet.png" alt="subnet"></p>
+<p>如图所示，把一个 B 类地址的 Host-id 的高位 5 bits 用来划分子网，Subnet-id 的范围从 <code>00000~11111</code>，总共可划分 32 个子网，子网对应的子网掩码也会相应的发生变化，比如 Subnet-id 为 <code>11111</code> 的子网掩码就是 <code>255.255.246.0</code> ，将 IP 地址与其相应掩码位执行与运输的结果就是网络地址。</p>
+<p>多划分出一个子网号码是要付出代价的，比如，本来一个 B 类 IP 地址可以容纳 65534 （2^16 - 2）个主机号码，但划分出 5  bits 长的子网字段后，最多可有 32 个子网，每个子网有 11 bits 的主机号码，即每个子网最多可有 2046 （2^11-2，去掉全 1 和全 0 的主机号）个主机号码，因此主机号码的总量为 32 * 2046 = 65472 个，比不划分子网时少 62 个。</p>
+<p>子网划分与 IP 地址规划时，通常需要综合考虑以下原则，实现合理高效的网络规划。</p>
+<h4 id="层次性"><a href="#层次性" class="headerlink" title="层次性"></a>层次性</h4><p>实现网络层次性划分，需要综合考虑地域和业务因素，采用自顶向下的方法划分，达到有效管理网络、简化路由表的目标。</p>
+<ul>
+<li>对于大骨干网络和大城域网洛相结合的网络，采用层次性划分方式</li>
+<li>对于行政区类型网络，采用多级网络分配方式</li>
+</ul>
+<h4 id="连续性"><a href="#连续性" class="headerlink" title="连续性"></a>连续性</h4><p>连续地址在层次结构的网络中易于进行路由聚合，大大缩减路由表数量，提高路由查找效率。</p>
+<ul>
+<li>尽量为每个区域分配连续的 IP 地址空间</li>
+<li>尽量为具有相同业务和功能的设备分配连续的 IP 地址</li>
+</ul>
+<h4 id="扩展性"><a href="#扩展性" class="headerlink" title="扩展性"></a>扩展性</h4><p>分配地址时，在每一层次上都要有余量，当网络规模扩展时能保证地址分配的连续性，实现网络的长远规划，骨干网洛应有足够的连续地址组成独立的自治域，并为今后的扩展留有余地。</p>
+<h4 id="高效性"><a href="#高效性" class="headerlink" title="高效性"></a>高效性</h4><p>划分子网时，要保证充分利用地址资源，使子网的划分满足主机个数的要求。</p>
+<ul>
+<li>利用可变长子网掩码 VLSM （Variable Length Subnet Mask）技术分配 IP 地址，充分合理地利用地址资源</li>
+<li>与网络的路由机制设计相结合，合理使用已划分的地址空间，提高地址的利用率</li>
+</ul>
+<h3 id="IP-地址分类和子网掩码"><a href="#IP-地址分类和子网掩码" class="headerlink" title="IP 地址分类和子网掩码"></a>IP 地址分类和子网掩码</h3><p>IP 地址分类和子网掩码是两个不同但相关的概念，它们一起用于实现 IP 地址的分配和路由。<strong>子网掩码的引入是为了更有效地管理 IP 地址资源和实现更灵活的网络划分</strong>。</p>
+<h4 id="即使有-IP-地址分类，为什么子网掩码是必要的？"><a href="#即使有-IP-地址分类，为什么子网掩码是必要的？" class="headerlink" title="即使有 IP 地址分类，为什么子网掩码是必要的？"></a>即使有 IP 地址分类，为什么子网掩码是必要的？</h4><h5 id="IP-地址分类的不足"><a href="#IP-地址分类的不足" class="headerlink" title="IP 地址分类的不足"></a>IP 地址分类的不足</h5><p>IP 地址分类（A、B、C、D、E 类）是一种早期的地址分配方案，它将 IP 地址划分为几个大的范围。然而，这种分类方法在实际网络中存在一些问题，例如：</p>
+<ol>
+<li>会导致 IP 地址的浪费：每个分类范围都有固定数量的可用地址，如果一个组织只需要一部分地址，那么将不得不分配整个分类范围，导致地址浪费。</li>
+<li>不适应网络的增长：随着网络的扩大和变化，需要更灵活的方式来分配 IP 地址和管理网络拓扑。</li>
+<li>子网掩码的灵活性： 子网掩码是一个二进制掩码，它定义了 IP 地址中哪部分用于网络标识，哪部分用于主机标识。子网掩码的引入允许将 IP 地址划分为更小的、灵活的子网络。</li>
+</ol>
+<ul>
+<li>精确匹配： 子网掩码允许更精确地定义网络的范围。不同的子网掩码可以用于将同一个 IP 地址范围划分成不同大小的子网络，以满足不同网络的需求。</li>
+</ul>
+<ol start="4">
+<li>地址节省和路由优化： 使用子网掩码，网络管理员可以更好地规划和管理 IP 地址资源，避免不必要的地址浪费。此外，子网掩码也有助于路由优化，使得网络的路由表更加精简。</li>
+</ol>
+<p>综上所述，尽管 IP 地址分类提供了一种初始的地址分配方法，但它存在一些限制，不适应现代复杂的网络需求。子网掩码的引入使得网络管理员可以更灵活地分配和管理 IP 地址，同时有助于提高地址的利用率和路由的效率。因此，子网掩码成为了 IP 地址分配和路由的关键概念之一。</p>
+<h4 id="IP-地址分类现在还有效吗？"><a href="#IP-地址分类现在还有效吗？" class="headerlink" title="IP 地址分类现在还有效吗？"></a>IP 地址分类现在还有效吗？</h4><p>IP 地址分类仍然是一个重要的概念，但在实际网络管理和路由中，它已经不再是主要的地址分配方法。原始的 IP 地址分类（A、B、C、D、E 类）在实际网络中使用已经不太常见，而更灵活的 <strong>CIDR</strong>（Classless Inter-Domain Routing）方法更常见。以下是一些相关信息：</p>
+<ol>
+<li><p>CIDR 的使用： CIDR 是一种更灵活的 IP 地址分配和路由方法，它不依赖于固定的 IP 地址分类。<strong>CIDR 允许网络管理员使用自定义的子网掩码来划分 IP 地址范围，以满足网络的实际需求</strong>。这种方法提供了更大的灵活性，使得地址分配更高效，减少了地址浪费，并优化了路由表。</p>
+</li>
+<li><p>地址耗尽问题： 原始的 IP 地址分类方法存在地址浪费的问题，导致 IPv4 地址池逐渐耗尽。为了应对这个问题，CIDR 方法引入了更精细的地址分配策略，允许更多的组织有效地使用有限的 IPv4 地址资源。</p>
+</li>
+<li><p>IPv6 的采用： 随着 IPv4 地址的枯竭，IPv6 被引入作为下一代 IP 协议。IPv6 使用了更大的地址空间，消除了地址耗尽的问题，并且不再需要严格的地址分类。IPv6 的地址分配更加简化，采用了一种统一的前缀表示法，而不再依赖于类别。</p>
+</li>
+</ol>
+<p>尽管 IP 地址分类在实际网络中不再起主导作用，但它仍然是网络知识的一部分，有助于理解 IP 地址结构的历史和演变。在实际网络管理中，网络管理员更倾向于使用 CIDR 和 IPv6，以满足现代网络需求和解决 IPv4 地址枯竭问题。</p>
+<h4 id="公网-IP"><a href="#公网-IP" class="headerlink" title="公网 IP"></a>公网 IP</h4><ol>
+<li><p>运营商给你的 IP 是分配给你的拨号设备的，也就是说，如果你是用光猫拨号的，那运营商给的IP就在光猫；如果你把光猫设为桥接、用路由器拨号，那运营商给的IP就在路由这个位置。</p>
+</li>
+<li><p>此外，由于IPv4的公网 IP 已经非常有限，现在运营商给公网 IP 的已经非常少，很多地方联通和电信对于千兆家宽的用户，还是给公网 IP 的，但千兆以下的，基本给内网 IP，而少部分客户可能通过和运营商沟通或投诉等方式获得了公网 IP。</p>
+</li>
+<li><p>目前各个运营商都是提供了光纤入户业务，各个家庭都有应该有一个光猫（调制解调器），路由器 WAN 口接光猫，在路由器上设置账号和密码，起到拨号上网功能。路由器拨号上网后，其WAN口可以从运营商网络中动态获取一个公网IP，但路由器 LAN 口向下面接入设备分配的是私有 IP 地址，而非公网IP地址。私有 IP 地址只有在内网内可用，无法在公网上进行路由，因此，私有 IP 地址可以在各个内网中重复使用，而不会出现冲突。如果直接用调制解调器连接电脑，则该电脑上需要安装拨号软件，在拨号软件上电脑通过拨号软件从运营商处动态获取的公网IP地址。这种情况下，由于调制解调器只接了这台电脑，只有这台电脑可以上网（最原始的方式）。</p>
+</li>
+<li><p>基本上每个家用路由器都不再分配公网 IP，都是内网 IP 的，经过网络商 NAT 转发后的内部地址。路由器使用内网 IP 的优点是可以省下公网 IP，毕竟公网 IP 也是一种有限资源，且不影响上网使用。缺点是本地内网 IP 无法直接提供异地外网访问，当本地搭建服务器需要发布公网时，需要通过穿透网络的内网端口映射软件或工具来实现。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/IP/" rel="tag"><i class="fa fa-tag"></i> IP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/08/02/%E9%92%B1%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%9B%E5%8C%96%E7%9A%84/" rel="prev" title="钱是如何进化的">
+      <i class="fa fa-chevron-left"></i> 钱是如何进化的
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IPv4%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">IPv4简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-number">1.2.</span> <span class="nav-text">目的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPv4-%E5%8D%8F%E8%AE%AE%E6%97%8F"><span class="nav-number">2.</span> <span class="nav-text">IPv4 协议族</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARP"><span class="nav-number">2.1.</span> <span class="nav-text">ARP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RARP"><span class="nav-number">2.2.</span> <span class="nav-text">RARP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ICMP"><span class="nav-number">2.3.</span> <span class="nav-text">ICMP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP"><span class="nav-number">2.4.</span> <span class="nav-text">TCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UDP"><span class="nav-number">2.5.</span> <span class="nav-text">UDP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPv4-%E5%9C%B0%E5%9D%80"><span class="nav-number">3.</span> <span class="nav-text">IPv4 地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv4-%E5%9C%B0%E5%9D%80%E8%A1%A8%E7%A4%BA"><span class="nav-number">3.1.</span> <span class="nav-text">IPv4 地址表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv4-%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">IPv4 的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv4-%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB"><span class="nav-number">3.3.</span> <span class="nav-text">IPv4 地址分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A-IPv4-%E5%9C%B0%E5%9D%80"><span class="nav-number">3.4.</span> <span class="nav-text">特殊 IPv4 地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%81%E6%9C%89-IPv4-%E5%9C%B0%E5%9D%80"><span class="nav-number">3.5.</span> <span class="nav-text">私有 IPv4 地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E7%BD%91%E5%88%92%E5%88%86"><span class="nav-number">3.6.</span> <span class="nav-text">子网划分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E6%80%A7"><span class="nav-number">3.6.1.</span> <span class="nav-text">层次性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="nav-number">3.6.2.</span> <span class="nav-text">连续性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">3.6.3.</span> <span class="nav-text">扩展性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%95%88%E6%80%A7"><span class="nav-number">3.6.4.</span> <span class="nav-text">高效性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB%E5%92%8C%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81"><span class="nav-number">3.7.</span> <span class="nav-text">IP 地址分类和子网掩码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%B3%E4%BD%BF%E6%9C%89-IP-%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E6%98%AF%E5%BF%85%E8%A6%81%E7%9A%84%EF%BC%9F"><span class="nav-number">3.7.1.</span> <span class="nav-text">即使有 IP 地址分类，为什么子网掩码是必要的？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#IP-%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB%E7%9A%84%E4%B8%8D%E8%B6%B3"><span class="nav-number">3.7.1.1.</span> <span class="nav-text">IP 地址分类的不足</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP-%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB%E7%8E%B0%E5%9C%A8%E8%BF%98%E6%9C%89%E6%95%88%E5%90%97%EF%BC%9F"><span class="nav-number">3.7.2.</span> <span class="nav-text">IP 地址分类现在还有效吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AC%E7%BD%91-IP"><span class="nav-number">3.7.3.</span> <span class="nav-text">公网 IP</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">64k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">58 mins.</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
