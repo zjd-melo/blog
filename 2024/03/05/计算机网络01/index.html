@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络课程学习01">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络01">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/03/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C01/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机网络课程学习01">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-05T11:26:38.000Z">
+<meta property="article:modified_time" content="2024-03-05T11:26:38.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/03/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C01/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机网络01 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">17</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/03/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络01
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-03-05 19:26:38" itemprop="dateCreated datePublished" datetime="2024-03-05T19:26:38+08:00">2024-03-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+            <div class="post-description">计算机网络课程学习01</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="协议的三要素"><a href="#协议的三要素" class="headerlink" title="协议的三要素"></a>协议的三要素</h2><h3 id="syntax-语法"><a href="#syntax-语法" class="headerlink" title="syntax 语法"></a>syntax 语法</h3><ul>
+<li>数据与控制信息的结构或格式</li>
+<li>信号电平</li>
+</ul>
+<h3 id="semantics-语义"><a href="#semantics-语义" class="headerlink" title="semantics 语义"></a>semantics 语义</h3><ul>
+<li>需要发送何种控制信息</li>
+<li>完成何种动作以及作出何种响应</li>
+</ul>
+<h3 id="timing-时序"><a href="#timing-时序" class="headerlink" title="timing 时序"></a>timing 时序</h3><ul>
+<li>事件的顺序</li>
+<li>速度匹配</li>
+</ul>
+<h3 id="bandwidth-带宽"><a href="#bandwidth-带宽" class="headerlink" title="bandwidth 带宽"></a>bandwidth 带宽</h3><p>在通信领域指信号的最高频率与最低频率之间的差，而在计算计算机网络中只每秒传输的bit bps。</p>
+<h2 id="接入网络"><a href="#接入网络" class="headerlink" title="接入网络"></a>接入网络</h2><h3 id="数字用户线路-DSL"><a href="#数字用户线路-DSL" class="headerlink" title="数字用户线路 DSL"></a>数字用户线路 DSL</h3><p>电话线，独占。</p>
+<h3 id="电缆网络-（cable-modem）"><a href="#电缆网络-（cable-modem）" class="headerlink" title="电缆网络 （cable modem）"></a>电缆网络 （cable modem）</h3><p>有线电视网络，频分多路复用，共享的， 虽然带宽高，但速度不一定比 DSL 快。</p>
+<h3 id="无线接入网"><a href="#无线接入网" class="headerlink" title="无线接入网"></a>无线接入网</h3><p>基站 base station access point</p>
+<h2 id="为什么需要数据交换"><a href="#为什么需要数据交换" class="headerlink" title="为什么需要数据交换"></a>为什么需要数据交换</h2><p>每台计算机两两直接用链路互联，会产生N平方链路问题，经济和技术上是不可行的，从而引入了交换设备。</p>
+<p>有了交换设备，每个主机只需要一个链路与交换设备连接；但是有了交换设备也不行，距离远，设备多，又引出了交换网络即交换机互联；</p>
+<h2 id="交换类型"><a href="#交换类型" class="headerlink" title="交换类型"></a>交换类型</h2><ul>
+<li>电路交换</li>
+<li>报文交换</li>
+<li>分组交换</li>
+</ul>
+<h2 id="电路交换"><a href="#电路交换" class="headerlink" title="电路交换"></a>电路交换</h2><p>电路交换的特点 <strong>独占资源</strong> 即使双方不说话，电路依然存在且不会被他人占用，是否独占链路呢？否 。会采用多路复用技术。</p>
+<p>最典型的电路交换网络：电话网络</p>
+<h3 id="电路交换三阶段"><a href="#电路交换三阶段" class="headerlink" title="电路交换三阶段"></a>电路交换三阶段</h3><ul>
+<li>建立连接（呼叫/电路建立）</li>
+<li>通信</li>
+<li>释放连接 （拆除电路）</li>
+</ul>
+<h3 id="电路交换网络如何共享中继线路"><a href="#电路交换网络如何共享中继线路" class="headerlink" title="电路交换网络如何共享中继线路"></a>电路交换网络如何共享中继线路</h3><p><strong>多路复用技术</strong></p>
+<ul>
+<li>链路/网络资源划分为资源片</li>
+<li>将资源片分配给各路 呼叫（calls）</li>
+<li>每路呼叫独占分配到的资源片进行通信</li>
+<li>资源片可能闲置（idle）</li>
+</ul>
+<h3 id="典型的多路复用方法"><a href="#典型的多路复用方法" class="headerlink" title="典型的多路复用方法"></a>典型的多路复用方法</h3><ul>
+<li>频分多路复用 （frequency division multiplexing FDM） 频率隔离 有线电视</li>
+<li>时分多路复用 （time division multiplexing TDM）</li>
+<li>波分多路复用 （wavelength division multiplexing WDM）</li>
+<li>码分多路复用 （code division multiplexing CDM）</li>
+</ul>
+<h4 id="频分多路复用"><a href="#频分多路复用" class="headerlink" title="频分多路复用"></a>频分多路复用</h4><ul>
+<li>各用户占用不同的带宽资源（这里的带宽是频率带宽（单位HZ）而不是数据的发送速率）</li>
+<li>用户在分配到一定的频带后，在通信过程中自始至终都占用这个频带</li>
+</ul>
+<h4 id="时分多路复用"><a href="#时分多路复用" class="headerlink" title="时分多路复用"></a>时分多路复用</h4><ul>
+<li>将时间划分为一段段等长的时分复用帧（TDM帧），每个用户在每个TDM帧中占用固定序号的时隙</li>
+<li>每个用户所占用的时隙是周期性出现（周期就是TDM帧的长度）</li>
+<li>时分复用的所有用户在不同的时间占用相同的频率宽度</li>
+</ul>
+<h4 id="波分多路复用"><a href="#波分多路复用" class="headerlink" title="波分多路复用"></a>波分多路复用</h4><p>波分多路复用就是光的频分复用</p>
+<h4 id="码分多路复用"><a href="#码分多路复用" class="headerlink" title="码分多路复用"></a>码分多路复用</h4><ul>
+<li>广泛应用于无线链路共享（蜂窝网、卫星通信）</li>
+<li>每个用户分配一个唯一的 m bit 码片序列（chipping sequence），0用 -1 表示，1 用 +1 表示</li>
+<li>各用户利用相同频率的载波，利用各自码片编码数据</li>
+<li>编码信号 = （原始数据）* （码片序列）</li>
+<li>各用户码片序列相互正交</li>
+</ul>
+<h2 id="报文交换（message-switching）"><a href="#报文交换（message-switching）" class="headerlink" title="报文交换（message switching）"></a>报文交换（message switching）</h2><p>报文：源（应用）发送信息的整体（比如一个文件） （早期的电报系统） 整体交换。</p>
+<h2 id="分组交换（package-switching）"><a href="#分组交换（package-switching）" class="headerlink" title="分组交换（package switching）"></a>分组交换（package switching）</h2><h3 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h3><p>报文拆分出来的一系列相对较小的数据包，分组交换需要报文的拆分与重组，产生额外开销。</p>
+<h3 id="分组交换-统计多路复用"><a href="#分组交换-统计多路复用" class="headerlink" title="分组交换 统计多路复用"></a>分组交换 统计多路复用</h3><p>（statistical multiplexing）按需共享链路。</p>
+<h3 id="存储转发过程-store-and-forward"><a href="#存储转发过程-store-and-forward" class="headerlink" title="存储转发过程 store-and-forward"></a>存储转发过程 store-and-forward</h3><p>报文交换与分组交换均采用存储转发方式，区别：</p>
+<ul>
+<li>报文交换以完整报文进行存储转发</li>
+<li>分组交换以较小的分组进行存储转发</li>
+</ul>
+<h3 id="分组交换传输延迟"><a href="#分组交换传输延迟" class="headerlink" title="分组交换传输延迟"></a>分组交换传输延迟</h3><p>发送主机：</p>
+<ul>
+<li>接收应用报文（消息）</li>
+<li>拆分为较小长度为L bits的分组（packets）</li>
+<li>在传输速率为 R 的 链路上传输分组</li>
+</ul>
+<p>分组传输延迟（时延）<code>delay = L（bits）/ R （bits/sec）</code></p>
+<p>分组交换时间快于报文交换，且路由器内存不需要很大。<strong>分组为什么快，并行</strong>。</p>
+<p>为什么使用分组交换不使用电路交换呢。分组交换可以允许更多的用户同时使用网络，网络资源充分共享。</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>一个10Mb/s的链路， 每个用户活动时需100kb/s，平均活动时间10%。</p>
+<h4 id="电路交换-1"><a href="#电路交换-1" class="headerlink" title="电路交换"></a>电路交换</h4><p>由于电路交换的独占性，只能有10个用户，同时使用。</p>
+<h4 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a>分组交换</h4><p>对于35个用户，大于10个用户同时活动的概率 &lt; 0.0004。</p>
+<h3 id="分组绝对优于电路交换"><a href="#分组绝对优于电路交换" class="headerlink" title="分组绝对优于电路交换?"></a>分组绝对优于电路交换?</h3><p>分组交换适用于突发数据传输网络。资源充分共享，简单，无需呼叫建立。但是可能产生拥塞（congestion，分组延迟和丢失），就需要协议处理可靠数据传输和拥塞控制。</p>
+<p>如何提供电路级性能保障（语音视频），例如音/视频应用所需带宽保障？都是需要设计协议的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/21/%E5%89%8D%E7%AB%AF%E9%9B%B6%E6%98%9F%E7%9F%A5%E8%AF%86/" rel="prev" title="前端零星知识">
+      <i class="fa fa-chevron-left"></i> 前端零星知识
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="nav-number">1.</span> <span class="nav-text">协议的三要素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#syntax-%E8%AF%AD%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">syntax 语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#semantics-%E8%AF%AD%E4%B9%89"><span class="nav-number">1.2.</span> <span class="nav-text">semantics 语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#timing-%E6%97%B6%E5%BA%8F"><span class="nav-number">1.3.</span> <span class="nav-text">timing 时序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bandwidth-%E5%B8%A6%E5%AE%BD"><span class="nav-number">1.4.</span> <span class="nav-text">bandwidth 带宽</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%85%A5%E7%BD%91%E7%BB%9C"><span class="nav-number">2.</span> <span class="nav-text">接入网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E7%94%A8%E6%88%B7%E7%BA%BF%E8%B7%AF-DSL"><span class="nav-number">2.1.</span> <span class="nav-text">数字用户线路 DSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E7%BC%86%E7%BD%91%E7%BB%9C-%EF%BC%88cable-modem%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">电缆网络 （cable modem）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF%E6%8E%A5%E5%85%A5%E7%BD%91"><span class="nav-number">2.3.</span> <span class="nav-text">无线接入网</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">为什么需要数据交换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">交换类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2"><span class="nav-number">5.</span> <span class="nav-text">电路交换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2%E4%B8%89%E9%98%B6%E6%AE%B5"><span class="nav-number">5.1.</span> <span class="nav-text">电路交换三阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2%E7%BD%91%E7%BB%9C%E5%A6%82%E4%BD%95%E5%85%B1%E4%BA%AB%E4%B8%AD%E7%BB%A7%E7%BA%BF%E8%B7%AF"><span class="nav-number">5.2.</span> <span class="nav-text">电路交换网络如何共享中继线路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E7%9A%84%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">5.3.</span> <span class="nav-text">典型的多路复用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%91%E5%88%86%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">5.3.1.</span> <span class="nav-text">频分多路复用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E5%88%86%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">5.3.2.</span> <span class="nav-text">时分多路复用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A2%E5%88%86%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">5.3.3.</span> <span class="nav-text">波分多路复用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A0%81%E5%88%86%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">5.3.4.</span> <span class="nav-text">码分多路复用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E4%BA%A4%E6%8D%A2%EF%BC%88message-switching%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">报文交换（message switching）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2%EF%BC%88package-switching%EF%BC%89"><span class="nav-number">7.</span> <span class="nav-text">分组交换（package switching）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84"><span class="nav-number">7.1.</span> <span class="nav-text">分组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2-%E7%BB%9F%E8%AE%A1%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">7.2.</span> <span class="nav-text">分组交换 统计多路复用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%BD%AC%E5%8F%91%E8%BF%87%E7%A8%8B-store-and-forward"><span class="nav-number">7.3.</span> <span class="nav-text">存储转发过程 store-and-forward</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2%E4%BC%A0%E8%BE%93%E5%BB%B6%E8%BF%9F"><span class="nav-number">7.4.</span> <span class="nav-text">分组交换传输延迟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">7.5.</span> <span class="nav-text">例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2-1"><span class="nav-number">7.5.1.</span> <span class="nav-text">电路交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2"><span class="nav-number">7.5.2.</span> <span class="nav-text">分组交换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E7%BB%9D%E5%AF%B9%E4%BC%98%E4%BA%8E%E7%94%B5%E8%B7%AF%E4%BA%A4%E6%8D%A2"><span class="nav-number">7.6.</span> <span class="nav-text">分组绝对优于电路交换?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">72k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:06</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
