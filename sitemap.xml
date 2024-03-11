@@ -11,6 +11,15 @@
   </url>
   
   <url>
+    <loc>https://zjd-melo.github.io/blog/categories/index.html</loc>
+    
+    <lastmod>2024-03-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zjd-melo.github.io/blog/tags/index.html</loc>
     
     <lastmod>2024-03-11</lastmod>
@@ -20,9 +29,9 @@
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/categories/index.html</loc>
+    <loc>https://zjd-melo.github.io/blog/2024/03/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B002/</loc>
     
-    <lastmod>2024-03-11</lastmod>
+    <lastmod>2024-03-09</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -191,14 +200,14 @@
 
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/tags/Python/</loc>
+    <loc>https://zjd-melo.github.io/blog/tags/Git/</loc>
     <lastmod>2024-03-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/tags/Git/</loc>
+    <loc>https://zjd-melo.github.io/blog/tags/Python/</loc>
     <lastmod>2024-03-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -233,14 +242,14 @@
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/tags/%E8%B4%A7%E5%B8%81/</loc>
+    <loc>https://zjd-melo.github.io/blog/tags/%E9%93%B6%E8%A1%8C/</loc>
     <lastmod>2024-03-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/tags/%E9%93%B6%E8%A1%8C/</loc>
+    <loc>https://zjd-melo.github.io/blog/tags/%E8%B4%A7%E5%B8%81/</loc>
     <lastmod>2024-03-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
