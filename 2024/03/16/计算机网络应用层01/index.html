@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络应用层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络应用层01">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/03/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E5%B1%8201/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机网络应用层">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-16T07:44:29.000Z">
+<meta property="article:modified_time" content="2024-03-16T07:44:29.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/03/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E5%B1%8201/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机网络应用层01 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">19</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/03/16/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E5%B1%8201/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络应用层01
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-03-16 15:44:29" itemprop="dateCreated datePublished" datetime="2024-03-16T15:44:29+08:00">2024-03-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+            <div class="post-description">计算机网络应用层</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="网络应用的体系结构"><a href="#网络应用的体系结构" class="headerlink" title="网络应用的体系结构"></a>网络应用的体系结构</h2><h3 id="客户机-x2F-服务器结构"><a href="#客户机-x2F-服务器结构" class="headerlink" title="客户机/服务器结构"></a>客户机/服务器结构</h3><p>Client Server  C/S （比如 WEB 应用）</p>
+<h4 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h4><ul>
+<li>7*24 小时提供服务</li>
+<li>永久性访问地址/域名</li>
+<li>利用大量服务器实现可扩展性</li>
+</ul>
+<h4 id="客户机"><a href="#客户机" class="headerlink" title="客户机"></a>客户机</h4><ul>
+<li>与服务器通信，使用服务器提供的服务</li>
+<li>间歇性接入网络</li>
+<li>可能使用动态 IP 地址</li>
+<li>不会与其他客户机直接通信</li>
+</ul>
+<h3 id="点对点结构"><a href="#点对点结构" class="headerlink" title="点对点结构"></a>点对点结构</h3><p>Peer to Peer P2P （BT 文件下载）</p>
+<ul>
+<li>没有永远在线的服务器</li>
+<li>任意端系统/结点之间可以直接通讯</li>
+<li>节点间歇性接入网络</li>
+<li>节点可能改变 IP 地址</li>
+</ul>
+<p>优点：高度可伸缩，缺点：实现起来复杂，难于管理</p>
+<h3 id="混合结构"><a href="#混合结构" class="headerlink" title="混合结构"></a>混合结构</h3><p>Hybrid</p>
+<p>Napster</p>
+<ul>
+<li>文件传输使用 P2P 结构</li>
+<li>文件搜索采用 C/S 结构 集中式</li>
+</ul>
+<p>每个节点向中央服务器登记自己的内容，每个节点向中央服务器提交查询请求。</p>
+<h2 id="网络应用进程通信"><a href="#网络应用进程通信" class="headerlink" title="网络应用进程通信"></a>网络应用进程通信</h2><h3 id="端口号"><a href="#端口号" class="headerlink" title="端口号"></a>端口号</h3><p>进程寻址=端口号</p>
+<p>主机寻址= IP 地址</p>
+<h3 id="应用层协议"><a href="#应用层协议" class="headerlink" title="应用层协议"></a>应用层协议</h3><ul>
+<li>网络应用需遵循应用层协议</li>
+<li>公开的协议<ul>
+<li>由 RFC （Request for Comments）定义</li>
+<li>允许互操作</li>
+<li>HTTP、SMTP…</li>
+</ul>
+</li>
+<li>私有协议<ul>
+<li>多数 P2P 文件共享应用</li>
+</ul>
+</li>
+</ul>
+<h3 id="应用层协议内容"><a href="#应用层协议内容" class="headerlink" title="应用层协议内容"></a>应用层协议内容</h3><h4 id="消息的类型（type）"><a href="#消息的类型（type）" class="headerlink" title="消息的类型（type）"></a>消息的类型（type）</h4><ul>
+<li>请求消息</li>
+<li>响应消息</li>
+</ul>
+<h4 id="消息的语法（syntax）-x2F-格式"><a href="#消息的语法（syntax）-x2F-格式" class="headerlink" title="消息的语法（syntax）/格式"></a>消息的语法（syntax）/格式</h4><ul>
+<li>消息中有哪些字段</li>
+<li>每个字段如何描述</li>
+</ul>
+<h4 id="字段的语义（semantics）"><a href="#字段的语义（semantics）" class="headerlink" title="字段的语义（semantics）"></a>字段的语义（semantics）</h4><ul>
+<li>字段中信息的含义</li>
+</ul>
+<h4 id="规则（rules）"><a href="#规则（rules）" class="headerlink" title="规则（rules）"></a>规则（rules）</h4><ul>
+<li>进程何时发送/响应消息</li>
+<li>进程如何发送/响应消息</li>
+</ul>
+<h2 id="网络应用的需求与传输层服务"><a href="#网络应用的需求与传输层服务" class="headerlink" title="网络应用的需求与传输层服务"></a>网络应用的需求与传输层服务</h2><h3 id="网络应用的需求"><a href="#网络应用的需求" class="headerlink" title="网络应用的需求"></a>网络应用的需求</h3><h4 id="数据丢失（data-loss）-x2F-可靠性（reliability）"><a href="#数据丢失（data-loss）-x2F-可靠性（reliability）" class="headerlink" title="数据丢失（data loss）/可靠性（reliability）"></a>数据丢失（data loss）/可靠性（reliability）</h4><ul>
+<li>某些网络应用能够容忍一定的数据丢失：网络电话、在线视频</li>
+<li>某些网络应用要求 100% 可靠的数据传输：文件传输、网络银行</li>
+</ul>
+<h4 id="时间（timing）-x2F-延迟（delay）"><a href="#时间（timing）-x2F-延迟（delay）" class="headerlink" title="时间（timing）/延迟（delay）"></a>时间（timing）/延迟（delay）</h4><ul>
+<li>有些应用只有在延迟足够低时才有效：网路电话/网络游戏</li>
+</ul>
+<h4 id="带宽（bandwidth）"><a href="#带宽（bandwidth）" class="headerlink" title="带宽（bandwidth）"></a>带宽（bandwidth）</h4><ul>
+<li>某些应用只有在带宽达到最低要求时才有效：网络视频</li>
+<li>某些应该能够适应任何带宽，弹性应用。如 email</li>
+</ul>
+<h4 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h4><table>
+<thead>
+<tr>
+<th>Application</th>
+<th>Data loss</th>
+<th>Bandwidth</th>
+<th>Time Sensitive</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>file transfer</td>
+<td>no loss</td>
+<td>elastic</td>
+<td>no</td>
+</tr>
+<tr>
+<td>e-mail</td>
+<td>no loss</td>
+<td>elastic</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Web documents</td>
+<td>no loss</td>
+<td>elastic</td>
+<td>no</td>
+</tr>
+<tr>
+<td>real-time audio/video</td>
+<td>loss-tolerant</td>
+<td>hard require</td>
+<td>yes, 100 msec</td>
+</tr>
+<tr>
+<td>stored audio/video</td>
+<td>loss-tolerant</td>
+<td>hard require</td>
+<td>yes, few secs</td>
+</tr>
+<tr>
+<td>interactive ganmes</td>
+<td>loss-tolerant</td>
+<td>few kbps up</td>
+<td>yes, 100 msec</td>
+</tr>
+<tr>
+<td>instant messaging</td>
+<td>no loss</td>
+<td>elastic</td>
+<td>yes and no</td>
+</tr>
+</tbody></table>
+<h3 id="Internet-提供的传输服务"><a href="#Internet-提供的传输服务" class="headerlink" title="Internet 提供的传输服务"></a>Internet 提供的传输服务</h3><h4 id="TCP服务"><a href="#TCP服务" class="headerlink" title="TCP服务"></a>TCP服务</h4><h5 id="面向连接"><a href="#面向连接" class="headerlink" title="面向连接"></a>面向连接</h5><p>客户机/服务器进程间需要建立连接</p>
+<h5 id="可靠的传输"><a href="#可靠的传输" class="headerlink" title="可靠的传输"></a>可靠的传输</h5><h5 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h5><p>发送方不会发送速度过快，超过接收方的处理能力</p>
+<h5 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h5><p>当网络负载过重时能够限制发送方的发送速度</p>
+<h5 id="不提供时间-x2F-延迟保障"><a href="#不提供时间-x2F-延迟保障" class="headerlink" title="不提供时间/延迟保障"></a>不提供时间/延迟保障</h5><h5 id="不提供最小带宽保障"><a href="#不提供最小带宽保障" class="headerlink" title="不提供最小带宽保障"></a>不提供最小带宽保障</h5><h4 id="UDP-服务"><a href="#UDP-服务" class="headerlink" title="UDP 服务"></a>UDP 服务</h4><h5 id="无连接"><a href="#无连接" class="headerlink" title="无连接"></a>无连接</h5><h5 id="不可靠的数据传输"><a href="#不可靠的数据传输" class="headerlink" title="不可靠的数据传输"></a>不可靠的数据传输</h5><h5 id="不提供可靠性保障"><a href="#不提供可靠性保障" class="headerlink" title="不提供可靠性保障"></a>不提供可靠性保障</h5><h5 id="不提供流量控制"><a href="#不提供流量控制" class="headerlink" title="不提供流量控制"></a>不提供流量控制</h5><h5 id="不提供拥塞控制"><a href="#不提供拥塞控制" class="headerlink" title="不提供拥塞控制"></a>不提供拥塞控制</h5><h5 id="不提供延迟保障"><a href="#不提供延迟保障" class="headerlink" title="不提供延迟保障"></a>不提供延迟保障</h5><h5 id="不提供带宽保障"><a href="#不提供带宽保障" class="headerlink" title="不提供带宽保障"></a>不提供带宽保障</h5><table>
+<thead>
+<tr>
+<th>Application</th>
+<th>Application layer protocol</th>
+<th>Underlying transport protocol</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>e-mail</td>
+<td>SMTP</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>remote terminal access</td>
+<td>Telnet</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>WEB</td>
+<td>HTTP</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>file transfer</td>
+<td>FTP</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>streaming multimedia</td>
+<td>proprietary（RealNetWorks）</td>
+<td>TCP or UDP</td>
+</tr>
+<tr>
+<td>internet telephony</td>
+<td>proprietary（Vonage、Dialpad）</td>
+<td>typically UDP</td>
+</tr>
+</tbody></table>
+<h2 id="WEB-与-HTTP"><a href="#WEB-与-HTTP" class="headerlink" title="WEB 与 HTTP"></a>WEB 与 HTTP</h2><p>HTTP 无状态的协议，stateless，服务器不维护任何有关客户端过去所发请求的信息。</p>
+<p>有状态的协议往往更复杂，需要维护状态（历史信息），如果客户和服务器失效，会产生状态的不一致，解决这种不一致代价高。</p>
+<h3 id="HTTP-连接的两种类型"><a href="#HTTP-连接的两种类型" class="headerlink" title="HTTP 连接的两种类型"></a>HTTP 连接的两种类型</h3><h4 id="非持久性连接（Nonpersistent-HTTP）"><a href="#非持久性连接（Nonpersistent-HTTP）" class="headerlink" title="非持久性连接（Nonpersistent HTTP）"></a>非持久性连接（Nonpersistent HTTP）</h4><p>如一张网页包含10个图片链接，此时网速很慢的话，图片会一个接一个显示。</p>
+<ul>
+<li>HTTP 1.0 版本使用</li>
+</ul>
+<h5 id="非持久性连接存在的问题"><a href="#非持久性连接存在的问题" class="headerlink" title="非持久性连接存在的问题"></a>非持久性连接存在的问题</h5><ul>
+<li>每个对象需要两个 RTT</li>
+<li>操作系统需要为每个 TCP 连接开销资源（overhead）</li>
+</ul>
+<h4 id="持久性连接（Persistent-HTTP）"><a href="#持久性连接（Persistent-HTTP）" class="headerlink" title="持久性连接（Persistent HTTP）"></a>持久性连接（Persistent HTTP）</h4><ul>
+<li>HTTP 1.1 版本默认使用</li>
+</ul>
+<h4 id="无流水（pipelining）的持久性连接"><a href="#无流水（pipelining）的持久性连接" class="headerlink" title="无流水（pipelining）的持久性连接"></a>无流水（pipelining）的持久性连接</h4><ul>
+<li>客户端只有收到前一个响应后才发送新的请求</li>
+<li>每个被引用的对象耗时一个 RTT</li>
+</ul>
+<h4 id="带有流水机制的持久性连接"><a href="#带有流水机制的持久性连接" class="headerlink" title="带有流水机制的持久性连接"></a>带有流水机制的持久性连接</h4><ul>
+<li>HTTP 1.1 的默认选项</li>
+<li>客户端只要遇到一个引用对象就尽快发出请求</li>
+<li>理想情况下，收到所有的引用对象只需耗时约一个 RTT</li>
+</ul>
+<h3 id="RTT（Round-Trip-Time）"><a href="#RTT（Round-Trip-Time）" class="headerlink" title="RTT（Round Trip Time）"></a>RTT（Round Trip Time）</h3><p>从客户端发送<strong>一个很小</strong>的数据包到服务器并返回所经历的时间。</p>
+<h3 id="Cookie-技术"><a href="#Cookie-技术" class="headerlink" title="Cookie 技术"></a>Cookie 技术</h3><p>HTTP 协议无状态，但是很多应用需要服务器掌握客户端的状态，如网上购物。</p>
+<p>某些网站为了辨别用户身份、进行 session 跟踪而储存在用户本地终端上的数据（通常经过加密）。</p>
+<h4 id="Cookie-的组件"><a href="#Cookie-的组件" class="headerlink" title="Cookie 的组件"></a>Cookie 的组件</h4><ul>
+<li>HTTP 响应消息的 cookie 头部行</li>
+<li>HTTP 请求消息的 cookie 头部行</li>
+<li>保存在客户端主机上的 cookie 文件，由浏览器管理</li>
+<li>WEB 服务器端的后台数据库</li>
+</ul>
+<h4 id="Cookie-应用"><a href="#Cookie-应用" class="headerlink" title="Cookie 应用"></a>Cookie 应用</h4><p>不限于如下应用：</p>
+<ul>
+<li>身份认证</li>
+<li>购物车</li>
+<li>推荐</li>
+<li>Web e-mail</li>
+</ul>
+<h4 id="隐私问题"><a href="#隐私问题" class="headerlink" title="隐私问题"></a>隐私问题</h4><h3 id="Web缓存-x2F-代理服务器技术"><a href="#Web缓存-x2F-代理服务器技术" class="headerlink" title="Web缓存/代理服务器技术"></a>Web缓存/代理服务器技术</h3><p>在不妨问服务器的前提下满足客户端的 HTTP 请求。</p>
+<ul>
+<li>缩短客户请求的响应时间</li>
+<li>减少机构/组织的流量</li>
+<li>在大范围内（Internet）实现有效的内容分发（CDN）</li>
+</ul>
+<p>与 Cookie 技术不同，Cookie 旨在解决功能上的问题，而缓存技术是在性能上进行优化处理。一个面向功能一个面向性能。</p>
+<p>缓存既充当客户端也充当服务器。一般由 ISP 架设。 </p>
+<h4 id="一致性问题"><a href="#一致性问题" class="headerlink" title="一致性问题"></a>一致性问题</h4><p>条件性 GET 请求，request header if-modified-since，response 304 Not Modified。</p>
+<h2 id="E-mail"><a href="#E-mail" class="headerlink" title="E-mail"></a>E-mail</h2><h3 id="SMTP"><a href="#SMTP" class="headerlink" title="SMTP"></a>SMTP</h3><ul>
+<li>使用 TCP 进行 email 消息的可靠传输</li>
+<li>传输过程的三个阶段<ul>
+<li>握手</li>
+<li>消息的传输</li>
+<li>关闭</li>
+</ul>
+</li>
+<li>命令/响应交互模型<ul>
+<li>命令（command）ASCII 文本</li>
+<li>响应（response）状态代码和语句</li>
+</ul>
+</li>
+<li>email 消息只能包含 7 位 ASCII 码</li>
+</ul>
+<h3 id="SMTP-VS-HTTP"><a href="#SMTP-VS-HTTP" class="headerlink" title="SMTP VS HTTP"></a>SMTP VS HTTP</h3><ul>
+<li>HTTP 拉式 （pull）</li>
+<li>SMTP 推式 （push）</li>
+<li>都使用命令/响应交互模型</li>
+<li>命令和状态码都是 ASCII 码</li>
+<li>HTTP：每个对象封装在独立的响应消息中</li>
+<li>SMTP：多个对象在由多个部分构成的消息中发送</li>
+</ul>
+<h3 id="E-mail-消息格式"><a href="#E-mail-消息格式" class="headerlink" title="E-mail 消息格式"></a>E-mail 消息格式</h3><ul>
+<li>SMTP：消息的传输/交换协议</li>
+<li>文本格式消息<ul>
+<li>头部行 （header）<ul>
+<li>to</li>
+<li>from</li>
+<li>subject</li>
+</ul>
+</li>
+<li>消息体 （body）<ul>
+<li>消息本身</li>
+<li>只能是 ASCII 字符</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Email-消息格式：多媒体扩展"><a href="#Email-消息格式：多媒体扩展" class="headerlink" title="Email 消息格式：多媒体扩展"></a>Email 消息格式：多媒体扩展</h3><h4 id="MIME"><a href="#MIME" class="headerlink" title="MIME"></a>MIME</h4><p>多媒体邮件扩展，通过在邮件头部增加额外的行以声明 MIME 的内容类型</p>
+<h3 id="邮件访问协议-access-protocol"><a href="#邮件访问协议-access-protocol" class="headerlink" title="邮件访问协议 access protocol"></a>邮件访问协议 access protocol</h3><p>从服务器获取邮件的协议，SMTP 是传输协议。</p>
+<ul>
+<li>POP Post Office Protocol 认证/授权（客户端-服务器）和下载</li>
+<li>IMAP Internet Mail Access Protocol<ul>
+<li>更多的功能</li>
+<li>更加复杂</li>
+<li>能够操纵服务器上存储的消息</li>
+</ul>
+</li>
+<li>HTTP （基于 web 的客户端）</li>
+</ul>
+<h4 id="POP-协议"><a href="#POP-协议" class="headerlink" title="POP 协议"></a>POP 协议</h4><ul>
+<li>认证过程<ul>
+<li>客户端命令<ul>
+<li>User：声明用户名</li>
+<li>Pass：声明密码</li>
+</ul>
+</li>
+<li>服务器响应<ul>
+<li>+OK</li>
+<li>-ERR</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>事务阶段<ul>
+<li>List：列出消息数量</li>
+<li>Retr：用编号获取消息</li>
+<li>Dele：删除消息</li>
+<li>Quit</li>
+</ul>
+</li>
+<li>下载并删除模式 （用户如果换了客户端软件，无法重读该消息）</li>
+<li>下载并保持模式 （不同客户端都可以保留消息的拷贝）</li>
+<li>POP3 是无状态的</li>
+</ul>
+<h4 id="IMAP-协议"><a href="#IMAP-协议" class="headerlink" title="IMAP 协议"></a>IMAP 协议</h4><p>有状态的</p>
+<ul>
+<li>所有消息统一保存在一个地方：服务器</li>
+<li>允许用户利用文件夹组织消息</li>
+<li>IMAP 支持跨会话（Session）的用户状态<ul>
+<li>文件夹的名字</li>
+<li>文件夹与消息 ID 之间的映射</li>
+</ul>
+</li>
+</ul>
+<h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><p>Domain Name System。主要解决 Internet 上主机/路由器的识别问题。 IP 地址与域名的映射。</p>
+<p>域名解析系统：多层命名服务器构成的分布式数据库，是一个应用层协议完成名字的解析。</p>
+<h3 id="DNS服务"><a href="#DNS服务" class="headerlink" title="DNS服务"></a>DNS服务</h3><ul>
+<li>域名向 IP 地址的翻译</li>
+<li>主机别名</li>
+<li>邮件服务器别名</li>
+<li>负载均衡：Web 服务器</li>
+</ul>
+<h3 id="为什么不使用集中式-DNS"><a href="#为什么不使用集中式-DNS" class="headerlink" title="为什么不使用集中式 DNS"></a>为什么不使用集中式 DNS</h3><ul>
+<li>单点失败问题</li>
+<li>流量问题</li>
+<li>距离问题</li>
+<li>维护性问题</li>
+</ul>
+<h3 id="分布式层次式数据库"><a href="#分布式层次式数据库" class="headerlink" title="分布式层次式数据库"></a>分布式层次式数据库</h3><ol>
+<li>根域名服务器 13个</li>
+<li>顶级和权威域名解析服务器</li>
+<li>权威（Authoritative）域名服务器</li>
+<li>本地域名解析服务器 （不属于层级体系）</li>
+</ol>
+<h4 id="根域名服务器"><a href="#根域名服务器" class="headerlink" title="根域名服务器"></a>根域名服务器</h4><ul>
+<li>本地域名解析服务器无法解析域名时，访问根域名服务器</li>
+<li>根域名服务器的行为<ul>
+<li>如果不知道映射，访问权威域名服务器</li>
+<li>获得映射</li>
+<li>向本地域名服务器返回映射</li>
+</ul>
+</li>
+</ul>
+<h4 id="顶级和权威域名解析服务器"><a href="#顶级和权威域名解析服务器" class="headerlink" title="顶级和权威域名解析服务器"></a>顶级和权威域名解析服务器</h4><p>顶级域名服务器（TLD top-level domain），负责com、org、net、edu等</p>
+<p>顶级域名和国家顶级域名 （cn、uk）</p>
+<ul>
+<li>Network Solutions 维护顶级域名服务器</li>
+<li>Educause 维护 edu 顶级域名服务器</li>
+</ul>
+<h4 id="权威（Authoritative）域名服务器"><a href="#权威（Authoritative）域名服务器" class="headerlink" title="权威（Authoritative）域名服务器"></a>权威（Authoritative）域名服务器</h4><p>组织的域名解析服务器，提供组织内部服务器的解析服务，由组织负责维护、服务提供商负责维护。自治的。</p>
+<h4 id="本地域名解析服务器"><a href="#本地域名解析服务器" class="headerlink" title="本地域名解析服务器"></a>本地域名解析服务器</h4><ul>
+<li>不严格属于层级体系</li>
+<li>每个 ISP 有一个本地域名服务器<ul>
+<li>默认域名解析服务器</li>
+</ul>
+</li>
+<li>当主机进行 DNS 查询时，查询被发送到本地域名服务器<ul>
+<li>作为代理（proxy），将查询转发给（层级式）域名解析服务器系统</li>
+</ul>
+</li>
+</ul>
+<h3 id="迭代查询"><a href="#迭代查询" class="headerlink" title="迭代查询"></a>迭代查询</h3><ul>
+<li>被查询服务器返回域名解析服务器的名字</li>
+<li>我不知道这个名字但你可以问这个服务器</li>
+</ul>
+<h3 id="递归查询"><a href="#递归查询" class="headerlink" title="递归查询"></a>递归查询</h3><ul>
+<li>将域名解析的任务交给所联系的服务器</li>
+</ul>
+<h3 id="DNS-记录缓存和更新"><a href="#DNS-记录缓存和更新" class="headerlink" title="DNS 记录缓存和更新"></a>DNS 记录缓存和更新</h3><p>只要域名解析服务器获得域名-IP映射，就要缓存这一映射，一段时间过后，缓存条目失效（删除）。</p>
+<p>本地域名服务器一般会缓存顶级域名服务器的映射，因此根域名服务器不经常被访问。</p>
+<h3 id="记录的更新-x2F-通知机制"><a href="#记录的更新-x2F-通知机制" class="headerlink" title="记录的更新/通知机制"></a>记录的更新/通知机制</h3><ul>
+<li>RFC 2136</li>
+<li>Dynamic Updates in the Domain Name System (DNS UPDATE)</li>
+</ul>
+<h3 id="DNS-记录和消息格式"><a href="#DNS-记录和消息格式" class="headerlink" title="DNS 记录和消息格式"></a>DNS 记录和消息格式</h3><h4 id="资源记录（RR-resource-records）"><a href="#资源记录（RR-resource-records）" class="headerlink" title="资源记录（RR resource records）"></a>资源记录（RR resource records）</h4><p><code>RR format: (name, value, type, ttl)</code></p>
+<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><ul>
+<li>Type=A <ul>
+<li>Name=主机域名</li>
+<li>Value=IP 地址</li>
+</ul>
+</li>
+<li>Type=NS<ul>
+<li>Name=域（edu.cn）</li>
+<li>Value=该域权威域名解析服务器的主机域名 指定了这个域的解析服务器是谁</li>
+</ul>
+</li>
+<li>Type=CNAME<ul>
+<li>Name=某一真实域名的别名</li>
+<li>Value=真实域名</li>
+</ul>
+</li>
+<li>Type=MX<ul>
+<li>Value是与name相对应的邮件服务器</li>
+</ul>
+</li>
+</ul>
+<h4 id="DNS-协议"><a href="#DNS-协议" class="headerlink" title="DNS 协议"></a>DNS 协议</h4><ul>
+<li><p>查询（query）和回复（repaly）的协议</p>
+</li>
+<li><p>消息格式相同 </p>
+</li>
+<li><p>消息头部</p>
+<ul>
+<li>Identification：16位查询编号，回复使用相同的编号</li>
+<li>flags<ul>
+<li>查询或回复</li>
+<li>期望递归</li>
+<li>递归可用</li>
+<li>权威回答</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="如何注册域名"><a href="#如何注册域名" class="headerlink" title="如何注册域名"></a>如何注册域名</h3><p>在域名管理机构（如 Network Solutions）注册域名。</p>
+<ul>
+<li>向域名管理机构提供权威域名解析服务器的名字和 IP 地址</li>
+<li>域名管理机构向 com 顶级域名解析服务器中插入两条记录<br><code>(xxx.com, xxx.xxx.com, NS)</code>,<code>(xxx.xxx.com, 111.111.111.111, A)</code></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/03/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B002/" rel="prev" title="计算机网络概述02">
+      <i class="fa fa-chevron-left"></i> 计算机网络概述02
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">网络应用的体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%BA-x2F-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">客户机&#x2F;服务器结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E6%9C%BA"><span class="nav-number">1.1.2.</span> <span class="nav-text">客户机</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">点对点结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">混合结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1"><span class="nav-number">2.</span> <span class="nav-text">网络应用进程通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="nav-number">2.1.</span> <span class="nav-text">端口号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.2.</span> <span class="nav-text">应用层协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%E5%86%85%E5%AE%B9"><span class="nav-number">2.3.</span> <span class="nav-text">应用层协议内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E7%9A%84%E7%B1%BB%E5%9E%8B%EF%BC%88type%EF%BC%89"><span class="nav-number">2.3.1.</span> <span class="nav-text">消息的类型（type）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E7%9A%84%E8%AF%AD%E6%B3%95%EF%BC%88syntax%EF%BC%89-x2F-%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.3.2.</span> <span class="nav-text">消息的语法（syntax）&#x2F;格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E6%AE%B5%E7%9A%84%E8%AF%AD%E4%B9%89%EF%BC%88semantics%EF%BC%89"><span class="nav-number">2.3.3.</span> <span class="nav-text">字段的语义（semantics）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%84%E5%88%99%EF%BC%88rules%EF%BC%89"><span class="nav-number">2.3.4.</span> <span class="nav-text">规则（rules）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E7%9A%84%E9%9C%80%E6%B1%82%E4%B8%8E%E4%BC%A0%E8%BE%93%E5%B1%82%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.</span> <span class="nav-text">网络应用的需求与传输层服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E7%9A%84%E9%9C%80%E6%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">网络应用的需求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1%EF%BC%88data-loss%EF%BC%89-x2F-%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%88reliability%EF%BC%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">数据丢失（data loss）&#x2F;可靠性（reliability）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%EF%BC%88timing%EF%BC%89-x2F-%E5%BB%B6%E8%BF%9F%EF%BC%88delay%EF%BC%89"><span class="nav-number">3.1.2.</span> <span class="nav-text">时间（timing）&#x2F;延迟（delay）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%A6%E5%AE%BD%EF%BC%88bandwidth%EF%BC%89"><span class="nav-number">3.1.3.</span> <span class="nav-text">带宽（bandwidth）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-number">3.1.4.</span> <span class="nav-text">安全性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Internet-%E6%8F%90%E4%BE%9B%E7%9A%84%E4%BC%A0%E8%BE%93%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">Internet 提供的传输服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.1.</span> <span class="nav-text">TCP服务</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">面向连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E7%9A%84%E4%BC%A0%E8%BE%93"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">可靠的传输</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">流量控制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.1.4.</span> <span class="nav-text">拥塞控制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E6%8F%90%E4%BE%9B%E6%97%B6%E9%97%B4-x2F-%E5%BB%B6%E8%BF%9F%E4%BF%9D%E9%9A%9C"><span class="nav-number">3.2.1.5.</span> <span class="nav-text">不提供时间&#x2F;延迟保障</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E6%8F%90%E4%BE%9B%E6%9C%80%E5%B0%8F%E5%B8%A6%E5%AE%BD%E4%BF%9D%E9%9A%9C"><span class="nav-number">3.2.1.6.</span> <span class="nav-text">不提供最小带宽保障</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP-%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.2.</span> <span class="nav-text">UDP 服务</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%A0%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">无连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E9%9D%A0%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">不可靠的数据传输</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E6%8F%90%E4%BE%9B%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E9%9A%9C"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">不提供可靠性保障</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E6%8F%90%E4%BE%9B%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.2.4.</span> <span class="nav-text">不提供流量控制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E6%8F%90%E4%BE%9B%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.2.5.</span> <span class="nav-text">不提供拥塞控制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E6%8F%90%E4%BE%9B%E5%BB%B6%E8%BF%9F%E4%BF%9D%E9%9A%9C"><span class="nav-number">3.2.2.6.</span> <span class="nav-text">不提供延迟保障</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E6%8F%90%E4%BE%9B%E5%B8%A6%E5%AE%BD%E4%BF%9D%E9%9A%9C"><span class="nav-number">3.2.2.7.</span> <span class="nav-text">不提供带宽保障</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WEB-%E4%B8%8E-HTTP"><span class="nav-number">4.</span> <span class="nav-text">WEB 与 HTTP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E8%BF%9E%E6%8E%A5%E7%9A%84%E4%B8%A4%E7%A7%8D%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.1.</span> <span class="nav-text">HTTP 连接的两种类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%9E%E6%8C%81%E4%B9%85%E6%80%A7%E8%BF%9E%E6%8E%A5%EF%BC%88Nonpersistent-HTTP%EF%BC%89"><span class="nav-number">4.1.1.</span> <span class="nav-text">非持久性连接（Nonpersistent HTTP）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%9E%E6%8C%81%E4%B9%85%E6%80%A7%E8%BF%9E%E6%8E%A5%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.1.1.1.</span> <span class="nav-text">非持久性连接存在的问题</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E6%80%A7%E8%BF%9E%E6%8E%A5%EF%BC%88Persistent-HTTP%EF%BC%89"><span class="nav-number">4.1.2.</span> <span class="nav-text">持久性连接（Persistent HTTP）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E6%B5%81%E6%B0%B4%EF%BC%88pipelining%EF%BC%89%E7%9A%84%E6%8C%81%E4%B9%85%E6%80%A7%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.1.3.</span> <span class="nav-text">无流水（pipelining）的持久性连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%A6%E6%9C%89%E6%B5%81%E6%B0%B4%E6%9C%BA%E5%88%B6%E7%9A%84%E6%8C%81%E4%B9%85%E6%80%A7%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.1.4.</span> <span class="nav-text">带有流水机制的持久性连接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RTT%EF%BC%88Round-Trip-Time%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">RTT（Round Trip Time）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie-%E6%8A%80%E6%9C%AF"><span class="nav-number">4.3.</span> <span class="nav-text">Cookie 技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookie-%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="nav-number">4.3.1.</span> <span class="nav-text">Cookie 的组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookie-%E5%BA%94%E7%94%A8"><span class="nav-number">4.3.2.</span> <span class="nav-text">Cookie 应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">4.3.3.</span> <span class="nav-text">隐私问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web%E7%BC%93%E5%AD%98-x2F-%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8A%80%E6%9C%AF"><span class="nav-number">4.4.</span> <span class="nav-text">Web缓存&#x2F;代理服务器技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-number">4.4.1.</span> <span class="nav-text">一致性问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#E-mail"><span class="nav-number">5.</span> <span class="nav-text">E-mail</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SMTP"><span class="nav-number">5.1.</span> <span class="nav-text">SMTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMTP-VS-HTTP"><span class="nav-number">5.2.</span> <span class="nav-text">SMTP VS HTTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-mail-%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">5.3.</span> <span class="nav-text">E-mail 消息格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Email-%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F%EF%BC%9A%E5%A4%9A%E5%AA%92%E4%BD%93%E6%89%A9%E5%B1%95"><span class="nav-number">5.4.</span> <span class="nav-text">Email 消息格式：多媒体扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MIME"><span class="nav-number">5.4.1.</span> <span class="nav-text">MIME</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%AE%E4%BB%B6%E8%AE%BF%E9%97%AE%E5%8D%8F%E8%AE%AE-access-protocol"><span class="nav-number">5.5.</span> <span class="nav-text">邮件访问协议 access protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#POP-%E5%8D%8F%E8%AE%AE"><span class="nav-number">5.5.1.</span> <span class="nav-text">POP 协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IMAP-%E5%8D%8F%E8%AE%AE"><span class="nav-number">5.5.2.</span> <span class="nav-text">IMAP 协议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS"><span class="nav-number">6.</span> <span class="nav-text">DNS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS%E6%9C%8D%E5%8A%A1"><span class="nav-number">6.1.</span> <span class="nav-text">DNS服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%BD%BF%E7%94%A8%E9%9B%86%E4%B8%AD%E5%BC%8F-DNS"><span class="nav-number">6.2.</span> <span class="nav-text">为什么不使用集中式 DNS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%B1%82%E6%AC%A1%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">6.3.</span> <span class="nav-text">分布式层次式数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">6.3.1.</span> <span class="nav-text">根域名服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B6%E7%BA%A7%E5%92%8C%E6%9D%83%E5%A8%81%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">6.3.2.</span> <span class="nav-text">顶级和权威域名解析服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E5%A8%81%EF%BC%88Authoritative%EF%BC%89%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">6.3.3.</span> <span class="nav-text">权威（Authoritative）域名服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">6.3.4.</span> <span class="nav-text">本地域名解析服务器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E6%9F%A5%E8%AF%A2"><span class="nav-number">6.4.</span> <span class="nav-text">迭代查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2"><span class="nav-number">6.5.</span> <span class="nav-text">递归查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E8%AE%B0%E5%BD%95%E7%BC%93%E5%AD%98%E5%92%8C%E6%9B%B4%E6%96%B0"><span class="nav-number">6.6.</span> <span class="nav-text">DNS 记录缓存和更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E7%9A%84%E6%9B%B4%E6%96%B0-x2F-%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6"><span class="nav-number">6.7.</span> <span class="nav-text">记录的更新&#x2F;通知机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E8%AE%B0%E5%BD%95%E5%92%8C%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">6.8.</span> <span class="nav-text">DNS 记录和消息格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E8%AE%B0%E5%BD%95%EF%BC%88RR-resource-records%EF%BC%89"><span class="nav-number">6.8.1.</span> <span class="nav-text">资源记录（RR resource records）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#type"><span class="nav-number">6.8.2.</span> <span class="nav-text">type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS-%E5%8D%8F%E8%AE%AE"><span class="nav-number">6.8.3.</span> <span class="nav-text">DNS 协议</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%B3%A8%E5%86%8C%E5%9F%9F%E5%90%8D"><span class="nav-number">6.9.</span> <span class="nav-text">如何注册域名</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">79k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:12</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
