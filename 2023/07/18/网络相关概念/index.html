@@ -281,7 +281,7 @@
 <li>TCP 报文段如果很长的话会在发送时发生分段，在接收时进行重组</li>
 <li>IP 数据报在长度超过一定值时也会发生分片，在接收端将分片重组</li>
 </ol>
-<p><strong>分段特指发生在使用 TCP 协议的传输层中的数据却分行为</strong><br><strong>分片特指发生在使用 IPv4 协议的网络 IP 层中的数据却分行为</strong></p>
+<p><strong>分段特指发生在使用 TCP 协议的传输层中的数据区分行为</strong><br><strong>分片特指发生在使用 IPv4 协议的网络 IP 层中的数据区分行为</strong></p>
 <p>分段和分片发生在协议栈的不同层次中，但目的都一样，都是为了能够传输上层交付的、数据量超过本层传输能力上限的数据，不得已才做的数据切分。即正常情况下尽量避免做数据切分，能不分就不分，而只有在特殊场景下才不得不这么做。</p>
 <p>为什么能不分就不分呢？</p>
 <ol>
@@ -306,9 +306,9 @@
 <p>如何才能彻底避免分片呢？</p>
 <h3 id="Path-MTU"><a href="#Path-MTU" class="headerlink" title="Path MTU"></a>Path MTU</h3><p>路径 MTU</p>
 <h3 id="Path-MTU-Discovery"><a href="#Path-MTU-Discovery" class="headerlink" title="Path MTU Discovery"></a>Path MTU Discovery</h3><p>路径 MTU 发现 略</p>
-<p>路径MTU发现看似完美避免了IP分片的问题，但同时又带来了新的问题：如果ICMP消息最终没能到达源主机怎么办？很显然该IP数据报就被静静丢弃了，TCP连接超时而被断开。ICMP为什么回不来？一般是被防火墙或路由器的访问控制列表(Access Control List, ACL)给无情拒绝了。</p>
+<p>路径MTU发现看似完美避免了 IP 分片的问题，但同时又带来了新的问题：如果 ICMP 消息最终没能到达源主机怎么办？很显然该IP数据报就被静静丢弃了，TCP连接超时而被断开。ICMP为什么回不来？一般是被防火墙或路由器的访问控制列表(Access Control List, ACL)给无情拒绝了。</p>
 <p>分段是为了避免分片，分片不可避免。</p>
-<p>有了tcp的确认重传机制，网卡、集线器、路由器就不需要有补偿机制了。</p>
+<p>有了 TCP 的确认重传机制，网卡、集线器、路由器就不需要有补偿机制了。</p>
 <h3 id="混杂模式-Promiscuous-Mode"><a href="#混杂模式-Promiscuous-Mode" class="headerlink" title="混杂模式 Promiscuous Mode"></a>混杂模式 Promiscuous Mode</h3><p>是指一台机器的网卡能够接收所有经过它的数据流，而不论其目的地址是否是它。 一般计算机网卡都工作在非混杂模式下，此时网卡只接受来自网络端口的目的地址指向自己的数据。当网卡工作在混杂模式下时，网卡将来自接口的所有数据都捕获并交给相应的驱动程序。 </p>
 <h3 id="plug-and-play"><a href="#plug-and-play" class="headerlink" title="plug and play"></a>plug and play</h3><p>热拔插，在过去是需要手动设置网卡中断号的</p>
 <h3 id="数据链路层帧报头的作用-（时钟同步）"><a href="#数据链路层帧报头的作用-（时钟同步）" class="headerlink" title="数据链路层帧报头的作用 （时钟同步）"></a>数据链路层帧报头的作用 （时钟同步）</h3><p>数据信号、时钟信号，通过时钟信号区分连续的1数据信号，这就是数据链路层报头的作用，保持时钟同步，通过观察报头的信号变化确保同步。</p>
