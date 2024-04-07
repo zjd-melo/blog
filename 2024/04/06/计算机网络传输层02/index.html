@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络传输层 TCP 协议">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络传输层02">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机网络传输层 TCP 协议">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/TCP%E9%87%8D%E4%BC%A0.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/TCP%E7%B4%AF%E8%AE%A1%E7%A1%AE%E8%AE%A4.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E6%8E%A5%E6%94%B6%E6%96%B9%E4%BA%8B%E4%BB%B6.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png">
+<meta property="article:published_time" content="2024-04-06T07:06:54.000Z">
+<meta property="article:modified_time" content="2024-04-06T07:06:54.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/TCP%E9%87%8D%E4%BC%A0.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机网络传输层02 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">22</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络传输层02
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-04-06 15:06:54" itemprop="dateCreated datePublished" datetime="2024-04-06T15:06:54+08:00">2024-04-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+            <div class="post-description">计算机网络传输层 TCP 协议</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="TCP-概述"><a href="#TCP-概述" class="headerlink" title="TCP 概述"></a>TCP 概述</h2><ul>
+<li>点对点 一个发送方一个接收方</li>
+<li>可靠的、按序的字节流</li>
+<li>流水线机制 TCP拥塞控制和流量控制机制设置窗口尺寸</li>
+<li>发送方/接收方缓存</li>
+<li>全双工<ul>
+<li>同一个连接中能够传输双向数据流</li>
+</ul>
+</li>
+<li>面向连接<ul>
+<li>通信双方在发送数据前必须建立连接</li>
+<li>连接状态只在连接的两端中维护，在沿途节点中并不维护状态</li>
+<li>TCP 连接包括两台主机上的缓存、连接状态变量、socket 等</li>
+</ul>
+</li>
+<li>流量控制机制</li>
+</ul>
+<h2 id="序列号和-ACK"><a href="#序列号和-ACK" class="headerlink" title="序列号和 ACK"></a>序列号和 ACK</h2><h3 id="序列号"><a href="#序列号" class="headerlink" title="序列号"></a>序列号</h3><ul>
+<li>序列号指的是 segment 中第一个字节的编号，而不是 segment 的编号</li>
+<li>建立 TCP 连接时，双方随机选择序列号</li>
+</ul>
+<h3 id="ACKs"><a href="#ACKs" class="headerlink" title="ACKs"></a>ACKs</h3><ul>
+<li>希望接收到的下一个字节的序列号</li>
+<li>累计确认：该序列号之前的所有字节均已被正确接收到</li>
+</ul>
+<p>问题：接收方如何处理乱序到达的 segment？</p>
+<p>TCP 规范中没有规定，由 TCP 的实现者做出决策。</p>
+<h2 id="TCP-可靠数据传输概述"><a href="#TCP-可靠数据传输概述" class="headerlink" title="TCP 可靠数据传输概述"></a>TCP 可靠数据传输概述</h2><ul>
+<li>TCP 在 IP 层提高的不可靠服务基础上实现可靠数据传输服务</li>
+<li>流水线机制</li>
+<li>累计确认</li>
+<li>TCP 使用单一重传定时器 （和 SR 不同）</li>
+<li>触发重传的事件<ul>
+<li>超时</li>
+<li>收到重复 ACK</li>
+</ul>
+</li>
+<li>渐进式<ul>
+<li>暂不考虑重复 ACK</li>
+<li>暂不考虑流量控制</li>
+<li>暂不考虑拥塞控制</li>
+</ul>
+</li>
+</ul>
+<h2 id="TCP-RTT-和超时"><a href="#TCP-RTT-和超时" class="headerlink" title="TCP RTT 和超时"></a>TCP RTT 和超时</h2><h3 id="如何设置定时器的超时时间"><a href="#如何设置定时器的超时时间" class="headerlink" title="如何设置定时器的超时时间"></a>如何设置定时器的超时时间</h3><ol>
+<li>大于 RTT，但是 RTT 是变化的</li>
+<li>过短，不必要的重传</li>
+<li>过长，对段丢失时间反应慢</li>
+</ol>
+<h3 id="如何估计-RTT"><a href="#如何估计-RTT" class="headerlink" title="如何估计 RTT"></a>如何估计 RTT</h3><h4 id="SampleRTT"><a href="#SampleRTT" class="headerlink" title="SampleRTT"></a>SampleRTT</h4><p>测量从段发出去到收到 ACK 的时间，忽略重传</p>
+<h4 id="SampleRTT-变化"><a href="#SampleRTT-变化" class="headerlink" title="SampleRTT 变化"></a>SampleRTT 变化</h4><p>测量多个 SampleRTT，求平均值，形成 RTT 的估计值 EstimatedRTT</p>
+<p>指数加权移动平均典型值=0.125</p>
+<p><code>EstimatedRTT=(1-x)*EstimatedRTT + x*EstimatedRTT</code></p>
+<h4 id="定时器超时时间的设置"><a href="#定时器超时时间的设置" class="headerlink" title="定时器超时时间的设置"></a>定时器超时时间的设置</h4><ul>
+<li>EstimatedRTT + “安全边界”</li>
+<li>EstimatedRTT 变化大 –&gt; 较大的边界</li>
+</ul>
+<h4 id="测量-RTT-的变化值：SampleRTT-与-EstimatedRTT-的差值"><a href="#测量-RTT-的变化值：SampleRTT-与-EstimatedRTT-的差值" class="headerlink" title="测量 RTT 的变化值：SampleRTT 与 EstimatedRTT 的差值"></a>测量 RTT 的变化值：SampleRTT 与 EstimatedRTT 的差值</h4><p><code>DevRtt = (1-x)*DevRtt + x*|SampleRtt - EstimatedRTT|</code> 一般 x = 0.25</p>
+<h4 id="定时器超时时间设置"><a href="#定时器超时时间设置" class="headerlink" title="定时器超时时间设置"></a>定时器超时时间设置</h4><p><code>TimeoutInterval = EstimatedRTT + 4*DevRTT</code></p>
+<h2 id="TCP-发送方事件"><a href="#TCP-发送方事件" class="headerlink" title="TCP 发送方事件"></a>TCP 发送方事件</h2><h3 id="从应用层收到数据"><a href="#从应用层收到数据" class="headerlink" title="从应用层收到数据"></a>从应用层收到数据</h3><ul>
+<li>创建 Segment</li>
+<li>序列号是 Segment 第一个字节的编号</li>
+<li>开启计时器</li>
+<li>设置超时时间：TimeOutInterval</li>
+</ul>
+<h3 id="超时"><a href="#超时" class="headerlink" title="超时"></a>超时</h3><ul>
+<li>重传引起超时的 Segment</li>
+<li>重启定时器</li>
+</ul>
+<h3 id="收到-ACK"><a href="#收到-ACK" class="headerlink" title="收到 ACK"></a>收到 ACK</h3><ul>
+<li>如果确认此前位确认的 Segment<ul>
+<li>更新 SendBase</li>
+<li>如果窗口中还有未被确认的分组，重新启动定时器</li>
+</ul>
+</li>
+</ul>
+<h3 id="TCP-重传示例"><a href="#TCP-重传示例" class="headerlink" title="TCP 重传示例"></a>TCP 重传示例</h3><p><img src="/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/TCP%E9%87%8D%E4%BC%A0.png" alt="TCP重传"><br><img src="/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/TCP%E7%B4%AF%E8%AE%A1%E7%A1%AE%E8%AE%A4.png" alt="TCP累计确认"></p>
+<h2 id="TCP-接收方"><a href="#TCP-接收方" class="headerlink" title="TCP 接收方"></a>TCP 接收方</h2><p><img src="/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E6%8E%A5%E6%94%B6%E6%96%B9%E4%BA%8B%E4%BB%B6.png" alt="接收方事件"></p>
+<h2 id="快速重传机制"><a href="#快速重传机制" class="headerlink" title="快速重传机制"></a>快速重传机制</h2><ol>
+<li>TCP 的实现中，如果发生超时，超时时间间隔将重新设置，即将超时时间间隔加倍，导致其很大，重发<br>丢失的分组之前要等待很长时间。</li>
+<li>通过重复 ACK 检测分组丢失，Sender 会背靠背地发送多个分组，如果某个分组丢失，可能会引发多个重复 ACK。</li>
+<li>如果 Sender 收到对同一个数据的 3 个 ACK，则假定该数据之后的段已经丢失。</li>
+</ol>
+<p>快速重传解决这些问题，即在定时器超时之前即进行重传。</p>
+<p>为什么是 3 次？</p>
+<h2 id="TCP-流量控制-速度匹配机制"><a href="#TCP-流量控制-速度匹配机制" class="headerlink" title="TCP 流量控制 速度匹配机制"></a>TCP 流量控制 速度匹配机制</h2><p><img src="/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6.png" alt="流量控制"><br>接收方为 TCP 连接分配 buffer，上层应用可能处理 buffer 中数据的速度较慢。</p>
+<p>flow control 发送方不会传输太多、太快以至于淹没接收方（buffer 溢出）</p>
+<p>假定 TCP receiver 丢弃乱序的 segments。</p>
+<p><code>buffer 中的可用空间（space room）= RcvWindow = RcvBuffer - (LastByteRcvd - LastByteRead)</code></p>
+<ul>
+<li>Receiver 通过在 segment 的头部字段将 RcvWindow 告诉 Sender</li>
+<li>Sender 限制自己已经发送的但还未收到 ACK 的数据不超过接收方的空闲 RcvWindow 尺寸</li>
+<li>Receiver 告诉 Sender RcvWindow=0，会出现什么情况？即使为0，发送方也会发送很小的段，以便收不到接收方的确认，从而导致死锁。</li>
+</ul>
+<h2 id="TCP-连接管理"><a href="#TCP-连接管理" class="headerlink" title="TCP 连接管理"></a>TCP 连接管理</h2><p>TCP sender 和 receiver 在传输数据前需要建立连接，初始化 TCP 变量，Seq、Buffer 和 流量控制信息。</p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><ol>
+<li>客户端发送 TCP SYN 段 到服务器，指定 initial seq，不包含数据</li>
+<li>服务器接收 SYN，返回 SYNACK 段，服务器分配 buffer，指定服务器端 initial seq</li>
+<li>客户端接收 SYNACK，返回 ACK 段，此时可能会包含数据</li>
+</ol>
+<p><img src="/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="三次握手"></p>
+<p>客户端在收到服务器的确认后，可以不给服务器发送确认，达到攻击的目的。</p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><ol>
+<li>客户机像服务器发送 TCP FIN 控制 Segment</li>
+<li>服务器收到 FIN，回复 ACK，关闭连接，发送 FIN</li>
+<li>客户机收到 FIN，回复 ACK，进入等待，如果收到 FIN，会重新发送 ACK，确认服务器成功释放资源</li>
+<li>服务器收到 ACK，连接关闭</li>
+</ol>
+<p><img src="/blog/2024/04/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8202/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="四次挥手"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/03/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%B1%8201/" rel="prev" title="计算机网络传输层01">
+      <i class="fa fa-chevron-left"></i> 计算机网络传输层01
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">TCP 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8F%B7%E5%92%8C-ACK"><span class="nav-number">2.</span> <span class="nav-text">序列号和 ACK</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8F%B7"><span class="nav-number">2.1.</span> <span class="nav-text">序列号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACKs"><span class="nav-number">2.2.</span> <span class="nav-text">ACKs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E5%8F%AF%E9%9D%A0%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E6%A6%82%E8%BF%B0"><span class="nav-number">3.</span> <span class="nav-text">TCP 可靠数据传输概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-RTT-%E5%92%8C%E8%B6%85%E6%97%B6"><span class="nav-number">4.</span> <span class="nav-text">TCP RTT 和超时</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E5%AE%9A%E6%97%B6%E5%99%A8%E7%9A%84%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4"><span class="nav-number">4.1.</span> <span class="nav-text">如何设置定时器的超时时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BC%B0%E8%AE%A1-RTT"><span class="nav-number">4.2.</span> <span class="nav-text">如何估计 RTT</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SampleRTT"><span class="nav-number">4.2.1.</span> <span class="nav-text">SampleRTT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SampleRTT-%E5%8F%98%E5%8C%96"><span class="nav-number">4.2.2.</span> <span class="nav-text">SampleRTT 变化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.2.3.</span> <span class="nav-text">定时器超时时间的设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E9%87%8F-RTT-%E7%9A%84%E5%8F%98%E5%8C%96%E5%80%BC%EF%BC%9ASampleRTT-%E4%B8%8E-EstimatedRTT-%E7%9A%84%E5%B7%AE%E5%80%BC"><span class="nav-number">4.2.4.</span> <span class="nav-text">测量 RTT 的变化值：SampleRTT 与 EstimatedRTT 的差值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.2.5.</span> <span class="nav-text">定时器超时时间设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E5%8F%91%E9%80%81%E6%96%B9%E4%BA%8B%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">TCP 发送方事件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%BA%94%E7%94%A8%E5%B1%82%E6%94%B6%E5%88%B0%E6%95%B0%E6%8D%AE"><span class="nav-number">5.1.</span> <span class="nav-text">从应用层收到数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E6%97%B6"><span class="nav-number">5.2.</span> <span class="nav-text">超时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B6%E5%88%B0-ACK"><span class="nav-number">5.3.</span> <span class="nav-text">收到 ACK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-%E9%87%8D%E4%BC%A0%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.4.</span> <span class="nav-text">TCP 重传示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E6%8E%A5%E6%94%B6%E6%96%B9"><span class="nav-number">6.</span> <span class="nav-text">TCP 接收方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6"><span class="nav-number">7.</span> <span class="nav-text">快速重传机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6-%E9%80%9F%E5%BA%A6%E5%8C%B9%E9%85%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">8.</span> <span class="nav-text">TCP 流量控制 速度匹配机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86"><span class="nav-number">9.</span> <span class="nav-text">TCP 连接管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">9.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">9.2.</span> <span class="nav-text">四次挥手</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">87k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:19</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
