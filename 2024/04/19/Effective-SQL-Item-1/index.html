@@ -18,15 +18,15 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Data Model Design 之所有表都需要有主键">
+  <meta name="description" content="Data Model Design 确保所有表都有主键">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Effective SQL Item 1">
 <meta property="og:url" content="https://zjd-melo.github.io/blog/2024/04/19/Effective-SQL-Item-1/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="Data Model Design 之所有表都需要有主键">
+<meta property="og:description" content="Data Model Design 确保所有表都有主键">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-19T08:04:40.000Z">
 <meta property="article:modified_time" content="2024-04-19T08:04:40.000Z">
@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>87</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -235,7 +235,7 @@
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               <span>1 mins.</span>
             </span>
-            <div class="post-description">Data Model Design 之所有表都需要有主键</div>
+            <div class="post-description">Data Model Design 确保所有表都有主键</div>
 
         </div>
       </header>
@@ -246,7 +246,76 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>为了遵守关系模型的要求，数据库系统能够区分表中的单行和所有其他行，因此每个表都应该有一列或一组列作为主键。<br>主键的值在所有行中必须唯一（unique）且非空（not null）。</p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>为了遵守关系模型的要求，数据库系统能够区分表中的单行和所有其他行，因此每个表都应该有一列或一组列作为主键。<br>主键的值在所有行中必须唯一（unique）且非空（not null）。如果没有主键，在过滤查询时没办法确保到底匹配到了<br>多少行数据。当然没有主键的表也是合法的。事实上在一列或者多列上设置非空并且保证唯一性并不意味着数据库引擎<br>高效的利用这些列，我们必须显式的指定 <code>primary key</code>，更深一点，没有主键更谈不上在表之间建立关联关系。</p>
+<p>如果一张表没有主键会引起很多问题，<strong>重复</strong>且<strong>不一致</strong>的数据、<strong>慢查询</strong>、<strong>不准确</strong>的报表等。</p>
+<h2 id="怎么选择主键"><a href="#怎么选择主键" class="headerlink" title="怎么选择主键"></a>怎么选择主键</h2><ul>
+<li>Must hold unique values</li>
+<li>Can never be null</li>
+<li>Should be stable<ul>
+<li>不需要或很少更新</li>
+</ul>
+</li>
+<li>Should be as simple as possible <ul>
+<li>整数比浮点数和字符串好</li>
+<li>单列比多列好</li>
+</ul>
+</li>
+</ul>
+<p>达到这些目的的通常做法是使用自增的物理主键。</p>
+<h2 id="Referential-Integrity"><a href="#Referential-Integrity" class="headerlink" title="Referential Integrity"></a>Referential Integrity</h2><p>在关系型数据库中<strong>参照完整性</strong>是一个很重要的概念，它要求一个 child table 中的每一个非空外键在 parent<br>table 中都必须有一条记录与之对应。</p>
+<h2 id="Numeric-vsersus-text-based-primary-keys"><a href="#Numeric-vsersus-text-based-primary-keys" class="headerlink" title="Numeric vsersus text-based primary keys"></a>Numeric vsersus text-based primary keys</h2><p>一直是一个争论。</p>
+<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
+<li>All tables should have a column (or a set of columns) designated as a pk</li>
+<li>如果担心非 key 列有重复的值，可以定义一个 unique index 确保完整性。</li>
+<li>使用较少更新、值简单的列作为主键</li>
+</ul>
+<h2 id="Primary-key-unique-key-foreign-key"><a href="#Primary-key-unique-key-foreign-key" class="headerlink" title="Primary key, unique key, foreign key"></a>Primary key, unique key, foreign key</h2><table>
+<thead>
+<tr>
+<th>Features</th>
+<th>pk</th>
+<th>uk</th>
+<th>fk</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Number of keys</td>
+<td>One pk in a parent table</td>
+<td>One or more than one, in parent or child tables</td>
+<td>Tables can have multiple fks</td>
+</tr>
+<tr>
+<td>Values</td>
+<td>Must have a value, cannot be null</td>
+<td>Can be null</td>
+<td>Can be null</td>
+</tr>
+<tr>
+<td>Use</td>
+<td>Identify every item in a table</td>
+<td>Identify items in a table when they cannot have duplicate values</td>
+<td>Relate to parent table</td>
+</tr>
+<tr>
+<td>Ease</td>
+<td>Can not be removed, difficult to change</td>
+<td>Can be removed or changed easily</td>
+<td>Can be remove from table</td>
+</tr>
+<tr>
+<td>Indexes</td>
+<td>Clustered index</td>
+<td>Non-clustered index</td>
+<td>None</td>
+</tr>
+<tr>
+<td>In tables</td>
+<td>Part of a parent table</td>
+<td>Part of a table</td>
+<td>Part of a child table, always links back to a pk in a parent table</td>
+</tr>
+</tbody></table>
+<h2 id="Nature-key、surrogate-key"><a href="#Nature-key、surrogate-key" class="headerlink" title="Nature key、surrogate key"></a>Nature key、surrogate key</h2><p>Nature key 自然主键/业务主键来源于业务字段，surrogate key 物理主键/代理主键/逻辑主键一般是自增序列。说法不一样。<br>###聚集索引<br>聚集索引基于数据行的键值在表内排序和存储这些数据行。每个表只能有一个聚集索引，因为数据行本身只能按一个顺序存储。<br>主键必须是聚集索引（即便是没有主键或者唯一约束字段，会自动生成一个主键做聚集索引），这一点没有商量的余地，因此，在MySQL中，“为什么InnoDB表最好要有自增列做主键？”这一点就显得更加有必要。</p>
 
     </div>
 
@@ -328,6 +397,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E9%80%89%E6%8B%A9%E4%B8%BB%E9%94%AE"><span class="nav-number">2.</span> <span class="nav-text">怎么选择主键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referential-Integrity"><span class="nav-number">3.</span> <span class="nav-text">Referential Integrity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Numeric-vsersus-text-based-primary-keys"><span class="nav-number">4.</span> <span class="nav-text">Numeric vsersus text-based primary keys</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">5.</span> <span class="nav-text">Things to Remember</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Primary-key-unique-key-foreign-key"><span class="nav-number">6.</span> <span class="nav-text">Primary key, unique key, foreign key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nature-key%E3%80%81surrogate-key"><span class="nav-number">7.</span> <span class="nav-text">Nature key、surrogate key</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -401,13 +471,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">93k</span>
+    <span title="Symbols count total">95k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">1:25</span>
+    <span title="Reading time total">1:26</span>
 </div>
 
         
