@@ -21,17 +21,20 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="melon">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Dying Memory">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/categories/web/index.html">
+  <meta name="description" content="Data Model Design 消除数据冗余存储">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective SQL Item 2">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/04/23/Effective-SQL-Item-2/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="melon">
+<meta property="og:description" content="Data Model Design 消除数据冗余存储">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-23T01:29:22.000Z">
+<meta property="article:modified_time" content="2024-04-23T01:29:22.000Z">
 <meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/categories/web/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/04/23/Effective-SQL-Item-2/">
 
 
 <script id="page-configurations">
@@ -39,12 +42,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh_CN'
   };
 </script>
 
-  <title>Category: web | Dying Memory</title>
+  <title>Effective SQL Item 2 | Dying Memory</title>
   
 
 
@@ -168,51 +171,210 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">web
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/04/23/Effective-SQL-Item-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Effective SQL Item 2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-04-23 09:29:22" itemprop="dateCreated datePublished" datetime="2024-04-23T09:29:22+08:00">2024-04-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+            <div class="post-description">Data Model Design 消除数据冗余存储</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>数据的冗余存储会引起很多问题，如数据一致性，增、删、改带来的异常情况，并且浪费了磁盘空间。<br><strong>Normalization is a process that involves dividing information by subject to help eliminate problems associated with storing duplicate data.</strong></p>
+<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><table>
+<thead>
+<tr>
+<th>SalesId</th>
+<th>CustFirstName</th>
+<th>CustLastName</th>
+<th>Address</th>
+<th>City</th>
+<th>Phone</th>
+<th>PurchaseDate</th>
+<th>ModelYear</th>
+<th>Model</th>
+<th>SalesPerson</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Tom</td>
+<td>Smith</td>
+<td>7453 BA</td>
+<td>SH</td>
+<td>131123</td>
+<td>2019-01-01</td>
+<td>2018-12-01</td>
+<td>BMW</td>
+<td>Dk</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Tom</td>
+<td>Smith</td>
+<td>7435 BA</td>
+<td>SH</td>
+<td>131123</td>
+<td>2019-01-01</td>
+<td>2018-12-01</td>
+<td>Audi</td>
+<td>Dk</td>
+</tr>
+</tbody></table>
+<h3 id="Inconsistent"><a href="#Inconsistent" class="headerlink" title="Inconsistent"></a>Inconsistent</h3><p>地址信息不对</p>
+<h3 id="Insertion-anomaly"><a href="#Insertion-anomaly" class="headerlink" title="Insertion anomaly"></a>Insertion anomaly</h3><p>对于一个新上市的 Car，只有等到有人购买才能录入信息。还有其他字段存在冗余，这些冗余/重复数据会浪费<br>磁盘空间、内存、网络带宽甚至浪费工作人员的时间来录入这些信息，同时也带来了数据错误的风险，如上述编码错误。</p>
+<h3 id="Update-anomaly"><a href="#Update-anomaly" class="headerlink" title="Update anomaly"></a>Update anomaly</h3><p>比如销售人员结婚并更换了 lastName，此时就需要对整个表里面属于该销售人的记录进行更新，只有在没有数据一致性问题且没有重名的情况下才能成功，<br>也会带来性能问题。</p>
+<h3 id="Deleteion-anomaly"><a href="#Deleteion-anomaly" class="headerlink" title="Deleteion anomaly"></a>Deleteion anomaly</h3><p>删除一行数据可能会删除不想删的信息。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>可以把表拆分为4张表，来解决上述问题。</p>
+<ol>
+<li>Customers</li>
+<li>Employees</li>
+<li>AutomobileModels</li>
+<li>SalesTransactions</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>CustomerId</th>
+<th>CustFirstName</th>
+<th>CustLastName</th>
+<th>Address</th>
+<th>City</th>
+<th>Phone</th>
+</tr>
+</thead>
+</table>
+<table>
+<thead>
+<tr>
+<th>EmployeeId</th>
+<th>SalesPerson</th>
+</tr>
+</thead>
+</table>
+<table>
+<thead>
+<tr>
+<th>ModelId</th>
+<th>ModelYear</th>
+<th>Model</th>
+</tr>
+</thead>
+</table>
+<table>
+<thead>
+<tr>
+<th>SalesId</th>
+<th>CustomerId</th>
+<th>ModelId</th>
+<th>SalesPersonId</th>
+<th>PurchaseDate</th>
+</tr>
+</thead>
+</table>
+<p>通过这种设计，结构更简洁，消除了冗余数据，可以通过视图来重建原始的表。</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> st.SalesID, c.CustFirstName, c.CustLastName, c.Address,</span><br><span class="line">       c.City, c.Phone, st.PurchaseDate, m.ModelYear, m.Model,</span><br><span class="line">       e.SalesPerson</span><br><span class="line"><span class="keyword">FROM</span> SalesTransactions st</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> Customers c</span><br><span class="line">    <span class="keyword">ON</span> c.CustomerID <span class="operator">=</span> st.CustomerID</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> Employees e</span><br><span class="line">    <span class="keyword">ON</span> e.EmployeeID <span class="operator">=</span> st.SalesPersonID</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> AutomobileModels m</span><br><span class="line">    <span class="keyword">ON</span> m.ModelID <span class="operator">=</span> st.ModelID;</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
+<li>A goal of database normalization is the elimination of redundant data and minimizing resource use when processing data.</li>
+<li>By eliminating redundant data, you eliminate insert, update, and delete anomalies.</li>
+<li>By eliminating redundant data, you minimize the occurrence of inconsistent data.</li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-10-21T13:59:10+08:00"
-              content="2023-10-21">
-          10-21
-        </time>
-      </div>
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/SQL/" rel="tag"><i class="fa fa-tag"></i> SQL</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/blog/2023/10/21/%E5%89%8D%E7%AB%AF%E9%9B%B6%E6%98%9F%E7%9F%A5%E8%AF%86/" itemprop="url">
-            <span itemprop="name">前端零星知识</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/04/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%B1%8202/" rel="prev" title="计算机网络网络层02">
+      <i class="fa fa-chevron-left"></i> 计算机网络网络层02
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
@@ -265,6 +427,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">举例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Inconsistent"><span class="nav-number">2.1.</span> <span class="nav-text">Inconsistent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Insertion-anomaly"><span class="nav-number">2.2.</span> <span class="nav-text">Insertion anomaly</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-anomaly"><span class="nav-number">2.3.</span> <span class="nav-text">Update anomaly</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deleteion-anomaly"><span class="nav-number">2.4.</span> <span class="nav-text">Deleteion anomaly</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">4.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
