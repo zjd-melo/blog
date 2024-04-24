@@ -21,19 +21,20 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="单词">
+  <meta name="description" content="Data Model Design 重复分组问题 Repeating groups">
 <meta property="og:type" content="article">
-<meta property="og:title" content="word">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/2023/06/02/word/index.html">
+<meta property="og:title" content="Effective SQL Item 3">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/04/24/Effective-SQL-Item-3/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="单词">
+<meta property="og:description" content="Data Model Design 重复分组问题 Repeating groups">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-06-02T03:20:35.000Z">
-<meta property="article:modified_time" content="2023-06-15T12:20:35.000Z">
+<meta property="article:published_time" content="2024-04-24T01:13:48.000Z">
+<meta property="article:modified_time" content="2024-04-24T01:13:48.000Z">
 <meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/2023/06/02/word/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/04/24/Effective-SQL-Item-3/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>word | Dying Memory</title>
+  <title>Effective SQL Item 3 | Dying Memory</title>
   
 
 
@@ -177,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/06/02/word/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/04/24/Effective-SQL-Item-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -190,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          word
+          Effective SQL Item 3
         </h1>
 
         <div class="post-meta">
@@ -200,15 +201,17 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-06-02 11:20:35" itemprop="dateCreated datePublished" datetime="2023-06-02T11:20:35+08:00">2023-06-02</time>
+              <time title="Created: 2024-04-24 09:13:48" itemprop="dateCreated datePublished" datetime="2024-04-24T09:13:48+08:00">2024-04-24</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-15 20:20:35" itemprop="dateModified" datetime="2023-06-15T20:20:35+08:00">2023-06-15</time>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
               </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -223,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>426</span>
+              <span>1.5k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -232,7 +235,7 @@
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               <span>1 mins.</span>
             </span>
-            <div class="post-description">单词</div>
+            <div class="post-description">Data Model Design 重复分组问题 Repeating groups</div>
 
         </div>
       </header>
@@ -243,17 +246,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="capable"><a href="#capable" class="headerlink" title="capable"></a>capable</h3><p>having the ability, fitness</p>
-<h3 id="vital"><a href="#vital" class="headerlink" title="vital"></a>vital</h3><h3 id="rival"><a href="#rival" class="headerlink" title="rival"></a>rival</h3><p>rival   竞争对手</p>
-<p>rivalry 对抗</p>
-<h3 id="mainframe"><a href="#mainframe" class="headerlink" title="mainframe"></a>mainframe</h3><p>mainframe 主机</p>
-<p>mainframes 大型机</p>
-<h3 id="decade"><a href="#decade" class="headerlink" title="decade"></a>decade</h3><p>a decade ago</p>
-<h3 id="modestly"><a href="#modestly" class="headerlink" title="modestly"></a>modestly</h3><p>谦虚的、端庄的</p>
-<h3 id="committee"><a href="#committee" class="headerlink" title="committee"></a>committee</h3><h3 id="precise"><a href="#precise" class="headerlink" title="precise"></a>precise</h3><h3 id="brevity"><a href="#brevity" class="headerlink" title="brevity"></a>brevity</h3><p>We have tried to retain the brevity of the first edition.</p>
-<h3 id="concise"><a href="#concise" class="headerlink" title="concise"></a>concise</h3><h3 id="perceptive"><a href="#perceptive" class="headerlink" title="perceptive"></a>perceptive</h3><p>Rob Pike gave us perceptive comments on almost every page of draft manuscripts</p>
-<h3 id="novcie"><a href="#novcie" class="headerlink" title="novcie"></a>novcie</h3><p>Nonetheless, a novice programmer should be able to read along and pick up the language</p>
-<h3 id="grave"><a href="#grave" class="headerlink" title="grave"></a>grave</h3><h3 id="deficiency"><a href="#deficiency" class="headerlink" title="deficiency"></a>deficiency</h3><h3 id="rudiment"><a href="#rudiment" class="headerlink" title="rudiment"></a>rudiment</h3><h3 id="algebra"><a href="#algebra" class="headerlink" title="algebra"></a>algebra</h3><h3 id="minuend"><a href="#minuend" class="headerlink" title="minuend"></a>minuend</h3><h3 id="subtrahend"><a href="#subtrahend" class="headerlink" title="subtrahend"></a>subtrahend</h3><h3 id="difference"><a href="#difference" class="headerlink" title="difference"></a>difference</h3><h3 id="flip-flop"><a href="#flip-flop" class="headerlink" title="flip-flop"></a>flip-flop</h3><h3 id="sparse"><a href="#sparse" class="headerlink" title="sparse"></a>sparse</h3>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="repeating-group-pattern"><a href="#repeating-group-pattern" class="headerlink" title="repeating group pattern"></a>repeating group pattern</h3><p>一中有类似月份（Jan, Feb, Mar）、或多列（Quantity1, ItemDescription1, Price1, Quantity2, ItemDescription2, Price2…），<br>这种情况就被认为是重复组模式。这种模式很难查询，并且当需要添加或减少类似属性时，当前的设计只能增/删表中的列，并且也需要修改基于表的查询。</p>
+<p>需要牢记的是：<strong>Columns are expensive. Rows are cheap.</strong></p>
+<blockquote>
+<p>A red flag should be raised in your mind if the table design requires adding or removing columns to accommodate future data requirements with similar data. A much better design involves adding or removing rows as needed.</p>
+</blockquote>
+<h2 id="Union"><a href="#Union" class="headerlink" title="Union"></a>Union</h2><p>可以使用 union 查询处理重复分组的表。在不能规范化表的情况下（没权限修改）可以通过只读视图来达到规范化的效果。</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_1 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_1 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_2 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_2 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_3 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_3 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_4 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_4 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_5 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_5 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> DrawingID, Predecessor;</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>union</code> 关键字要求每个 <code>select</code> 字段需要相同的类型和顺序，只需要在第一个 <code>select</code> 语句后添加 <code>as</code> 就可以了，每个 <code>select</code> 都可以有自己不同的 <code>where</code> 查询，<br>只需要在最后添加 <code>order by</code>。</p>
+<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
+<li>A goal of database normalization is the elimination of repeating groups of data and minimizing the schema change.</li>
+<li>By eliminating repeating groups of data, you can use indexing to prevent accidental duplication of data, and you greatly simplify any queries needed.</li>
+<li>Removing repeating groups of data makes the design more flexible because adding a new group simply requires adding another row of data, not changing the table design to add more columns.</li>
+</ul>
+
     </div>
 
     
@@ -261,6 +268,10 @@
     
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/SQL/" rel="tag"><i class="fa fa-tag"></i> SQL</a>
+          </div>
 
         
 
@@ -268,13 +279,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2023/05/26/glossary/" rel="prev" title="计算机相关术语">
-      <i class="fa fa-chevron-left"></i> 计算机相关术语
+    <a href="/blog/2024/04/23/Effective-SQL-Item-2/" rel="prev" title="Effective SQL Item 2">
+      <i class="fa fa-chevron-left"></i> Effective SQL Item 2
     </a></div>
-      <div class="post-nav-item">
-    <a href="/blog/2023/06/02/C-1/" rel="next" title="C-1">
-      C-1 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -333,7 +341,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#capable"><span class="nav-number">1.</span> <span class="nav-text">capable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vital"><span class="nav-number">2.</span> <span class="nav-text">vital</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rival"><span class="nav-number">3.</span> <span class="nav-text">rival</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mainframe"><span class="nav-number">4.</span> <span class="nav-text">mainframe</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#decade"><span class="nav-number">5.</span> <span class="nav-text">decade</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#modestly"><span class="nav-number">6.</span> <span class="nav-text">modestly</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#committee"><span class="nav-number">7.</span> <span class="nav-text">committee</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#precise"><span class="nav-number">8.</span> <span class="nav-text">precise</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#brevity"><span class="nav-number">9.</span> <span class="nav-text">brevity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#concise"><span class="nav-number">10.</span> <span class="nav-text">concise</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#perceptive"><span class="nav-number">11.</span> <span class="nav-text">perceptive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#novcie"><span class="nav-number">12.</span> <span class="nav-text">novcie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grave"><span class="nav-number">13.</span> <span class="nav-text">grave</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deficiency"><span class="nav-number">14.</span> <span class="nav-text">deficiency</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rudiment"><span class="nav-number">15.</span> <span class="nav-text">rudiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#algebra"><span class="nav-number">16.</span> <span class="nav-text">algebra</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#minuend"><span class="nav-number">17.</span> <span class="nav-text">minuend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#subtrahend"><span class="nav-number">18.</span> <span class="nav-text">subtrahend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#difference"><span class="nav-number">19.</span> <span class="nav-text">difference</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flip-flop"><span class="nav-number">20.</span> <span class="nav-text">flip-flop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sparse"><span class="nav-number">21.</span> <span class="nav-text">sparse</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#repeating-group-pattern"><span class="nav-number">1.1.</span> <span class="nav-text">repeating group pattern</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Union"><span class="nav-number">2.</span> <span class="nav-text">Union</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">3.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
