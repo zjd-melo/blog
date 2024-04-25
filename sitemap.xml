@@ -29,6 +29,15 @@
   </url>
   
   <url>
+    <loc>https://zjd-melo.github.io/blog/2024/04/25/Effective-SQL-Item-4/</loc>
+    
+    <lastmod>2024-04-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zjd-melo.github.io/blog/2024/04/24/Effective-SQL-Item-3/</loc>
     
     <lastmod>2024-04-24</lastmod>
@@ -316,14 +325,14 @@
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</loc>
+    <loc>https://zjd-melo.github.io/blog/tags/%E8%B4%A7%E5%B8%81/</loc>
     <lastmod>2024-04-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/tags/%E8%B4%A7%E5%B8%81/</loc>
+    <loc>https://zjd-melo.github.io/blog/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</loc>
     <lastmod>2024-04-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -374,14 +383,14 @@
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</loc>
+    <loc>https://zjd-melo.github.io/blog/categories/%E9%87%91%E8%9E%8D/</loc>
     <lastmod>2024-04-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://zjd-melo.github.io/blog/categories/%E9%87%91%E8%9E%8D/</loc>
+    <loc>https://zjd-melo.github.io/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2024-04-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

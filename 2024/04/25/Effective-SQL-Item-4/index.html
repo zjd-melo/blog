@@ -21,20 +21,20 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="The C programming language ch-2">
+  <meta name="description" content="Data Model Design">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C-2">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/2023/06/12/C-2/index.html">
+<meta property="og:title" content="Effective SQL Item 4">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/04/25/Effective-SQL-Item-4/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="The C programming language ch-2">
+<meta property="og:description" content="Data Model Design">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-06-12T12:02:00.000Z">
-<meta property="article:modified_time" content="2023-06-12T12:02:00.000Z">
+<meta property="article:published_time" content="2024-04-25T01:22:31.000Z">
+<meta property="article:modified_time" content="2024-04-25T01:22:31.000Z">
 <meta property="article:author" content="朱佳东">
-<meta property="article:tag" content="C">
+<meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/2023/06/12/C-2/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/04/25/Effective-SQL-Item-4/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>C-2 | Dying Memory</title>
+  <title>Effective SQL Item 4 | Dying Memory</title>
   
 
 
@@ -178,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/06/12/C-2/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/04/25/Effective-SQL-Item-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -191,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          C-2
+          Effective SQL Item 4
         </h1>
 
         <div class="post-meta">
@@ -201,7 +201,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-06-12 20:02:00" itemprop="dateCreated datePublished" datetime="2023-06-12T20:02:00+08:00">2023-06-12</time>
+              <time title="Created: 2024-04-25 09:22:31" itemprop="dateCreated datePublished" datetime="2024-04-25T09:22:31+08:00">2024-04-25</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,7 +209,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">编程语言</span></a>
+                  <a href="/blog/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
                 </span>
             </span>
 
@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>689</span>
+              <span>1.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -235,7 +235,7 @@
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               <span>1 mins.</span>
             </span>
-            <div class="post-description">The C programming language ch-2</div>
+            <div class="post-description">Data Model Design</div>
 
         </div>
       </header>
@@ -246,19 +246,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>变量（Variables）和常量（constants）是一个程序中基本的操作对象。<br>对象的类型决定了值域和对应的操作。</p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><blockquote>
+<p>In relational terminology, a relation (table) should describe one and only one subject or action. Attributes (columns) contain the data pertaining to one and only one property (often referred to as “atomic” data) that describes the subject defined by the relation. An attribute can also be a foreign key containing an attribute from another relation, and this foreign key provides the relationship to some tuple (row) in another relation.</p>
 </blockquote>
-<hr>
-<p><strong>lower case for variable names</strong></p>
-<p><strong>upper case for symbolic constant</strong></p>
-<p>At least the first 31 characters of an internal name are significant. For function names and external variables, the number may be less than 31, because external names may be used by assemblers and loaders over which the language has no control. For external names, the standard guarantees uniqueness only for 6 characters and a single case.<br>不同编译器有不同的实现。</p>
-<h3 id="数据类型和长度"><a href="#数据类型和长度" class="headerlink" title="数据类型和长度"></a>数据类型和长度</h3><p>C语言中的类型很少：<code>char</code>, <code>int</code>, <code>float</code>, <code>double</code></p>
-<p>除此之外还有一些qualifiers可以修饰这些类型<br>比如 <code>short</code>, <code>long</code>, <code>signed</code>, <code>unsigned</code></p>
-<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">short</span> <span class="type">int</span> sh;</span><br><span class="line"><span class="type">long</span> <span class="type">int</span> counter;</span><br><span class="line"><span class="comment">// int 可以省略</span></span><br></pre></td></tr></tbody></table></figure>
-<p><code>short</code> 和 <code>long</code> 的目的是提供不同长度的整型数据，<code>int</code>一般是机器的 nature size<br><code>short</code> 一般是 16 bits，<code>int</code>一般是16 bits 或者 32 bits，取决于编译器</p>
-<p>&lt;limits.h&gt;  和 &lt;float.h&gt; 中定义了关于类型大小的符号常量。</p>
-<p><strong>写一个程序打印各个类型的取值范围</strong></p>
+<p>列只保存原子数据，比如地址信息，需要拆分为多列（省、市、区等）。</p>
+<p>单列中存多属性的值并不是一个好的设计，不利于查询和聚合。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>比如一张表中有存外国人的名字（first name last name） 和地址信息会导致如下问题：</p>
+<ul>
+<li>很难搜索 last name 是 smith 的，使用低效的 <code>like</code> 查询可能也会返回 SmithA 等信息</li>
+<li>使用 <code>like</code> 查询 first name 可能会使用前缀索引提升效率，但是如果是 <code>Mr Smith</code> 呢，就不能使用 trailing wildcard 了，会退化为 data scan</li>
+<li>join 数据时很难用省去关联</li>
+</ul>
+<h2 id="分解"><a href="#分解" class="headerlink" title="分解"></a>分解</h2><p>此时我们就需要把列分解为更加具体的原子数据，至于如何区分粒度，则要根据具体应用而定，这样存储、查询都会变的高效，如果想提取具体信息则可以使用字符串函数拼接数据。</p>
+<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
+<li>Correct table design assigns each individual property to its own column, because when a column contains multiple properties, searching and grouping become difficult if not impossible.</li>
+<li>For some applications, the need to filter the parts in columns such as address or phone number may dictate the level of granularity.</li>
+<li>When you need to reassemble properties for a report or a printed listing, use concatenation.</li>
+</ul>
 
     </div>
 
@@ -269,7 +273,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/blog/tags/C/" rel="tag"><i class="fa fa-tag"></i> C</a>
+              <a href="/blog/tags/SQL/" rel="tag"><i class="fa fa-tag"></i> SQL</a>
           </div>
 
         
@@ -278,13 +282,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2023/06/02/C-1/" rel="prev" title="C-1">
-      <i class="fa fa-chevron-left"></i> C-1
+    <a href="/blog/2024/04/24/Effective-SQL-Item-3/" rel="prev" title="Effective SQL Item 3">
+      <i class="fa fa-chevron-left"></i> Effective SQL Item 3
     </a></div>
-      <div class="post-nav-item">
-    <a href="/blog/2023/07/10/hbase/" rel="next" title="HBase">
-      HBase <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -343,7 +344,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E9%95%BF%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">数据类型和长度</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">4.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
