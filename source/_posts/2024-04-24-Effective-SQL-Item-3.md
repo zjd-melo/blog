@@ -16,6 +16,11 @@ description: Data Model Design 重复分组问题 Repeating groups
 
 >A red flag should be raised in your mind if the table design requires adding or removing columns to accommodate future data requirements with similar data. A much better design involves adding or removing rows as needed.
 
+repeating group 最早是有 E.F.Codd 提出的，本意是指在一列中包含了多个类似的值，比如列中存放了数组，这违背了 1NF，现在被数据库设计者非正式的引用为一张表中有属性值相同的多个列。
+后者并不违背 1NF，没列只有一个单一的值。后者违背 DRY 原则。
+
+[关于repating group的一些讨论](https://stackoverflow.com/questions/23194292/normalization-what-does-repeating-groups-mean)
+
 ## Union
 可以使用 union 查询处理重复分组的表。在不能规范化表的情况下（没权限修改）可以通过只读视图来达到规范化的效果。
 ```sql
