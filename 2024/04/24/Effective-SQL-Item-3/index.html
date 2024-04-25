@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.5k</span>
+              <span>1.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -251,6 +251,8 @@
 <blockquote>
 <p>A red flag should be raised in your mind if the table design requires adding or removing columns to accommodate future data requirements with similar data. A much better design involves adding or removing rows as needed.</p>
 </blockquote>
+<p>repeating group 最早是有 E.F.Codd 提出的，本意是指在一列中包含了多个类似的值，比如列中存放了数组，这违背了 1NF，现在被数据库设计者非正式的引用为一张表中有属性值相同的多个列。<br>后者并不违背 1NF，没列只有一个单一的值。后者违背 DRY 原则。</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/23194292/normalization-what-does-repeating-groups-mean">关于repating group的一些讨论</a></p>
 <h2 id="Union"><a href="#Union" class="headerlink" title="Union"></a>Union</h2><p>可以使用 union 查询处理重复分组的表。在不能规范化表的情况下（没权限修改）可以通过只读视图来达到规范化的效果。</p>
 <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_1 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_1 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_2 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_2 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_3 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_3 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_4 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_4 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> ID <span class="keyword">AS</span> DrawingID, Predecessor_5 <span class="keyword">AS</span> Predecessor</span><br><span class="line"><span class="keyword">FROM</span> Assignments <span class="keyword">WHERE</span> Predecessor_5 <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> DrawingID, Predecessor;</span><br></pre></td></tr></tbody></table></figure>
 
@@ -415,7 +417,7 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">100k</span>
+    <span title="Symbols count total">101k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
