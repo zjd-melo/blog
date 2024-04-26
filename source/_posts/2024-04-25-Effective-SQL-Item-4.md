@@ -4,7 +4,7 @@ date: 2024-04-25 09:22:31
 updated: 2024-04-25 09:22:31
 categories: DataBase
 tags: [SQL]
-description: Data Model Design 
+description: Data Model Design Store Only One Property per Column
 ---
 
 ## 简介
