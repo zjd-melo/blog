@@ -4,7 +4,7 @@ date: 2024-04-29 10:27:22
 updated: 2024-04-29 10:27:22
 categories: DataBase
 tags: [SQL]
-description: Data Model Design Define Be Sure Your Table Relationships Make Sense
+description: Data Model Design Be Sure Your Table Relationships Make Sense
 ---
 
 ## 简介
