@@ -21,30 +21,33 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="melon">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Dying Memory">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/page/4/index.html">
+  <meta name="description" content="Programmability and Index Design Factor in Nulls When Creating Indexes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective SQL Item 10">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/05/13/Effective-SQL-Item-10/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="melon">
+<meta property="og:description" content="Programmability and Index Design Factor in Nulls When Creating Indexes">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-05-13T06:38:56.000Z">
+<meta property="article:modified_time" content="2024-05-13T06:38:56.000Z">
 <meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/page/4/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/05/13/Effective-SQL-Item-10/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh_CN'
   };
 </script>
 
-  <title>Dying Memory</title>
+  <title>Effective SQL Item 10 | Dying Memory</title>
   
 
 
@@ -168,13 +171,14 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/06/02/word/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/05/13/Effective-SQL-Item-10/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -186,10 +190,9 @@
       <meta itemprop="name" content="Dying Memory">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2023/06/02/word/" class="post-title-link" itemprop="url">word</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Effective SQL Item 10
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -198,265 +201,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-06-02 11:20:35" itemprop="dateCreated datePublished" datetime="2023-06-02T11:20:35+08:00">2023-06-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-15 20:20:35" itemprop="dateModified" datetime="2023-06-15T20:20:35+08:00">2023-06-15</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>426</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>单词</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2023/06/02/word/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/05/26/glossary/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="朱佳东">
-      <meta itemprop="description" content="melon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Dying Memory">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2023/05/26/glossary/" class="post-title-link" itemprop="url">计算机相关术语</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-26 16:02:36" itemprop="dateCreated datePublished" datetime="2023-05-26T16:02:36+08:00">2023-05-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-28 18:02:36" itemprop="dateModified" datetime="2023-08-28T18:02:36+08:00">2023-08-28</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.2k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>术语</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2023/05/26/glossary/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/05/11/git-rebase/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="朱佳东">
-      <meta itemprop="description" content="melon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Dying Memory">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2023/05/11/git-rebase/" class="post-title-link" itemprop="url">git rebase</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-11 18:09:01" itemprop="dateCreated datePublished" datetime="2023-05-11T18:09:01+08:00">2023-05-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-26 19:32:02" itemprop="dateModified" datetime="2023-07-26T19:32:02+08:00">2023-07-26</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.4k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>About git rebase</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2023/05/11/git-rebase/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/05/09/%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="朱佳东">
-      <meta itemprop="description" content="melon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Dying Memory">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2023/05/09/%E6%8F%8F%E8%BF%B0%E7%AC%A6/" class="post-title-link" itemprop="url">描述符</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-09 18:52:04" itemprop="dateCreated datePublished" datetime="2023-05-09T18:52:04+08:00">2023-05-09</time>
+              <time title="Created: 2024-05-13 14:38:56" itemprop="dateCreated datePublished" datetime="2024-05-13T14:38:56+08:00">2024-05-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -464,96 +209,24 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">编程语言</span></a>
+                  <a href="/blog/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
                 </span>
             </span>
 
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>12k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>11 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Python描述符机制</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2023/05/09/%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/05/09/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
-      <meta itemprop="name" content="朱佳东">
-      <meta itemprop="description" content="melon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Dying Memory">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
           
-            <a href="/blog/2023/05/09/hello-world/" class="post-title-link" itemprop="url">hello world</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
               <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
+                <i class="fa fa-eye"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-09 17:10:49" itemprop="dateCreated datePublished" datetime="2023-05-09T17:10:49+08:00">2023-05-09</time>
-            </span>
-
-          <br>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="Symbols count in article">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>30</span>
+              <span>873</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -562,6 +235,7 @@
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               <span>1 mins.</span>
             </span>
+            <div class="post-description">Programmability and Index Design Factor in Nulls When Creating Indexes</div>
 
         </div>
       </header>
@@ -572,34 +246,57 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>how this site was built.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2023/05/09/hello-world/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+        <blockquote>
+<p>不能假设逻辑上设计良好的表结构会让你写出高效的 SQL，必须在表的物理结构上进行优化，该主题介绍索引。</p>
+</blockquote>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
+<li><p><code>NULL</code> 与其他任何值都不相等，包括自身，判断是否为 <code>NULL</code> 要用 <code>IS NULL</code> 或者 <code>IS NOT NULL</code> 判断。</p>
+</li>
+<li><p>在给数据库表中某列建立索引时，需要事先了解该列是否包含 <code>NULL</code> 值，并了解使用的数据库在建立索引时如何对待 <code>NULL</code>。</p>
+</li>
+<li><p>如果一个列中存在大量的 <code>NULL</code>，在建立索引时会占用很多空间，有些数据库允许在建索引时排除 <code>NULL</code>；有些数据库会把空字符串当作 <code>NULL</code>。</p>
+</li>
+<li><p>ISO SQL 标准中规定主键不能包含 <code>NULL</code>。</p>
+</li>
+<li><p>某些数据库在使用 unique key时，如果有两条记录的相同列包含 <code>NULL</code>，会认为是重复，可以手动忽略 <code>NULL</code> 值。</p>
+</li>
+</ol>
+<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
+<li>Consider whether a column you want to index will contain null values.</li>
+<li>If you want to search for null values, but the majority of values in the column are likely to be NULL, it is better not to index the column. It may be also an indication that redesign of the table may be warranted.</li>
+<li>When you want to be able to search for values on a column more quickly, but the majority of the values will be NULL, build the index without null values if your database supports it.</li>
+<li>Every database system supports null values in indexes differently. Be sure you understand the options for your database system before considering building an index on a column that may contain null values.</li>
+</ul>
+
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          
+          <div class="post-tags">
+              <a href="/blog/tags/SQL/" rel="tag"><i class="fa fa-tag"></i> SQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/05/13/Effective-SQL-Item-9/" rel="prev" title="Effective SQL Item 9">
+      <i class="fa fa-chevron-left"></i> Effective SQL Item 9
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
-
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/blog/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/3/">3</a><span class="page-number current">4</span>
-  </nav>
 
 
 
@@ -651,6 +348,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">2.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
