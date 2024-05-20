@@ -226,14 +226,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
+              <span>3.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>3 mins.</span>
             </span>
             <div class="post-description">Programmability and Index Design Carefully Consider Creation of Indexes to Minimize Index and Data Scanning</div>
 
@@ -246,7 +246,39 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>尽管增加硬件资源可能是改善查询性能的一个方法，可以通过修改查询以花更少的钱来提升性能。通常这种问题是由没有索引或者不正确的索引导致的。</p>
+<p>通常称为 <code>index scan and table scans</code>。</p>
+<blockquote>
+<p>An index scan or table scan occurs when the database engine has to scan the index or data pages to find the appropriate records, as opposed to a seek, where an index is used to pinpoint the records that are needed to satisfy the query. The more data that exists, the more time index scans can take to complete.</p>
+</blockquote>
+<h2 id="Index-seek"><a href="#Index-seek" class="headerlink" title="Index seek"></a>Index seek</h2><p><code>SELECT * FROM Customers WHERE CustomerID = 1</code> 和 <code>SELECT CustomerID FROM Customers WHERE CustomerID = 1</code>，假设 CustomerID 列有<strong>唯一</strong>索引，第一个查询通过 index seek 定位到数据，然后回表查询数据，第二个直接返回不需要回表。</p>
+<h2 id="Index-scan"><a href="#Index-scan" class="headerlink" title="Index scan"></a>Index scan</h2><p><code>SELECT * FROM Customers WHERE CustState = 'TX'</code>，假设 CustState 列有索引但不是唯一索引，这就意味着，查询必须查看整个索引来找到所有满足 where 条件的行，这就是一个 <code>index scan</code>，并且查询的列不在索引中，需要 go back to table。</p>
+<h2 id="Table-scan"><a href="#Table-scan" class="headerlink" title="Table scan"></a>Table scan</h2><p><code>SELECT CustomerID FROM Customers WHERE CustAreaCode = '905'</code> CustAreaCode 列没有索引，db engine 会查找表中的每一行。</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>There might not seem to be much difference between a table scan and an index scan in many instances, because it is necessary to search through all entries in an object to find a particular value. However, the index is usually much smaller and specially designed to be scanned, so it is generally much faster to do an index scan if you want only a small proportion of the rows in the table.</p>
+<p>但有时 table scan 有更好的查询性能，这依赖于具体情况，比如返回的行很多时。</p>
+<p>There is a risk, though, of assuming that indexes are the solution to all data retrieval problems.</p>
+<p>Many indexes do not speed up retrieval and can actually slow down updates. A problem is that whenever you update an indexed column, you force an update to one or more “index tables”—meaning more disk reads and writes. Because indexes are highly organized, making updates in them is often more expensive than the update to the table.</p>
+<p>OLTP 有大量的更新，建立索引时需谨慎，而 OLAP 更新不频繁，可以使用更多的索引改善查询。</p>
+<p>However, simply applying indexes is not a panacea.</p>
+<h2 id="B-tree"><a href="#B-tree" class="headerlink" title="B-tree"></a>B-tree</h2><p>B-tree 索引对查询性能贡献成都取决于索引类型，有两种索引方式：clustered index and nonclustered。</p>
+<p>A clustered index physically sorts the table’s contents in the order of whichever columns were specified when the index was created.<br>Because it is not possible to order the rows in a table in more than one way, you can have only one clustered index per table.<br>In SQL Server, at least, usually a clustered index has leaf nodes that contain data directly.<br>A nonclustered index has the same index structure as a clustered index, but with two important differences:</p>
+<ul>
+<li>Nonclustered indexes may be sorted differently from the table’s physical order.</li>
+<li>A nonclustered index’s leaf level consists of an index key plus a bookmark that points to the data, rather than containing the data.</li>
+</ul>
+<p>聚簇索引叶子结点包含数据，一般一张表只有一个聚簇索引，一般是主键。</p>
+<p>非聚簇索引性能是否比table scan 更好取决于 table size、row’s storage pattern、rows length and the percentage of rows the query returns。</p>
+<p>A table scan often starts to perform better than a nonclustered index access when at least 10% of the rows are selected. A clustered index usually performs better than a table scan even when the percentage of returned rows is high.</p>
+<h2 id="其他因素"><a href="#其他因素" class="headerlink" title="其他因素"></a>其他因素</h2><p>如果一个列很少出现在 where 中，加索引收益很小，如果一列基数很低，即大量的行拥有相同的数据，同样建力索引收益很小。</p>
+<p>If an index will not result in the database engine reading less than a minimum percentage of the table, the engine will not use the index.(是回表查询导致走索引比直接table scan 慢吗)</p>
+<p>此外，只有当表很大时索引才有意义，大多数数据库直接把小的表加载到内存里面。</p>
+<p>Once a table is in memory, searching it goes quickly, no matter what you do or do not do. What <strong>small</strong> means depends on the number of rows, the size of each row, how it fits into a page, and how much memory your database server has available.</p>
+<p>复合索引同样重要，如果查询需要多个列，可以考虑创建复合索引，建复合索引时的顺序很重要。</p>
+<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
+<li>Analyze your data so that the appropriate indexes are created to improve performance.</li>
+<li>Ensure that the indexes you have created are, in fact, going to be used.</li>
+</ul>
+
     </div>
 
     
@@ -327,6 +359,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Index-seek"><span class="nav-number">2.</span> <span class="nav-text">Index seek</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Index-scan"><span class="nav-number">3.</span> <span class="nav-text">Index scan</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Table-scan"><span class="nav-number">4.</span> <span class="nav-text">Table scan</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">5.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-tree"><span class="nav-number">6.</span> <span class="nav-text">B-tree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%9B%A0%E7%B4%A0"><span class="nav-number">7.</span> <span class="nav-text">其他因素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">8.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -400,13 +433,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">108k</span>
+    <span title="Symbols count total">111k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">1:38</span>
+    <span title="Reading time total">1:41</span>
 </div>
 
         
