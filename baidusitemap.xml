@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://zjd-melo.github.io/blog/blog/2024/05/22/Effective-SQL-Item-12/</loc>
+    <lastmod>2024-05-22</lastmod>
+  </url>
+  <url>
     <loc>https://zjd-melo.github.io/blog/blog/2024/05/20/pymysql%E7%B1%BB%E5%9E%8B%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2024-05-20</lastmod>
   </url>
