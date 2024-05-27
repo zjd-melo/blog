@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络数据链路层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网路数据链路层">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/05/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机网络数据链路层">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/05/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/%E5%B7%AE%E9%94%99%E7%BC%96%E7%A0%81.png">
+<meta property="article:published_time" content="2024-05-25T06:26:19.000Z">
+<meta property="article:modified_time" content="2024-05-25T06:26:19.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/05/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/%E5%B7%AE%E9%94%99%E7%BC%96%E7%A0%81.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/05/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机网路数据链路层 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">40</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/05/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网路数据链路层
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-05-25 14:26:19" itemprop="dateCreated datePublished" datetime="2024-05-25T14:26:19+08:00">2024-05-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+            <div class="post-description">计算机网络数据链路层</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>数据链路层</strong>负责通过一条链路从一个结点向另一个物理链路直接相连的相邻结点传送数据报。</p>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><h3 id="结点-nodes"><a href="#结点-nodes" class="headerlink" title="结点 nodes"></a>结点 nodes</h3><p>主机和路由器</p>
+<h3 id="链路-links"><a href="#链路-links" class="headerlink" title="链路 links"></a>链路 links</h3><p>连接相邻结点的通信信道，有数据链路和物理链路之分，数据链路基于物理链路。</p>
+<ul>
+<li>有线链路 wired links</li>
+<li>无线链路 wireless links</li>
+<li>局域网 LANs</li>
+</ul>
+<h3 id="帧-Frame"><a href="#帧-Frame" class="headerlink" title="帧 Frame"></a>帧 Frame</h3><p>链路层数据分组，封装网络层数据报。</p>
+<h2 id="链路层服务"><a href="#链路层服务" class="headerlink" title="链路层服务"></a>链路层服务</h2><h3 id="组帧-framing"><a href="#组帧-framing" class="headerlink" title="组帧 framing"></a>组帧 framing</h3><ol>
+<li>封装数据报构成数据帧，加首部和尾部</li>
+<li>帧同步（帧定界符）</li>
+</ol>
+<h3 id="链路接入-link-access"><a href="#链路接入-link-access" class="headerlink" title="链路接入 link access"></a>链路接入 link access</h3><ol>
+<li>如果是共享介质，需要解决信道接入（channel access）</li>
+<li>帧首部中的 MAC 地址，用于标识帧的源和目的，物理层寻址</li>
+</ol>
+<h3 id="相邻结点间可靠交付"><a href="#相邻结点间可靠交付" class="headerlink" title="相邻结点间可靠交付"></a>相邻结点间可靠交付</h3><ol>
+<li>根据具体链路采用不同的手段。在低误码率的有线链路上很少采用（如光纤、某些双绞线）一些可靠交付手段。</li>
+<li>无线链路：误码率高，需要可靠交付。（确认、重传等）</li>
+</ol>
+<h3 id="流量控制-flow-control"><a href="#流量控制-flow-control" class="headerlink" title="流量控制 flow control"></a>流量控制 flow control</h3><p>协调 pacing 相邻的发送结点和接收结点</p>
+<h3 id="差错控制-error-detection"><a href="#差错控制-error-detection" class="headerlink" title="差错控制 error detection"></a>差错控制 error detection</h3><ol>
+<li>信号衰减和噪声会引起差错。</li>
+<li>接收端检测到差错，根据具体的交付协议可能需要发送端重传也有可能直接丢弃由上层来决定。</li>
+</ol>
+<h3 id="差错纠正-error-correction"><a href="#差错纠正-error-correction" class="headerlink" title="差错纠正 error correction"></a>差错纠正 error correction</h3><p>接收端直接纠正比特差错。</p>
+<h3 id="全双工和半双工通信控制"><a href="#全双工和半双工通信控制" class="headerlink" title="全双工和半双工通信控制"></a>全双工和半双工通信控制</h3><ul>
+<li>全双工链路两端结点同时双向传输</li>
+<li>半双工链路两端结点交替双向传输</li>
+</ul>
+<h2 id="链路层具体实现-（网卡）"><a href="#链路层具体实现-（网卡）" class="headerlink" title="链路层具体实现 （网卡）"></a>链路层具体实现 （网卡）</h2><p>链路层的具体实现是由每个主机或路由器接口实现。链路层在适配器（网路接口卡-NIC）中实现或者在一个芯片上实现。</p>
+<h2 id="差错编码"><a href="#差错编码" class="headerlink" title="差错编码"></a>差错编码</h2><h3 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h3><p>在数据基础上增加一些冗余信息，这些冗余信息建立起了数据位和位或者 bit 与 bit 之间原本不存在的关联关系，把这个<br>冗余信息随数据发送出去吗，由接收方判断这种关联关系是否存在。</p>
+<p>根据冗余信息是由数据中的一个分组还是多个连续分组获取的，可以把差错编码分为分组码和卷积码。</p>
+<p><img src="/blog/2024/05/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/%E5%B7%AE%E9%94%99%E7%BC%96%E7%A0%81.png" alt="差错编码"></p>
+<p>R 称为冗余比特或监督位。如果 <code>R'= f(D')</code> 并不能保证数据完全不错。</p>
+<p><strong>差错编码不能保证 100% 可靠！</strong></p>
+<h3 id="差错编码能力"><a href="#差错编码能力" class="headerlink" title="差错编码能力"></a>差错编码能力</h3><p>检测能力强，冗余信息小，信道利用率高的要求。<br>差错编码可以分为 <strong>检错码</strong> 与 <strong>纠错码</strong>。</p>
+<p><strong>汉明距离</strong>。</p>
+<h2 id="奇偶校验码-Parity-Bit"><a href="#奇偶校验码-Parity-Bit" class="headerlink" title="奇偶校验码 Parity Bit"></a>奇偶校验码 Parity Bit</h2><p>检错能力是50%，漏检率50%，编码效率好。<br>奇偶校验码（Parity Bit）是一种简单的错误检测机制，用于检测数据传输中的单比特错误。它通常在数据传输和存储过程中用于验证数据的完整性。奇偶校验有两种类型：奇校验和偶校验。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><h4 id="奇校验（Odd-Parity）"><a href="#奇校验（Odd-Parity）" class="headerlink" title="奇校验（Odd Parity）"></a>奇校验（Odd Parity）</h4><p>奇校验码确保数据中1的个数是奇数。如果数据中1的个数已经是奇数，则校验位设为0；如果是偶数，则校验位设为1。</p>
+<h4 id="偶校验（Even-Parity）"><a href="#偶校验（Even-Parity）" class="headerlink" title="偶校验（Even Parity）"></a>偶校验（Even Parity）</h4><p>偶校验码确保数据中1的个数是偶数。如果数据中1的个数已经是偶数，则校验位设为0；如果是奇数，则校验位设为1。</p>
+<h3 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h3><p>奇偶校验只能检测单个比特错误，对于偶数个比特错误无法检测（如两个比特同时错误）。因此，虽然它简单且计算开销低，但适用于低误码率场景。在需要更高可靠性的场景中，通常使用更复杂的错误检测和纠正码（如CRC、Hamming码）。</p>
+<h3 id="二维奇偶校验"><a href="#二维奇偶校验" class="headerlink" title="二维奇偶校验"></a>二维奇偶校验</h3><ol>
+<li>检测奇数位差错、部分偶数位差错</li>
+<li>纠正同一行/列的奇数位差错</li>
+</ol>
+<h2 id="Internet校验和（checksum）"><a href="#Internet校验和（checksum）" class="headerlink" title="Internet校验和（checksum）"></a>Internet校验和（checksum）</h2><p>发送端将数据划分为16位的二进制整数序列，补码求和（sum）（最高位进位的1，返回最低位继续加）。</p>
+<h2 id="循环冗余校验码-CRC"><a href="#循环冗余校验码-CRC" class="headerlink" title="循环冗余校验码 CRC"></a>循环冗余校验码 CRC</h2><h2 id="多路访问控制协议-MAC"><a href="#多路访问控制协议-MAC" class="headerlink" title="多路访问控制协议 MAC"></a>多路访问控制协议 MAC</h2><p>解决单一共享广播信道的两个或两个以上结点同时传输的干扰（interference）问题。<br>冲突 collision：结点同时接收到两个或者多个信号–接收失败。</p>
+<h3 id="两类链路"><a href="#两类链路" class="headerlink" title="两类链路"></a>两类链路</h3><p>####点对点链路</p>
+<ol>
+<li>拨号接入的 PPP </li>
+<li>以太网交换机与主机间的点对点链路</li>
+</ol>
+<h4 id="广播链路-共享介质"><a href="#广播链路-共享介质" class="headerlink" title="广播链路 共享介质"></a>广播链路 共享介质</h4><ol>
+<li>早期的总线以太网</li>
+<li>HFC 的上行链路</li>
+<li>802.11 无线局域网</li>
+</ol>
+<h3 id="多路访问控制协议"><a href="#多路访问控制协议" class="headerlink" title="多路访问控制协议"></a>多路访问控制协议</h3><p>mutiple access control protocol</p>
+<ul>
+<li>采用分布式算法决定结点如何共享信道，即决策结点何时可以传输数据</li>
+<li>必须基于信道本身，通信信道共享协调信息，无需第三方信道用于协调</li>
+</ul>
+<h3 id="理想-MAC-协议"><a href="#理想-MAC-协议" class="headerlink" title="理想 MAC 协议"></a>理想 MAC 协议</h3><p>给定速率位 R bps 的广播信道。期望：</p>
+<ol>
+<li>当只有一个结点希望传输数据时，它可以以速率 R 发送。</li>
+<li>当有 M 个结点期望发送数据时，每个结点平均发送数据的平均速率是 R/M。</li>
+<li>完全分散控制，无需特定结点协调，无需时钟同步、时隙同步。</li>
+<li>简单。</li>
+</ol>
+<h3 id="MAC-协议分类"><a href="#MAC-协议分类" class="headerlink" title="MAC 协议分类"></a>MAC 协议分类</h3><p>三大类</p>
+<h4 id="信道划分（channel-partitioning）MAC-协议"><a href="#信道划分（channel-partitioning）MAC-协议" class="headerlink" title="信道划分（channel partitioning）MAC 协议"></a>信道划分（channel partitioning）MAC 协议</h4><p>多路复用技术，TDMA time divison multiple access。</p>
+<ul>
+<li>网络负载重时，共享信道效率高，且公平</li>
+<li>网络负载轻时，共享信道效率低</li>
+</ul>
+<h4 id="随机访问（random-access）MAC-协议"><a href="#随机访问（random-access）MAC-协议" class="headerlink" title="随机访问（random access）MAC 协议"></a>随机访问（random access）MAC 协议</h4><p>信道不划分，允许冲突，采用冲突恢复机制。</p>
+<p>网络负载轻时，共享信道效率高，单个结点可以利用信道的全部带宽。网络负载重时，产生冲突开销。</p>
+<p>当结点要发送分组时，利用信道全部数据速率 R 发送分组，动态性强，没有事先的结点间协调，两个或多个结点同时传输就会<br>造成冲突。随机访问 MAC 协议需要定义如何检测冲突，如何从冲突中恢复（比如延迟重传）。</p>
+<h5 id="典型的随机访问-MAC协议"><a href="#典型的随机访问-MAC协议" class="headerlink" title="典型的随机访问 MAC协议"></a>典型的随机访问 MAC协议</h5><ul>
+<li>时隙（sloted）ALOHA</li>
+<li>ALOHA</li>
+<li>CSMA、CSMA/CD、CSMA/CA</li>
+</ul>
+<h6 id="时隙-ALOHA-协议"><a href="#时隙-ALOHA-协议" class="headerlink" title="时隙 ALOHA 协议"></a>时隙 ALOHA 协议</h6><p>假定：</p>
+<ul>
+<li>所有帧大小相同</li>
+<li>时间被划分为等长的时隙（每个时隙可以传输1个帧）</li>
+<li>结点只能在时隙开始时刻发送帧</li>
+<li>结点间时钟同步</li>
+<li>如果两个或两个以上结点在同一时隙发送帧，结点即检测到冲突<br>运行：</li>
+<li>当结点有新的帧时，在下一个时隙发送</li>
+<li>如果没有冲突，该结点可以在下一个时隙继续发送新的帧</li>
+<li>如果冲突，该结点在下一个时隙以概率P重传该帧，直至成功<br>优点：</li>
+<li>单个结点活动时，可以连续以信道全部速率传输数据</li>
+<li>高度分散化，只需同步时隙</li>
+<li>简单<br>缺点：</li>
+<li>易冲突，浪费时隙</li>
+<li>空闲时隙</li>
+<li>结点也许能以远小于分组传输时间检测到冲突</li>
+<li>时钟同步<br>最好情况：信道被成功利用的时间仅占37%！</li>
+</ul>
+<h6 id="ALOHA-协议"><a href="#ALOHA-协议" class="headerlink" title="ALOHA 协议"></a>ALOHA 协议</h6><ol>
+<li>非时隙（纯）ALOHA：更加简单，无需同步</li>
+<li>当有新的帧生成时立即发送</li>
+<li>冲突可能性增大<br>最好情况：信道被成功利用的时间仅占18%！ALOHA = Hello 第一个 MAC 协议。<br>ALOHA 协议损人不利己、自私的。</li>
+</ol>
+<h6 id="CSMA-协议"><a href="#CSMA-协议" class="headerlink" title="CSMA 协议"></a>CSMA 协议</h6><p>载波监听多路访问协议 carrier sense multiple access，发送帧之前监听信道（载波）。</p>
+<p>信道空闲则发送完整帧，信道忙则推迟发送：</p>
+<ul>
+<li>1-坚持 CSMA</li>
+<li>非坚持 CSMA</li>
+<li>P-坚持 CSMA 以概率 P 随机检测信道</li>
+</ul>
+<p>冲突可能仍然发生，信号传播延迟，此时继续发送冲突帧会导致信道资源浪费。</p>
+<h6 id="CSMA-x2F-CD-协议"><a href="#CSMA-x2F-CD-协议" class="headerlink" title="CSMA/CD 协议"></a>CSMA/CD 协议</h6><p>CSMA with Collision Detection，<strong>边发送边检测冲突</strong>，效率高。只要是随机访问协议都会有冲突检测机制，只不过机制不同。</p>
+<ul>
+<li>短时间内可以检测到冲突</li>
+<li>冲突后传输终止，减少信道浪费</li>
+</ul>
+<p>冲突检测：</p>
+<ul>
+<li>有线局域网易于实现：测量信号强度，比较发射信号与接收信号。</li>
+<li>无线局域网很难实现：接收信号强度淹没在本地发送信号强度下。<br><strong>边发边听，不发不听。</strong></li>
+</ul>
+<h4 id="轮转（taking-truns）MAC-协议"><a href="#轮转（taking-truns）MAC-协议" class="headerlink" title="轮转（taking truns）MAC 协议"></a>轮转（taking truns）MAC 协议</h4><p>结点轮流使用信道。综合以上协议的优点。</p>
+<h5 id="轮询-polling"><a href="#轮询-polling" class="headerlink" title="轮询 polling"></a>轮询 polling</h5><p>主结点轮询邀请从属结点发送数据。典型应用：哑（dumb）从属设备，比如传感器。</p>
+<p>问题：轮询开销，等待延迟，单点故障。</p>
+<h5 id="令牌传递-token-passsing"><a href="#令牌传递-token-passsing" class="headerlink" title="令牌传递 token passsing"></a>令牌传递 token passsing</h5><p>控制令牌依次从一个结点传递到下一个结点。 令牌：特殊帧。一般会形成环形网络。</p>
+<p>问题：令牌开销，等待延迟，单点故障。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/05/24/ElasticSearch-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="prev" title="ElasticSearch 常用命令">
+      <i class="fa fa-chevron-left"></i> ElasticSearch 常用命令
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AF%E8%AF%AD"><span class="nav-number">1.</span> <span class="nav-text">术语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E7%82%B9-nodes"><span class="nav-number">1.1.</span> <span class="nav-text">结点 nodes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF-links"><span class="nav-number">1.2.</span> <span class="nav-text">链路 links</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A7-Frame"><span class="nav-number">1.3.</span> <span class="nav-text">帧 Frame</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E5%B1%82%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">链路层服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%B8%A7-framing"><span class="nav-number">2.1.</span> <span class="nav-text">组帧 framing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E6%8E%A5%E5%85%A5-link-access"><span class="nav-number">2.2.</span> <span class="nav-text">链路接入 link access</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E9%82%BB%E7%BB%93%E7%82%B9%E9%97%B4%E5%8F%AF%E9%9D%A0%E4%BA%A4%E4%BB%98"><span class="nav-number">2.3.</span> <span class="nav-text">相邻结点间可靠交付</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6-flow-control"><span class="nav-number">2.4.</span> <span class="nav-text">流量控制 flow control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%AE%E9%94%99%E6%8E%A7%E5%88%B6-error-detection"><span class="nav-number">2.5.</span> <span class="nav-text">差错控制 error detection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%AE%E9%94%99%E7%BA%A0%E6%AD%A3-error-correction"><span class="nav-number">2.6.</span> <span class="nav-text">差错纠正 error correction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%8F%8C%E5%B7%A5%E5%92%8C%E5%8D%8A%E5%8F%8C%E5%B7%A5%E9%80%9A%E4%BF%A1%E6%8E%A7%E5%88%B6"><span class="nav-number">2.7.</span> <span class="nav-text">全双工和半双工通信控制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E5%B1%82%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0-%EF%BC%88%E7%BD%91%E5%8D%A1%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">链路层具体实现 （网卡）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%AE%E9%94%99%E7%BC%96%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">差错编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%AE%E9%94%99%E7%BC%96%E7%A0%81%E8%83%BD%E5%8A%9B"><span class="nav-number">4.2.</span> <span class="nav-text">差错编码能力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%87%E5%81%B6%E6%A0%A1%E9%AA%8C%E7%A0%81-Parity-Bit"><span class="nav-number">5.</span> <span class="nav-text">奇偶校验码 Parity Bit</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">5.1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A5%87%E6%A0%A1%E9%AA%8C%EF%BC%88Odd-Parity%EF%BC%89"><span class="nav-number">5.1.1.</span> <span class="nav-text">奇校验（Odd Parity）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%B6%E6%A0%A1%E9%AA%8C%EF%BC%88Even-Parity%EF%BC%89"><span class="nav-number">5.1.2.</span> <span class="nav-text">偶校验（Even Parity）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E5%88%B6"><span class="nav-number">5.2.</span> <span class="nav-text">限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E5%A5%87%E5%81%B6%E6%A0%A1%E9%AA%8C"><span class="nav-number">5.3.</span> <span class="nav-text">二维奇偶校验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Internet%E6%A0%A1%E9%AA%8C%E5%92%8C%EF%BC%88checksum%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">Internet校验和（checksum）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%86%97%E4%BD%99%E6%A0%A1%E9%AA%8C%E7%A0%81-CRC"><span class="nav-number">7.</span> <span class="nav-text">循环冗余校验码 CRC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE-MAC"><span class="nav-number">8.</span> <span class="nav-text">多路访问控制协议 MAC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%B1%BB%E9%93%BE%E8%B7%AF"><span class="nav-number">8.1.</span> <span class="nav-text">两类链路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%BF%E6%92%AD%E9%93%BE%E8%B7%AF-%E5%85%B1%E4%BA%AB%E4%BB%8B%E8%B4%A8"><span class="nav-number">8.1.1.</span> <span class="nav-text">广播链路 共享介质</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.2.</span> <span class="nav-text">多路访问控制协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E6%83%B3-MAC-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.3.</span> <span class="nav-text">理想 MAC 协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAC-%E5%8D%8F%E8%AE%AE%E5%88%86%E7%B1%BB"><span class="nav-number">8.4.</span> <span class="nav-text">MAC 协议分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E9%81%93%E5%88%92%E5%88%86%EF%BC%88channel-partitioning%EF%BC%89MAC-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.1.</span> <span class="nav-text">信道划分（channel partitioning）MAC 协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE%EF%BC%88random-access%EF%BC%89MAC-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.2.</span> <span class="nav-text">随机访问（random access）MAC 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E7%9A%84%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE-MAC%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.2.1.</span> <span class="nav-text">典型的随机访问 MAC协议</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%97%B6%E9%9A%99-ALOHA-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.2.1.1.</span> <span class="nav-text">时隙 ALOHA 协议</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#ALOHA-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.2.1.2.</span> <span class="nav-text">ALOHA 协议</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CSMA-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.2.1.3.</span> <span class="nav-text">CSMA 协议</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CSMA-x2F-CD-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.2.1.4.</span> <span class="nav-text">CSMA&#x2F;CD 协议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AE%E8%BD%AC%EF%BC%88taking-truns%EF%BC%89MAC-%E5%8D%8F%E8%AE%AE"><span class="nav-number">8.4.3.</span> <span class="nav-text">轮转（taking truns）MAC 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BD%AE%E8%AF%A2-polling"><span class="nav-number">8.4.3.1.</span> <span class="nav-text">轮询 polling</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A4%E7%89%8C%E4%BC%A0%E9%80%92-token-passsing"><span class="nav-number">8.4.3.2.</span> <span class="nav-text">令牌传递 token passsing</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">115k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:45</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
