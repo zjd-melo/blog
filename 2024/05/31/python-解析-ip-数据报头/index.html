@@ -21,20 +21,20 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Programmability and Index Design Factor in Nulls When Creating Indexes">
+  <meta name="description" content="使用 python 解析 ip 数据报头，格式化字节为二进制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Effective SQL Item 10">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/05/13/Effective-SQL-Item-10/index.html">
+<meta property="og:title" content="python 解析 ip 数据报头">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/05/31/python-%E8%A7%A3%E6%9E%90-ip-%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%A4%B4/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="Programmability and Index Design Factor in Nulls When Creating Indexes">
+<meta property="og:description" content="使用 python 解析 ip 数据报头，格式化字节为二进制">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-13T06:38:56.000Z">
-<meta property="article:modified_time" content="2024-05-13T06:38:56.000Z">
+<meta property="article:published_time" content="2024-05-31T06:54:30.000Z">
+<meta property="article:modified_time" content="2024-05-31T06:54:30.000Z">
 <meta property="article:author" content="朱佳东">
-<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/05/13/Effective-SQL-Item-10/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/05/31/python-%E8%A7%A3%E6%9E%90-ip-%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%A4%B4/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>Effective SQL Item 10 | Dying Memory</title>
+  <title>python 解析 ip 数据报头 | Dying Memory</title>
   
 
 
@@ -178,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/05/13/Effective-SQL-Item-10/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/05/31/python-%E8%A7%A3%E6%9E%90-ip-%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%A4%B4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -191,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Effective SQL Item 10
+          python 解析 ip 数据报头
         </h1>
 
         <div class="post-meta">
@@ -201,7 +201,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2024-05-13 14:38:56" itemprop="dateCreated datePublished" datetime="2024-05-13T14:38:56+08:00">2024-05-13</time>
+              <time title="Created: 2024-05-31 14:54:30" itemprop="dateCreated datePublished" datetime="2024-05-31T14:54:30+08:00">2024-05-31</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,7 +209,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
+                  <a href="/blog/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
                 </span>
             </span>
 
@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>873</span>
+              <span>1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -235,7 +235,7 @@
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               <span>1 mins.</span>
             </span>
-            <div class="post-description">Programmability and Index Design Factor in Nulls When Creating Indexes</div>
+            <div class="post-description">使用 python 解析 ip 数据报头，格式化字节为二进制</div>
 
         </div>
       </header>
@@ -246,28 +246,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>不能假设逻辑上设计良好的表结构会让你写出高效的 SQL，必须在表的物理结构上进行优化，该主题介绍索引。</p>
-</blockquote>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
-<li><p><code>NULL</code> 与其他任何值都不相等，包括自身，判断是否为 <code>NULL</code> 要用 <code>IS NULL</code> 或者 <code>IS NOT NULL</code> 判断。</p>
-</li>
-<li><p>在给数据库表中某列建立索引时，需要事先了解该列是否包含 <code>NULL</code> 值，并了解使用的数据库在建立索引时如何对待 <code>NULL</code>。</p>
-</li>
-<li><p>如果一个列中存在大量的 <code>NULL</code>，在建立索引时会占用很多空间，有些数据库允许在建索引时排除 <code>NULL</code>；有些数据库会把空字符串当作 <code>NULL</code>。</p>
-</li>
-<li><p>ISO SQL 标准中规定主键不能包含 <code>NULL</code>。</p>
-</li>
-<li><p>某些数据库在使用 unique key时，如果有两条记录的相同列包含 <code>NULL</code>，会认为是重复，可以手动忽略 <code>NULL</code> 值。</p>
-</li>
-</ol>
-<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
-<li>Consider whether a column you want to index will contain null values.</li>
-<li>If you want to search for null values, but the majority of values in the column are likely to be NULL, it is better not to index the column. It may be also an indication that redesign of the table may be warranted.</li>
-<li>When you want to be able to search for values on a column more quickly, but the majority of the values will be NULL, build the index without null values if your database supports it.</li>
-<li>Every database system supports null values in indexes differently. Be sure you understand the options for your database system before considering building an index on a column that may contain null values.</li>
-</ul>
-
+        <figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_ip_packet</span>(<span class="params">data</span>):</span><br><span class="line">    <span class="comment"># 解析IP头部</span></span><br><span class="line">    ip_header = struct.unpack(<span class="string">"!BBHHHBBH4s4s"</span>, data[:<span class="number">20</span>])</span><br><span class="line">    version = ip_header[<span class="number">0</span>] &gt;&gt; <span class="number">4</span></span><br><span class="line">    ihl = ip_header[<span class="number">0</span>] &amp; <span class="number">0xF</span></span><br><span class="line">    ttl = ip_header[<span class="number">5</span>]</span><br><span class="line">    protocol = ip_header[<span class="number">6</span>]</span><br><span class="line">    src_ip = socket.inet_ntoa(ip_header[<span class="number">8</span>])</span><br><span class="line">    dest_ip = socket.inet_ntoa(ip_header[<span class="number">9</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> {</span><br><span class="line">        <span class="string">"Version"</span>: version,</span><br><span class="line">        <span class="string">"IHL"</span>: ihl,</span><br><span class="line">        <span class="string">"TTL"</span>: ttl,</span><br><span class="line">        <span class="string">"Protocol"</span>: protocol,</span><br><span class="line">        <span class="string">"Source IP"</span>: src_ip,</span><br><span class="line">        <span class="string">"Destination IP"</span>: dest_ip</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 示例数据</span></span><br><span class="line">    ip_packet_data = <span class="string">b'\x45\x00\x00\x28\x67\x12\x40\x00\x40\x01\x17\x2c\xc0\xa8\x00\x01\xc0\xa8\x00\x02'</span></span><br><span class="line"></span><br><span class="line">    parsed_packet = parse_ip_packet(ip_packet_data)</span><br><span class="line">    <span class="built_in">print</span>(parsed_packet)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">format_bytes_2_bin</span>():</span><br><span class="line">    binary_data = <span class="string">b'\x45\x00\x00\x28\x67\x12\x40\x00\x40\x01\x17\x2c\xc0\xa8\x00\x01\xc0\xa8\x00\x02'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使用格式化字符串将二进制数据打印成二进制字符串</span></span><br><span class="line">    binary_string = <span class="string">''</span>.join(<span class="built_in">format</span>(byte, <span class="string">'08b'</span>) <span class="keyword">for</span> byte <span class="keyword">in</span> binary_data)</span><br><span class="line">    <span class="built_in">print</span>(binary_string)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> binary_data:</span><br><span class="line">        <span class="built_in">print</span>(b, <span class="built_in">format</span>(b, <span class="string">'08b'</span>))</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
     </div>
 
     
@@ -277,7 +256,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/blog/tags/SQL/" rel="tag"><i class="fa fa-tag"></i> SQL</a>
+              <a href="/blog/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
           </div>
 
         
@@ -286,13 +265,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2024/05/13/Effective-SQL-Item-9/" rel="prev" title="Effective SQL Item 9">
-      <i class="fa fa-chevron-left"></i> Effective SQL Item 9
+    <a href="/blog/2024/05/30/Effective-SQL-Item-13/" rel="prev" title="Effective SQL Item 13">
+      <i class="fa fa-chevron-left"></i> Effective SQL Item 13
     </a></div>
-      <div class="post-nav-item">
-    <a href="/blog/2024/05/17/Effective-SQL-Item-11/" rel="next" title="Effective SQL Item 11">
-      Effective SQL Item 11 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -351,7 +327,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">2.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
