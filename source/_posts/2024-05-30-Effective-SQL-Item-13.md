@@ -20,7 +20,7 @@ In those cases where triggers are used, it might be preferable to create the tri
 在 view 上使用触发器。
 
 ## Things to Remember
-DRI = **Declarative Referential Integrity（声明性参照完整性**， 即约束。
+DRI = **Declarative Referential Integrity（声明性参照完整性)**， 即约束。
 - Because performance is usually better with DRI provided through the use of constraints and with calculated columns using built-in features when you create a table, we recommend that constraints or the built-in features for calculated columns be the default approach.
 - Triggers are generally not portable: it is difficult to create a trigger for one DBMS and expect it to run without modifications on another DBMS.
 - Use triggers only when absolutely necessary. If possible, ensure that the triggers are idempotent.
