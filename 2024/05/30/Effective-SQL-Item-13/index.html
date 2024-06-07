@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
+              <span>908</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -246,7 +246,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>绝大多数情况下都不要使用触发器。</p>
+<p>以下情况可能适合使用触发器：</p>
+<ul>
+<li>Maintenance of duplicate or derived data</li>
+<li>Complex column constrains</li>
+<li>Complex defaults</li>
+<li>Inter-database referential integrity：关联关系跨越了不同的数据库系统</li>
+</ul>
+<p><strong>note</strong>:<br>In those cases where triggers are used, it might be preferable to create the triggers on views, not on the table. This can make things easier, because you may not want triggers fired during bulk import/export operations, but need them to fire when used in an application.<br>在 view 上使用触发器。</p>
+<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><p>DRI = **Declarative Referential Integrity（声明性参照完整性)**， 即约束。</p>
+<ul>
+<li>Because performance is usually better with DRI provided through the use of constraints and with calculated columns using built-in features when you create a table, we recommend that constraints or the built-in features for calculated columns be the default approach.</li>
+<li>Triggers are generally not portable: it is difficult to create a trigger for one DBMS and expect it to run without modifications on another DBMS.</li>
+<li>Use triggers only when absolutely necessary. If possible, ensure that the triggers are idempotent.</li>
+</ul>
+
     </div>
 
     
@@ -330,6 +345,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">1.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -403,13 +419,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">124k</span>
+    <span title="Symbols count total">125k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">1:53</span>
+    <span title="Reading time total">1:54</span>
 </div>
 
         
