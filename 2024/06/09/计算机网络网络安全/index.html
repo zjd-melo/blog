@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络网络安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络网络安全">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机网络网络安全">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/SYN-cookie.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%A4%9A%E7%A0%81.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%AE%E6%8D%A2.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/feistel.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/DES%E7%AE%97%E6%B3%95.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/IP%E7%BD%AE%E6%8D%A2%E8%A1%A8.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%B8%80%E8%BD%AEDES.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/f%E5%87%BD%E6%95%B0.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%89%A9%E5%B1%95%E5%8F%98%E6%8D%A2.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/S%E6%9B%BF%E4%BB%A3.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/P%E7%BD%AE%E6%8D%A2.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E9%80%86%E5%88%9D%E5%A7%8B%E7%BD%AE%E6%8D%A2.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AD%90%E5%AF%86%E9%92%A5.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap3.0.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap3.1.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap4.0.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap5.0.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%8A%A5%E6%96%87%E8%AE%A4%E8%AF%81.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/MAC.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%AD%BE%E5%90%8D%E6%91%98%E8%A6%81.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%91%98%E8%A6%81%E7%AD%BE%E5%90%8D%E6%A0%B8%E5%AE%9E.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/KDC.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/KDC%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CA.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CA%E8%8E%B7%E5%8F%96%E5%85%AC%E9%92%A5.png">
+<meta property="article:published_time" content="2024-06-09T04:58:40.000Z">
+<meta property="article:modified_time" content="2024-06-09T04:58:40.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/SYN-cookie.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机网络网络安全 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络网络安全
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-06-09 12:58:40" itemprop="dateCreated datePublished" datetime="2024-06-09T12:58:40+08:00">2024-06-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>9.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+            <div class="post-description">计算机网络网络安全</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>网络安全吗？答案是否定的，网络可以认为是十分不安全的。</strong></p>
+<p>网络安全是指网络系统的硬件、软件及其系统中的数据受到保护，不因偶然的或者恶意的原因而遭受到破坏、<br>更改、泄漏，系统连续可靠正常地运行，网络服务不中断。</p>
+<h2 id="网络安全基本属性"><a href="#网络安全基本属性" class="headerlink" title="网络安全基本属性"></a>网络安全基本属性</h2><h3 id="机密性-confidentiality"><a href="#机密性-confidentiality" class="headerlink" title="机密性 confidentiality"></a>机密性 confidentiality</h3><p>只有发送方与预定接收方能够理解报文内容</p>
+<ul>
+<li>发送方加密报文</li>
+<li>接收方解密报文</li>
+</ul>
+<h3 id="身份认证-authentication"><a href="#身份认证-authentication" class="headerlink" title="身份认证 authentication"></a>身份认证 authentication</h3><p>发送方与接收方希望确认彼此的真实身份</p>
+<h3 id="信息完整性-message-integrity"><a href="#信息完整性-message-integrity" class="headerlink" title="信息完整性 message integrity"></a>信息完整性 message integrity</h3><p>发送方与接收方希望确保信息未被篡改（传输途中或者后期），发生篡改一定会被检测到</p>
+<h3 id="可访问与可用性-access-and-availability"><a href="#可访问与可用性-access-and-availability" class="headerlink" title="可访问与可用性 access and availability"></a>可访问与可用性 access and availability</h3><p>网络服务必须对被授权的用户可访问与可用</p>
+<h2 id="网络安全基本特征"><a href="#网络安全基本特征" class="headerlink" title="网络安全基本特征"></a>网络安全基本特征</h2><h3 id="相对性"><a href="#相对性" class="headerlink" title="相对性"></a>相对性</h3><p>只有相对安全，没有绝对安全</p>
+<h3 id="时效性"><a href="#时效性" class="headerlink" title="时效性"></a>时效性</h3><p>新的漏洞与攻击方法不断发现，某个时期相对安全</p>
+<h3 id="相关性"><a href="#相关性" class="headerlink" title="相关性"></a>相关性</h3><p>新配置、新系统组件可能会引入新的安全问题</p>
+<h3 id="不确定性"><a href="#不确定性" class="headerlink" title="不确定性"></a>不确定性</h3><p>攻击时间、攻击者、攻击目标和攻击发起的地点都具有不确定性</p>
+<h3 id="复杂性"><a href="#复杂性" class="headerlink" title="复杂性"></a>复杂性</h3><p>网络安全是一项系统工程，需要技术的和非技术的手段（法律）</p>
+<h3 id="重要性"><a href="#重要性" class="headerlink" title="重要性"></a>重要性</h3><p>网络安全关乎国家、政府、企业、个人安全</p>
+<h2 id="网路安全研究领域"><a href="#网路安全研究领域" class="headerlink" title="网路安全研究领域"></a>网路安全研究领域</h2><ul>
+<li>入侵者（bad guys）如何攻击计算机网络</li>
+<li>如何防护网络对抗攻击</li>
+<li>如何设计网络体系结果免疫（immune）攻击</li>
+</ul>
+<p>Internet 最初设计几乎没有考虑安全性，最初愿景：一组彼此信任的互助用户连接到一个透明网络进行信息共享。</p>
+<p>Internet协议设计者扮演了追赶者（catch-up）角色。网路安全需要在网络各个层次考虑。</p>
+<h2 id="拟人模型"><a href="#拟人模型" class="headerlink" title="拟人模型"></a>拟人模型</h2><p>Alice、Bob、Trudy。</p>
+<h3 id="网络中的-Bob-Alice"><a href="#网络中的-Bob-Alice" class="headerlink" title="网络中的 Bob Alice"></a>网络中的 Bob Alice</h3><ul>
+<li>电子交易过程的 Web 浏览器/服务器</li>
+<li>网络银行的客户端/服务器</li>
+<li>DNS 服务器</li>
+<li>路由器之间交换路由表更新</li>
+</ul>
+<h3 id="网络中的-Trudy"><a href="#网络中的-Trudy" class="headerlink" title="网络中的 Trudy"></a>网络中的 Trudy</h3><ul>
+<li>通过 Internet 向主机植入恶意软件 （malware）<ul>
+<li>病毒（virus）</li>
+<li>蠕虫（worm）</li>
+<li>间谍软件（spyware）：记录键盘输入、web 站点访问、向收集站点上传信息等</li>
+</ul>
+</li>
+</ul>
+<p>被感染的主机可能加入僵尸网络（botnet），用于发送垃圾邮件、DDoS 攻击等。</p>
+<h2 id="网络安全威胁"><a href="#网络安全威胁" class="headerlink" title="网络安全威胁"></a>网络安全威胁</h2><h3 id="窃听-eavesdrop"><a href="#窃听-eavesdrop" class="headerlink" title="窃听 eavesdrop"></a>窃听 eavesdrop</h3><p>窃听信息</p>
+<h3 id="插入-insert"><a href="#插入-insert" class="headerlink" title="插入 insert"></a>插入 insert</h3><p>主动在连接中插入信息</p>
+<h3 id="假冒-impersonation"><a href="#假冒-impersonation" class="headerlink" title="假冒 impersonation"></a>假冒 impersonation</h3><p>可以通过伪造 spoof 分组中的源地址（或者分组的任意其他字段）</p>
+<h3 id="劫持-hijacking"><a href="#劫持-hijacking" class="headerlink" title="劫持 hijacking"></a>劫持 hijacking</h3><p>通过移除/取代发送方或者接收方接管 take over 连接</p>
+<h3 id="拒绝服务-Dos-denail-of-service"><a href="#拒绝服务-Dos-denail-of-service" class="headerlink" title="拒绝服务 Dos denail of service"></a>拒绝服务 Dos denail of service</h3><p>阻止服务器为其他用户提供服务，向接收方恶意泛洪 flood 分组，淹没 swamp 接收方。</p>
+<ul>
+<li>带宽耗尽</li>
+<li>资源耗尽</li>
+</ul>
+<p>DDoS 分布式拒绝服务攻击。反射式 DDoS 攻击。 </p>
+<p>对策：在到达主机前过滤掉泛洪分组（比如 SYN），可能好坏一起扔，误杀。追溯 traceback 攻击源。</p>
+<h4 id="SYN-cookie"><a href="#SYN-cookie" class="headerlink" title="SYN cookie"></a>SYN cookie</h4><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/SYN-cookie.png" alt="SYN-cookie"><br>攻击者只发送第一次握手，此时服务器处于半连接状态（第二次握手），服务器就分配了资源。 SYN cookie<br>延缓资源分配，在收到客户端第三次握手时再分配资源，那服务器在收到第三次握手时怎么知道之前已经进行了<br>两次握手但未分配资源呢，答案就是服务器返回的序列号，<code>SYN cookie：y=Hash(源 IP 地址， 目的 IP 地址，源端口号，目的端口号，R（随机数）)</code></p>
+<h3 id="映射-mapping"><a href="#映射-mapping" class="headerlink" title="映射 mapping"></a>映射 mapping</h3><ul>
+<li>发起攻击前：”探路”，踩点，case the joint，找出网络上运行什么服务</li>
+<li>利用 ping 命令确定网络上主机的地址</li>
+<li>端口扫描 port scanning 依次尝试与每个端口建立 TCP 连接</li>
+<li>nmap 端口扫描工具</li>
+</ul>
+<p>对策：countermeasures</p>
+<ul>
+<li>记录到达的网络流量</li>
+<li>分析、识别出可疑活动（IP地址和端口依次扫描）</li>
+</ul>
+<h3 id="分组嗅探-sniffing"><a href="#分组嗅探-sniffing" class="headerlink" title="分组嗅探 sniffing"></a>分组嗅探 sniffing</h3><p>必须是广播介质，共享式以太网、无线网络等，混杂模式 promiscuous 网络接口可以接收/记录所有经过的分组/帧，可以读到所有未加密数据。比如 wireshark 工具。</p>
+<p>对策：组织中的所有主机都运行软件，周期性检测网络接口是否工作在混杂模式。或者每段广播介质连接一台主机（如交换式以太网）。</p>
+<h3 id="IP-欺骗-spoofing"><a href="#IP-欺骗-spoofing" class="headerlink" title="IP 欺骗 spoofing"></a>IP 欺骗 spoofing</h3><p>直接由应用生成原始 IP 分组，可以设置分组的源 IP 地址字段为任意值。（原始套接字 raw socket）。接收方无法判断源地址是否被欺骗。</p>
+<p>对策：入口过滤 ingress filtering，路由器不转发源 IP 地址无效的 IP 分组比如源 IP 地址不属于所连接网络，很有效，但是不能强制所有网络都执行入口过滤。</p>
+<h2 id="密码学"><a href="#密码学" class="headerlink" title="密码学"></a>密码学</h2><h3 id="密码学-cryptography-术语"><a href="#密码学-cryptography-术语" class="headerlink" title="密码学 cryptography 术语"></a>密码学 cryptography 术语</h3><p>对称密钥加密：Bob 和 Alice 共享相同（对称）密钥 （密钥如何分发）<br>公开密钥加密：Alice 利用 Bob 的公钥加密，一旦加密后 Alice 就无法解开了，只能由 Bob 的密钥解开。</p>
+<h3 id="破解加密方法"><a href="#破解加密方法" class="headerlink" title="破解加密方法"></a>破解加密方法</h3><h4 id="唯密文攻击"><a href="#唯密文攻击" class="headerlink" title="唯密文攻击"></a>唯密文攻击</h4><p>cipher-text only attack：入侵者只截获密文，基于对密文饿的分析进行破解</p>
+<p>两条途径：</p>
+<ul>
+<li>暴力破解 brute force，尝试所有可能的密钥</li>
+<li>统计分析</li>
+</ul>
+<h4 id="已知明文攻击"><a href="#已知明文攻击" class="headerlink" title="已知明文攻击"></a>已知明文攻击</h4><p>known-plaintext attack，入侵者已知（部分）明文以及与之匹配的密文。</p>
+<h4 id="选择明文攻击"><a href="#选择明文攻击" class="headerlink" title="选择明文攻击"></a>选择明文攻击</h4><p>chosen-plaintext attack，入侵者可以获取针对选择的明文的密文。</p>
+<h3 id="传统加密算法"><a href="#传统加密算法" class="headerlink" title="传统加密算法"></a>传统加密算法</h3><h4 id="替代密码-substitution"><a href="#替代密码-substitution" class="headerlink" title="替代密码 substitution"></a>替代密码 substitution</h4><p>利用一种东西替代另一种东西</p>
+<h5 id="凯撒密码-casesar-cipher"><a href="#凯撒密码-casesar-cipher" class="headerlink" title="凯撒密码 casesar cipher"></a>凯撒密码 casesar cipher</h5><p>一个字母替代另一个字母，将一个字母利用字母表中该字母后面的第k个字母替代，此时 k 就是密钥</p>
+<h5 id="单码-x2F-字母替代密码-monoalphabetic-cipher"><a href="#单码-x2F-字母替代密码-monoalphabetic-cipher" class="headerlink" title="单码/字母替代密码 monoalphabetic cipher"></a>单码/字母替代密码 monoalphabetic cipher</h5><p>一个字母替代成其他字母，此时这种映射关系就是密钥</p>
+<h5 id="多码-x2F-字母替代加密-polyalphabetic-encryption"><a href="#多码-x2F-字母替代加密-polyalphabetic-encryption" class="headerlink" title="多码/字母替代加密 polyalphabetic encryption"></a>多码/字母替代加密 polyalphabetic encryption</h5><p>使用多个单码替代密码，明文中不同位置的字母使用不同的单码替代密码<br><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%A4%9A%E7%A0%81.png" alt="多码"><br>加密密钥为（C1=5，C2=19），C1，C2，C2，…，比如第一个位置用C1替代，第二个用C2替代，以此类推。</p>
+<h4 id="换位密码-transpositions"><a href="#换位密码-transpositions" class="headerlink" title="换位密码 transpositions"></a>换位密码 transpositions</h4><p>重新排列明文中的字母</p>
+<h5 id="置换法-permutation-method"><a href="#置换法-permutation-method" class="headerlink" title="置换法 permutation method"></a>置换法 permutation method</h5><p>将明文划分为固定长度（d）的组，每个组内的字母按置换规则（f）变换位置，此时长度d和变换规则f就是密钥。</p>
+<p>比如密钥为：d=4，f=（1-&gt;3, 2-&gt;1, 3-&gt;4, 4-&gt;2）。</p>
+<h5 id="列置换加密"><a href="#列置换加密" class="headerlink" title="列置换加密"></a>列置换加密</h5><p>将明文按行组成一个矩阵，然后按给定列顺序输出得到密文。</p>
+<p>比如密钥为：k=4（矩阵的列数）（2, 3, 1, 4）输出顺序，不足用 x 替代。</p>
+<p>可以用一个单词来表示密钥，单词长度表示列数，单词中的字母顺序表示输出顺序，单词不能出现重复。</p>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%BD%AE%E6%8D%A2.png" alt="置换"></p>
+<h3 id="现代加密技术"><a href="#现代加密技术" class="headerlink" title="现代加密技术"></a>现代加密技术</h3><p>现代加密技术的基本操作包括经典的替代和置换，不在针对一个个字母，而是针对二进制位操作。</p>
+<p>现代加密技术主要分为：</p>
+<ul>
+<li>对称密钥加密<ul>
+<li>流密码 stream ciphers</li>
+<li>分组密码，也称块密码 block ciphers</li>
+</ul>
+</li>
+<li>非对称密钥加密（公开密钥加密）</li>
+</ul>
+<h4 id="流密码"><a href="#流密码" class="headerlink" title="流密码"></a>流密码</h4><p>基本思想：首先利用密钥 K 产生一个密钥流（字节流或者比特流都可以）：Z=Z0Z1Z2…，然后使用如下规则对明文串x=x0x1x2…加密<br>y=y0y1y2…=Ez0(x0)Ez1(x1)Ez2(x2)，使用 Z0 对 x0 加密，一般是异或运算，解密时，使用相同的（对称加密）密钥流与密文做XOR运算。</p>
+<h4 id="分组密码"><a href="#分组密码" class="headerlink" title="分组密码"></a>分组密码</h4><p>将明文序列划分为长为 m 的明文组，各明文组在长为 i 的密钥组的控制下变换成长度为 n 的密文组，通常取 n=m；n&gt;m扩展分组密码，n&lt;m压缩分组密码。</p>
+<p>典型分组密码结构：Feistel分组密码结构，在设计密码体制的过程中，Shannon 提出了能够破坏对密码系统进行各种统计分析攻击的两个基本操作：扩散（diffision）和混淆（confusion）。</p>
+<h4 id="Feistel-分组密码结构"><a href="#Feistel-分组密码结构" class="headerlink" title="Feistel 分组密码结构"></a>Feistel 分组密码结构</h4><p>基于扩散和混淆的思考，Feistel提出通过替代和置换交替操作方式构造密码，Feistel 是一种设计原则，并非一个特殊的密码。</p>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/feistel.png" alt="feistel"></p>
+<h5 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h5><p>将明文分成左右两部分，明文=（L0，R0），每一轮i=1,2,…n 计算 Li=Ri-1 Ri=Li-1 XOR F（Ri-1，Ki），<br>其中F是轮函数，Ki是子密钥。每一轮的左半部用上一轮的右半部替换，右半部用上一轮的左半部异或上一轮的右半部和子密钥运算的结果，<br>密文=（Ln, Rn）。</p>
+<h5 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h5><p>密文 =（Ln, Rn），每一轮i=n,n-1,…1，计算Ri-1=Li，Li-1=Ri XOR F（Ri-1, Ki）,<br>其中F是轮函数，ki是子密钥，密文=（L0，R0）。</p>
+<h4 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h4><p>Feistel 结构的分组密码安全性取决于</p>
+<ul>
+<li>分组长度，分组长度越大，安全性越高，加密速度越慢，效率越低，目前常用的分组加密算法的分组长度取64位</li>
+<li>子密钥大小，子密钥长度增加，安全性提高，加密速度降低，设计分组密码时需要在安全性和加密效率之间进行平衡</li>
+<li>循环次数，循环越多，安全性越高，加密效率越低</li>
+<li>子密钥产生算法，在初始密钥给定的情况下，产生子密钥的算法越复杂，安全性越高</li>
+<li>轮函数，一般情况下，论函数越复杂，加密算法的安全性越高</li>
+</ul>
+<h3 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h3><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/DES%E7%AE%97%E6%B3%95.png" alt="DES算法"><br>数据加密标准，Data Encryption Standard，IBM 研制的对称密钥加密。</p>
+<ul>
+<li>DES 是 16 轮的 Feistel 结构密码</li>
+<li>DES 是一个包含 16 个阶段的<strong>替代-置换</strong>的分组加密算法</li>
+<li>DES 的分组长度是 64 位<ul>
+<li>64 位的分组明文序列作为加密算法的输入，经过 16 轮加密得到 64 位的秘文序列</li>
+</ul>
+</li>
+<li>DES 使用 56 位的密钥</li>
+<li>DES 的每一轮使用 48 位的子密钥<ul>
+<li>每个子密钥是 56 位密钥的子集构成</li>
+</ul>
+</li>
+</ul>
+<h4 id="初始置换IP-Initial-Permutation"><a href="#初始置换IP-Initial-Permutation" class="headerlink" title="初始置换IP Initial Permutation"></a>初始置换IP Initial Permutation</h4><p>把输入的 64 位数据的排列顺序打乱，每位数据按照如下规则重新组合。<br><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/IP%E7%BD%AE%E6%8D%A2%E8%A1%A8.png" alt="IP置换表"><br>表中的每个格子都是一位数据，第一位利用第五十八位替换，一次类推。</p>
+<h4 id="一轮-DES"><a href="#一轮-DES" class="headerlink" title="一轮 DES"></a>一轮 DES</h4><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%B8%80%E8%BD%AEDES.png" alt="一轮DES"></p>
+<h4 id="f-函数结构"><a href="#f-函数结构" class="headerlink" title="f 函数结构"></a>f 函数结构</h4><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/f%E5%87%BD%E6%95%B0.png" alt="f函数"></p>
+<ul>
+<li>黑盒变换</li>
+<li>多个函数/操作（E、异或、S、P）的组合函数</li>
+<li>扩展变换：Expansion Permutation，也被称为E-盒，将 64 位输入序列的右半部分从 32 位扩展到 48 位<ul>
+<li>确保最终的密文与所有的明文位都有关</li>
+</ul>
+</li>
+</ul>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%89%A9%E5%B1%95%E5%8F%98%E6%8D%A2.png" alt="扩展变换"></p>
+<ul>
+<li>S-盒替代 s-boxes substitution</li>
+</ul>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/S%E6%9B%BF%E4%BB%A3.png" alt="S替代"></p>
+<ul>
+<li>P-盒置换 p-boxes permutation<br><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/P%E7%BD%AE%E6%8D%A2.png" alt="P置换"></li>
+</ul>
+<h4 id="逆初始置换-Inverse-Initial-Permutation"><a href="#逆初始置换-Inverse-Initial-Permutation" class="headerlink" title="逆初始置换 Inverse Initial Permutation"></a>逆初始置换 Inverse Initial Permutation</h4><p>初始置换和对应的逆初始置换操作并不会增强 DES 算法的安全性，主要目的是为了更容易地将明文和密文数据以字节大小放入 DES 芯片中。</p>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E9%80%86%E5%88%9D%E5%A7%8B%E7%BD%AE%E6%8D%A2.png" alt="逆初始置换"></p>
+<h4 id="每轮子密钥的生成"><a href="#每轮子密钥的生成" class="headerlink" title="每轮子密钥的生成"></a>每轮子密钥的生成</h4><p>64 位的密钥，每个字节的第八位作为校验位。<br><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AD%90%E5%AF%86%E9%92%A5.png" alt="子密钥"></p>
+<h4 id="DES-的安全性"><a href="#DES-的安全性" class="headerlink" title="DES 的安全性"></a>DES 的安全性</h4><ul>
+<li>DES的 56 位密钥可能太小<ul>
+<li>1998年7月，EFE 电子前哨基金会宣布攻破了 DES 算法，他们使用的是不到25万美元的特殊的 DES 破译机，这种攻击只需要不到三天的时间</li>
+</ul>
+</li>
+<li>DES 的迭代次数可能太少<ul>
+<li>16次恰巧能抵抗差分分析</li>
+</ul>
+</li>
+<li>S 盒中可能有不安全因素</li>
+<li>DES 的一些关键部分不应该保密 （加密方法应公开，密钥需要保密）</li>
+<li>DES 存在弱密钥和半弱密钥 （移位后子密钥相同，16 轮子密钥相同或交替出现）</li>
+<li>针对 DES 的攻击方法<ul>
+<li>差分分析方法 Difference Analysis Method</li>
+<li>线性分析方法 Linear Analysis Method</li>
+<li>旁路攻击方法 Side-Channel Attack （观察芯片耗能等）</li>
+</ul>
+</li>
+</ul>
+<h4 id="DES-的改进"><a href="#DES-的改进" class="headerlink" title="DES 的改进"></a>DES 的改进</h4><h5 id="密码分组链接-CBC-cipher-block-chaining"><a href="#密码分组链接-CBC-cipher-block-chaining" class="headerlink" title="密码分组链接 CBC-cipher block chaining"></a>密码分组链接 CBC-cipher block chaining</h5><ul>
+<li>算法解决了相同的明文分组加密后的数据相同问题，避免攻击者破解</li>
+<li>加密算法的输入是当前明文组和前一次密文分组的异或</li>
+<li>重复的明文分组不会在密文中暴露出重复关系</li>
+</ul>
+<h5 id="多重-DES"><a href="#多重-DES" class="headerlink" title="多重 DES"></a>多重 DES</h5><ul>
+<li>DES 密钥过短 56 bits 改成多重 DES 加密</li>
+<li>3DES 使用 3 个密钥，执行 3 次 DES 算法<ul>
+<li>加密-解密-加密（EDE）使用三个密钥先加密在解密在加密</li>
+</ul>
+</li>
+<li>为了避免 3DES 使用 3 个密钥进行三阶段加密带来的密钥过长缺点（168bit），Tuchman 提出使用两个密钥的三重加密方法，这个方法只要求 112bit 密钥，即令 k1=k3</li>
+<li>3DES 的第二阶段的解密并没有密码编码学上的意义，唯一优点是可以使用 3DES 解密原来的单次 DES 加密的数据</li>
+</ul>
+<h3 id="AES-高级加密标准"><a href="#AES-高级加密标准" class="headerlink" title="AES 高级加密标准"></a>AES 高级加密标准</h3><ul>
+<li>Advanced Encryption Standard</li>
+<li>NIST（美国国家标准技术研究所）对称密钥加密标准，取代 DES （2001年12月）</li>
+<li>1997年 NIST 宣布征集 AES 算法，要求<ul>
+<li>可公开加密方法</li>
+<li>分组加密。分组长度为 128 位</li>
+<li>至少像 3DES 一样安全</li>
+<li>更加高效、快</li>
+<li>可提供 128/192/256 位密钥</li>
+</ul>
+</li>
+<li>比利时学者 Joan Daemen 和 Vincent Rijmen 提出的 Rijndael 加密算法最终被选为 AES 算法</li>
+</ul>
+<h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><ul>
+<li>不属于 Feistel 结构</li>
+<li>加密、解密相似但不完全对称</li>
+<li>支持 128/192/256 数据块大小</li>
+<li>支持 128/192/256 密钥长度</li>
+<li>有较好的数学理论作为基础</li>
+<li>结构简单、速度快</li>
+<li>算法特点<ul>
+<li>分组长度和密钥长度均可变 128/192/256bit</li>
+<li>循环次数允许在一定范围内根据安全要求进行修正</li>
+<li>汇聚了安全、效率、易用、灵活等优点</li>
+<li>抗线性攻击和抗差分攻击的能力大大增强</li>
+<li>如果 1 秒暴力破解 DES，则需要 149 万亿年破解 AES</li>
+</ul>
+</li>
+</ul>
+<h3 id="公钥密码学"><a href="#公钥密码学" class="headerlink" title="公钥密码学"></a>公钥密码学</h3><p>对称密钥加密需要发送方与接收方知道共享的秘密密钥，最初如何商定密钥？</p>
+<h4 id="公开密钥加密"><a href="#公开密钥加密" class="headerlink" title="公开密钥加密"></a>公开密钥加密</h4><ul>
+<li>完全不同的方法 Diffie-Hellman76 RSA78</li>
+<li>发送方与接收方无需共享秘密密钥</li>
+<li>公开密钥（公钥）完全公开</li>
+<li>私有密钥（私钥）只有接收方知道</li>
+</ul>
+<h4 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h4><ul>
+<li>公钥加密和私钥解密需要能还原数据</li>
+<li>给定公钥不可能计算得到私钥</li>
+</ul>
+<h4 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h4><p>Rivest、Shamir、Adelson algorithm </p>
+<h4 id="RSA-预备知识"><a href="#RSA-预备知识" class="headerlink" title="RSA 预备知识"></a>RSA 预备知识</h4><ul>
+<li>报文/信息（message）仅仅是一个比特模式 bit pattern</li>
+<li>每个比特模式可以表示为一个唯一的整数</li>
+<li>因此，加密一个报文就等价于加密一个数<br>比如 m = 10010001，可以唯一的表示为十进制数145，为了加密 m，我们可以加密对应的数（145），得到一个新的数（密文）。</li>
+</ul>
+<h4 id="RSA-生成公钥-x2F-私钥对"><a href="#RSA-生成公钥-x2F-私钥对" class="headerlink" title="RSA 生成公钥/私钥对"></a>RSA 生成公钥/私钥对</h4><ol>
+<li>选择两个大质数 p 和 q （如 1024 bits 的大质数）</li>
+<li>计算 n= pq，z=(p-1)(q-1)</li>
+<li>选择 e （满足 e &lt; n），使 e 与 z 之间没有公因子，即 e，z互质(relatively prime)</li>
+<li>选择 d 使 ed - 1 刚好可以被 z 整除（即 ed mod z = 1）</li>
+<li>公钥 = (n, e)，私钥 = (n, d)</li>
+</ol>
+<h4 id="RSA-加密、解密"><a href="#RSA-加密、解密" class="headerlink" title="RSA 加密、解密"></a>RSA 加密、解密</h4><ol>
+<li>给定公钥 (n, e) 和 私钥(n, d)</li>
+<li>加密报文 m (m&lt;n)时计算 c = m^e mod n</li>
+<li>解密密文 c 时，计算 m = c^d mod n</li>
+</ol>
+<h4 id="RSA-另外一个重要性质"><a href="#RSA-另外一个重要性质" class="headerlink" title="RSA 另外一个重要性质"></a>RSA 另外一个重要性质</h4><p>利用公钥加密，可以利用私钥解密，利用私钥加密，可以利用公钥解密。</p>
+<h4 id="RSA-为什么安全"><a href="#RSA-为什么安全" class="headerlink" title="RSA 为什么安全"></a>RSA 为什么安全</h4><ul>
+<li>RSA 的安全性建立在大数分解和素性检测这个数论难题的基础上<ul>
+<li>即将两个大素数相乘在计算上容易实现，而将该乘积分解的计算量相当大</li>
+</ul>
+</li>
+</ul>
+<h4 id="RSA的实际应用"><a href="#RSA的实际应用" class="headerlink" title="RSA的实际应用"></a>RSA的实际应用</h4><ul>
+<li>RSA 的幂运算强度很大，速度慢</li>
+<li>DES 至少比 RSA 快 100 倍</li>
+<li>实际应用中：<ul>
+<li>利用公钥加密建立安全连接，然后建立第二个密钥-对称会话密钥，用于加密数据</li>
+</ul>
+</li>
+</ul>
+<p>会话密钥 session key</p>
+<ul>
+<li>Bob 与 Alice 利用 RSA 交换对称会话密钥 </li>
+<li>一旦双方确认会话密钥，则利用会话密钥加密/解密会话数据</li>
+</ul>
+<h2 id="身份认证-Authentication"><a href="#身份认证-Authentication" class="headerlink" title="身份认证 Authentication"></a>身份认证 Authentication</h2><h3 id="AP1-0"><a href="#AP1-0" class="headerlink" title="AP1.0"></a>AP1.0</h3><p>Alice 声明 I am Alice，在网络中，Bob 看不见 Alice，因此 Trudy 可以简单的声明她就是 Alice。</p>
+<h3 id="AP2-0"><a href="#AP2-0" class="headerlink" title="AP2.0"></a>AP2.0</h3><p>Alice 在 IP 分组中声明 I am Alice，IP 分组包含 Alice 的源 IP 地址，Trudy 可以构造一个分组，欺骗为 Alice 的 IP 地址。</p>
+<h3 id="AP3-0"><a href="#AP3-0" class="headerlink" title="AP3.0"></a>AP3.0</h3><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap3.0.png" alt="ap3.0"><br>Alice 声明 I am Alice 的同时，发送她的秘密口令进行证明，Trudy 嗅探 Alice 的分组，提取口令。</p>
+<h3 id="AP3-1"><a href="#AP3-1" class="headerlink" title="AP3.1"></a>AP3.1</h3><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap3.1.png" alt="ap3.1"><br>Alice 声明 I am Alice 的同时，发送她的加密的秘密口令进行证明。</p>
+<p>回放攻击 playback attack，Trudy 记录 Alice 的分组，稍后回放给 Bob。</p>
+<h3 id="AP4-0"><a href="#AP4-0" class="headerlink" title="AP4.0"></a>AP4.0</h3><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap4.0.png" alt="ap4.0"><br>目标：避免回放攻击</p>
+<p>一次性随机数（nonce）：一个生命期内只使用一次的数 R。</p>
+<p>为了证明真实的 Alice，Bob 向 Alice 发送一个随机数 R，Alice 必须返回 R，并利用共享密钥进行加密。</p>
+<p>不足之处：在发送消息之前必须共享密钥。</p>
+<h3 id="AP5-0"><a href="#AP5-0" class="headerlink" title="AP5.0"></a>AP5.0</h3><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ap5.0.png" alt="ap5.0"><br>ap4.0 需要共享密钥，是否可以利用公钥技术？</p>
+<p>ap5.0 利用一次性随机数以及公钥加密技术。</p>
+<p>中间人攻击 man in the middle attack，Trudy 向 Bob 假扮 ALice，向 Alice 假扮 Bob。</p>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB.png" alt="中间人攻击"></p>
+<p>通信似乎正常进行，事实上通信所有内容都被中间人截获。</p>
+<p>很难检测：</p>
+<ul>
+<li>Bob 和 Alice 可以收到彼此发送的所有信息</li>
+<li>问题是 Trudy 也收到了所有信息</li>
+</ul>
+<p>之所以通信被攻破是因为密钥可信性问题，即密钥分发问题？</p>
+<h2 id="报文完整性"><a href="#报文完整性" class="headerlink" title="报文完整性"></a>报文完整性</h2><p>报文/消息完整性 message integrity，也称为报文/消息认证（或报文鉴别），目标是：</p>
+<ul>
+<li>证明报文确实来自声称的发送方</li>
+<li>验证报文在传输过程中没有被篡改</li>
+<li>预防报文的时间、顺序被篡改</li>
+<li>预防报文持有期被修改</li>
+<li>预防抵赖<ul>
+<li>发送方否认</li>
+<li>接收方否认</li>
+</ul>
+</li>
+</ul>
+<h3 id="密码散列函数"><a href="#密码散列函数" class="headerlink" title="密码散列函数"></a>密码散列函数</h3><p>密码散列函数 Cryptographic Hash Function H(m)</p>
+<ul>
+<li>散列算法公开</li>
+<li>H(m)能够快速计算</li>
+<li>对任意长度报文进行多对一映射，均产生<strong>定长输出</strong></li>
+<li>对于任意报文无法预知其散列值</li>
+<li>不同报文不能产生相同的散列值</li>
+<li>单向性：无法根据散列值倒推出报文<ul>
+<li>对于给定散列值 h，无法计算找到满足 h=H(m) 的报文 m</li>
+</ul>
+</li>
+<li>抗弱碰撞性 Weak Collision Resistence WCR<ul>
+<li>对于给定报文 x，计算上不可能找到 y 且 y!=x，使得 H(x) = H(y)</li>
+</ul>
+</li>
+<li>抗强碰撞性 Strong Collision Resistence SCR<ul>
+<li>在计算上，不可能找到任意两个不同报文 x 和 y (x!=y)，使得 H(x) = H(y)</li>
+</ul>
+</li>
+</ul>
+<p>Internet 校验和是优秀的密码散列函数吗？<br>Internet 校验和 (checksum) 具备散列函数的某些属性：</p>
+<ul>
+<li>多对一映射</li>
+<li>对于任意长度报文，产生固定长度的散列值（16-bit校验和）</li>
+</ul>
+<p>但是，对于给定的报文其散列值，很容易找到另一个具有相同散列值的不同报文。</p>
+<h3 id="散列函数算法"><a href="#散列函数算法" class="headerlink" title="散列函数算法"></a>散列函数算法</h3><h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>被广泛应用的散列函数</p>
+<ul>
+<li>通过四个步骤，对任意长度的报文输入，计算输出 128 位的散列值</li>
+<li>MD5 不是足够安全<ul>
+<li>1996年，Dobbertin 找到了两个不同的 512-bit 块，在 MD5 计算下产生了相同的散列值</li>
+</ul>
+</li>
+</ul>
+<h4 id="SHA-1-Secure-Hash-Algorithm"><a href="#SHA-1-Secure-Hash-Algorithm" class="headerlink" title="SHA-1 Secure Hash Algorithm"></a>SHA-1 Secure Hash Algorithm</h4><p>另一个正在使用的散列算法</p>
+<ul>
+<li>要求输入消息长度小于 2^64</li>
+<li>散列值为 160 位</li>
+<li>速度慢于 MD5，安全性优于 MD5</li>
+</ul>
+<h3 id="报文摘要-message-digests"><a href="#报文摘要-message-digests" class="headerlink" title="报文摘要 message digests"></a>报文摘要 message digests</h3><p>对报文 m 应用散列函数 H，得到一个固定长度的散列码，称为报文摘要（message digest），记为 H(m)。</p>
+<p>报文摘要对原报文很重要，可以作为报文 m 的数字指纹 fingerprint。比如借条上按的手印。</p>
+<h3 id="报文认证"><a href="#报文认证" class="headerlink" title="报文认证"></a>报文认证</h3><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%8A%A5%E6%96%87%E8%AE%A4%E8%AF%81.png" alt="报文认证"><br>简单方案：报文+报文摘要 –&gt; 扩展报文(m, H(m))。</p>
+<p>这种方法仍然有缺陷，Trudy 可以用自己的报文+散列后的指纹发送给 Bob，此时 Bob 无法知道是真实的报文还是伪造后的，需要身份认证。</p>
+<h4 id="报文认证码-MAC-Message-Authentication-Code"><a href="#报文认证码-MAC-Message-Authentication-Code" class="headerlink" title="报文认证码 MAC Message Authentication Code"></a>报文认证码 MAC Message Authentication Code</h4><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/MAC.png" alt="MAC"><br>报文m + 认证密钥s + 密码散列函数 H –&gt; 扩展报文 (m, H(m+s))</p>
+<p>发送方和接收方共享<strong>认证密钥</strong>。</p>
+<h3 id="数字签名-Digital-signatures"><a href="#数字签名-Digital-signatures" class="headerlink" title="数字签名 Digital signatures"></a>数字签名 Digital signatures</h3><p>如何解决下列与报文完整性相关的问题？</p>
+<ul>
+<li>否认，发送方不承认自己发生过某一报文</li>
+<li>伪造，接收方自己伪造一份报文，并声称来自发送方</li>
+<li>冒充，某个用户冒充另一个用户接收或发送报文</li>
+<li>篡改，接收方收到的信息进行篡改</li>
+</ul>
+<p>这些问题 MAC 很难解决。</p>
+<p>数字签名技术是实现安全电子交易的核心技术之一。</p>
+<ul>
+<li>可验证性 verifiable</li>
+<li>不可伪造性 unforgeable</li>
+<li>不可抵赖性 non-repudiation</li>
+</ul>
+<p>怎么做呢？</p>
+<p>对报文 m 的简单数字签名</p>
+<ul>
+<li>报文加密技术是数字签名的基础，只能用公钥加密技术，不能用对称密钥加密</li>
+<li>Bob 通过利用其私钥对 m 进行加密，创建签名报文</li>
+</ul>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D.png" alt="数字签名"></p>
+<ul>
+<li>假设 Alice 收到报文 m 以及签名</li>
+<li>Alice 利用 Bob 的公钥解密签名，并检验解密后的内容是否和收到的 m 一样来证实报文 m 是 Bob 签名的。</li>
+<li>如果解密后的内容和 m 一致，则签名 m 的一定是 Bob 的私钥</li>
+<li>于是 Alice 可以证实<ul>
+<li>Bob 签名了 m</li>
+<li>没有其他人签名 m 的可能</li>
+<li>Bob 签名的是 m 而不是其他报文 m’</li>
+</ul>
+</li>
+<li>不可抵赖性 non-repudiation<ul>
+<li>Alice 可以持有 m 和 签名，必要时可以提交给法院证明是 Bob 签名的m</li>
+</ul>
+</li>
+</ul>
+<p>缺点：私钥 RSA 加密慢，签名要随报文一起发送，相当于发送了两份数据。</p>
+<h3 id="签名报文摘要"><a href="#签名报文摘要" class="headerlink" title="签名报文摘要"></a>签名报文摘要</h3><p>不对原报文签名，而是签名报文摘要。</p>
+<p>Bob 发送数字签名的报文：<br><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E7%AD%BE%E5%90%8D%E6%91%98%E8%A6%81.png" alt="签名摘要"></p>
+<p>Alice 核实签名以及数字签名报文的完整性：<br><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%91%98%E8%A6%81%E7%AD%BE%E5%90%8D%E6%A0%B8%E5%AE%9E.png" alt="摘要签名核实"></p>
+<h2 id="密钥分发和公钥认证中心-CA"><a href="#密钥分发和公钥认证中心-CA" class="headerlink" title="密钥分发和公钥认证中心 CA"></a>密钥分发和公钥认证中心 CA</h2><p>回顾一下 AP4.0，对称密钥如何分发？两个实体在网上如何建立共享秘密密钥？</p>
+<p>解决方案：引入可信任的密钥分发中心（Key Distribution Center-KDC）作为实体间的中介（intermediary）</p>
+<h3 id="（对称）密钥分发中心-KDC"><a href="#（对称）密钥分发中心-KDC" class="headerlink" title="（对称）密钥分发中心 KDC"></a>（对称）密钥分发中心 KDC</h3><p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/KDC.png" alt="KDC"></p>
+<ul>
+<li>Alice 和 Bob 需要共享对称密钥</li>
+<li>KDC：一个服务器<ul>
+<li>每个注册用户（很多用户）共享其与 KDC 的秘密密钥，只有用户和 KDC 知道的密钥</li>
+</ul>
+</li>
+<li>Alice 和 Bob 只知道自己与 KDC 之间的对称密钥，用于分别与 KD次进行秘密通信</li>
+</ul>
+<p>KDC 如何支持 Bob 和 Alice 确定用于彼此通信的共享对称密钥？</p>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/KDC%E6%B5%81%E7%A8%8B.png" alt="KDC流程"></p>
+<h3 id="（公钥）认证中心-（CA）"><a href="#（公钥）认证中心-（CA）" class="headerlink" title="（公钥）认证中心 （CA）"></a>（公钥）认证中心 （CA）</h3><p>回顾一下 AP5.0 ，中间人攻击，这些问题都是由假的公钥引起的。</p>
+<h4 id="比萨恶作剧"><a href="#比萨恶作剧" class="headerlink" title="比萨恶作剧"></a>比萨恶作剧</h4><p>Trudy 针对 Bob 实施比萨恶作剧，Trudy 创建邮件订单，以 Bob 的名义定比萨。<br>Trudy 利用她的私钥签名订单，Trudy 向比萨店发送订单，Trudy 向比萨店发送她的公钥，但她声称这是 Bob 的公钥，<br>比萨店核实签名：然后向 Bob 递送比萨。</p>
+<p>公钥问题：当 Alice 获得 Bob 的公钥（通过 web 网站、e-mail、磁盘等），她怎么确认这真的是 Bob 的公钥而不是 Trudy 的。</p>
+<h4 id="认证中心"><a href="#认证中心" class="headerlink" title="认证中心"></a>认证中心</h4><ul>
+<li>认证中心（CA），实现特定实体 E 与其公钥的绑定</li>
+<li>每个 E （人，路由器的等）在 CA 上注册其公钥<ul>
+<li>E 向 CA提供身份证明</li>
+<li>CA 创建绑定 E 以及公钥的证书 certificate</li>
+<li>证书包含由 CA 签名的 E 的公钥–CA 声明：这是 E 的公钥</li>
+</ul>
+</li>
+</ul>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CA.png" alt="CA"></p>
+<p>当 Alice 想要 Bob 的公钥时：</p>
+<ul>
+<li>首先获取 Bob 的公钥证书（从 Bob或者其他地方）</li>
+<li>应用 CA 的公钥（大家都知道），解密证书中签名的公钥，获得 Bob 公钥</li>
+</ul>
+<p><img src="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CA%E8%8E%B7%E5%8F%96%E5%85%AC%E9%92%A5.png" alt="CA获取公钥"></p>
+<h4 id="公钥证书主要内容"><a href="#公钥证书主要内容" class="headerlink" title="公钥证书主要内容"></a>公钥证书主要内容</h4><ul>
+<li>序列号： 唯一发行号</li>
+<li>证书持有者信息，包括算法和密钥值</li>
+<li>证书发行者信息， CA 信息</li>
+<li>有效期</li>
+<li>发行者数字签名</li>
+</ul>
+<p>KDC 解决对称密钥问题，CA 解决公钥问题。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/06/08/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%89%A9%E7%90%86%E5%B1%82/" rel="prev" title="计算机网络物理层">
+      <i class="fa fa-chevron-left"></i> 计算机网络物理层
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E5%B1%9E%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">网络安全基本属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%AF%86%E6%80%A7-confidentiality"><span class="nav-number">1.1.</span> <span class="nav-text">机密性 confidentiality</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81-authentication"><span class="nav-number">1.2.</span> <span class="nav-text">身份认证 authentication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E5%AE%8C%E6%95%B4%E6%80%A7-message-integrity"><span class="nav-number">1.3.</span> <span class="nav-text">信息完整性 message integrity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%AE%BF%E9%97%AE%E4%B8%8E%E5%8F%AF%E7%94%A8%E6%80%A7-access-and-availability"><span class="nav-number">1.4.</span> <span class="nav-text">可访问与可用性 access and availability</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%9F%BA%E6%9C%AC%E7%89%B9%E5%BE%81"><span class="nav-number">2.</span> <span class="nav-text">网络安全基本特征</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">相对性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E6%95%88%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">时效性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E6%80%A7"><span class="nav-number">2.3.</span> <span class="nav-text">相关性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7"><span class="nav-number">2.4.</span> <span class="nav-text">不确定性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E6%80%A7"><span class="nav-number">2.5.</span> <span class="nav-text">复杂性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E6%80%A7"><span class="nav-number">2.6.</span> <span class="nav-text">重要性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E8%B7%AF%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E9%A2%86%E5%9F%9F"><span class="nav-number">3.</span> <span class="nav-text">网路安全研究领域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%9F%E4%BA%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">拟人模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84-Bob-Alice"><span class="nav-number">4.1.</span> <span class="nav-text">网络中的 Bob Alice</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84-Trudy"><span class="nav-number">4.2.</span> <span class="nav-text">网络中的 Trudy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81"><span class="nav-number">5.</span> <span class="nav-text">网络安全威胁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AA%83%E5%90%AC-eavesdrop"><span class="nav-number">5.1.</span> <span class="nav-text">窃听 eavesdrop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5-insert"><span class="nav-number">5.2.</span> <span class="nav-text">插入 insert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%87%E5%86%92-impersonation"><span class="nav-number">5.3.</span> <span class="nav-text">假冒 impersonation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%AB%E6%8C%81-hijacking"><span class="nav-number">5.4.</span> <span class="nav-text">劫持 hijacking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%92%E7%BB%9D%E6%9C%8D%E5%8A%A1-Dos-denail-of-service"><span class="nav-number">5.5.</span> <span class="nav-text">拒绝服务 Dos denail of service</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SYN-cookie"><span class="nav-number">5.5.1.</span> <span class="nav-text">SYN cookie</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%A0%E5%B0%84-mapping"><span class="nav-number">5.6.</span> <span class="nav-text">映射 mapping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%97%85%E6%8E%A2-sniffing"><span class="nav-number">5.7.</span> <span class="nav-text">分组嗅探 sniffing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%E6%AC%BA%E9%AA%97-spoofing"><span class="nav-number">5.8.</span> <span class="nav-text">IP 欺骗 spoofing</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6"><span class="nav-number">6.</span> <span class="nav-text">密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6-cryptography-%E6%9C%AF%E8%AF%AD"><span class="nav-number">6.1.</span> <span class="nav-text">密码学 cryptography 术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E5%8A%A0%E5%AF%86%E6%96%B9%E6%B3%95"><span class="nav-number">6.2.</span> <span class="nav-text">破解加密方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%94%AF%E5%AF%86%E6%96%87%E6%94%BB%E5%87%BB"><span class="nav-number">6.2.1.</span> <span class="nav-text">唯密文攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%B2%E7%9F%A5%E6%98%8E%E6%96%87%E6%94%BB%E5%87%BB"><span class="nav-number">6.2.2.</span> <span class="nav-text">已知明文攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E6%98%8E%E6%96%87%E6%94%BB%E5%87%BB"><span class="nav-number">6.2.3.</span> <span class="nav-text">选择明文攻击</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">6.3.</span> <span class="nav-text">传统加密算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%BF%E4%BB%A3%E5%AF%86%E7%A0%81-substitution"><span class="nav-number">6.3.1.</span> <span class="nav-text">替代密码 substitution</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%87%AF%E6%92%92%E5%AF%86%E7%A0%81-casesar-cipher"><span class="nav-number">6.3.1.1.</span> <span class="nav-text">凯撒密码 casesar cipher</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8D%95%E7%A0%81-x2F-%E5%AD%97%E6%AF%8D%E6%9B%BF%E4%BB%A3%E5%AF%86%E7%A0%81-monoalphabetic-cipher"><span class="nav-number">6.3.1.2.</span> <span class="nav-text">单码&#x2F;字母替代密码 monoalphabetic cipher</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E7%A0%81-x2F-%E5%AD%97%E6%AF%8D%E6%9B%BF%E4%BB%A3%E5%8A%A0%E5%AF%86-polyalphabetic-encryption"><span class="nav-number">6.3.1.3.</span> <span class="nav-text">多码&#x2F;字母替代加密 polyalphabetic encryption</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8D%A2%E4%BD%8D%E5%AF%86%E7%A0%81-transpositions"><span class="nav-number">6.3.2.</span> <span class="nav-text">换位密码 transpositions</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BD%AE%E6%8D%A2%E6%B3%95-permutation-method"><span class="nav-number">6.3.2.1.</span> <span class="nav-text">置换法 permutation method</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%97%E7%BD%AE%E6%8D%A2%E5%8A%A0%E5%AF%86"><span class="nav-number">6.3.2.2.</span> <span class="nav-text">列置换加密</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3%E5%8A%A0%E5%AF%86%E6%8A%80%E6%9C%AF"><span class="nav-number">6.4.</span> <span class="nav-text">现代加密技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E5%AF%86%E7%A0%81"><span class="nav-number">6.4.1.</span> <span class="nav-text">流密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81"><span class="nav-number">6.4.2.</span> <span class="nav-text">分组密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Feistel-%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%BB%93%E6%9E%84"><span class="nav-number">6.4.3.</span> <span class="nav-text">Feistel 分组密码结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="nav-number">6.4.3.1.</span> <span class="nav-text">加密过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="nav-number">6.4.3.2.</span> <span class="nav-text">解密过程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-number">6.4.4.</span> <span class="nav-text">安全性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DES"><span class="nav-number">6.5.</span> <span class="nav-text">DES</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E7%BD%AE%E6%8D%A2IP-Initial-Permutation"><span class="nav-number">6.5.1.</span> <span class="nav-text">初始置换IP Initial Permutation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%BD%AE-DES"><span class="nav-number">6.5.2.</span> <span class="nav-text">一轮 DES</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#f-%E5%87%BD%E6%95%B0%E7%BB%93%E6%9E%84"><span class="nav-number">6.5.3.</span> <span class="nav-text">f 函数结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%86%E5%88%9D%E5%A7%8B%E7%BD%AE%E6%8D%A2-Inverse-Initial-Permutation"><span class="nav-number">6.5.4.</span> <span class="nav-text">逆初始置换 Inverse Initial Permutation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AF%8F%E8%BD%AE%E5%AD%90%E5%AF%86%E9%92%A5%E7%9A%84%E7%94%9F%E6%88%90"><span class="nav-number">6.5.5.</span> <span class="nav-text">每轮子密钥的生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DES-%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-number">6.5.6.</span> <span class="nav-text">DES 的安全性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DES-%E7%9A%84%E6%94%B9%E8%BF%9B"><span class="nav-number">6.5.7.</span> <span class="nav-text">DES 的改进</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%88%86%E7%BB%84%E9%93%BE%E6%8E%A5-CBC-cipher-block-chaining"><span class="nav-number">6.5.7.1.</span> <span class="nav-text">密码分组链接 CBC-cipher block chaining</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E9%87%8D-DES"><span class="nav-number">6.5.7.2.</span> <span class="nav-text">多重 DES</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AES-%E9%AB%98%E7%BA%A7%E5%8A%A0%E5%AF%86%E6%A0%87%E5%87%86"><span class="nav-number">6.6.</span> <span class="nav-text">AES 高级加密标准</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">6.6.1.</span> <span class="nav-text">简介</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81%E5%AD%A6"><span class="nav-number">6.7.</span> <span class="nav-text">公钥密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AC%E5%BC%80%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86"><span class="nav-number">6.7.1.</span> <span class="nav-text">公开密钥加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A6%81%E6%B1%82"><span class="nav-number">6.7.2.</span> <span class="nav-text">要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA"><span class="nav-number">6.7.3.</span> <span class="nav-text">RSA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-number">6.7.4.</span> <span class="nav-text">RSA 预备知识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA-%E7%94%9F%E6%88%90%E5%85%AC%E9%92%A5-x2F-%E7%A7%81%E9%92%A5%E5%AF%B9"><span class="nav-number">6.7.5.</span> <span class="nav-text">RSA 生成公钥&#x2F;私钥对</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA-%E5%8A%A0%E5%AF%86%E3%80%81%E8%A7%A3%E5%AF%86"><span class="nav-number">6.7.6.</span> <span class="nav-text">RSA 加密、解密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA-%E5%8F%A6%E5%A4%96%E4%B8%80%E4%B8%AA%E9%87%8D%E8%A6%81%E6%80%A7%E8%B4%A8"><span class="nav-number">6.7.7.</span> <span class="nav-text">RSA 另外一个重要性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%89%E5%85%A8"><span class="nav-number">6.7.8.</span> <span class="nav-text">RSA 为什么安全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">6.7.9.</span> <span class="nav-text">RSA的实际应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81-Authentication"><span class="nav-number">7.</span> <span class="nav-text">身份认证 Authentication</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AP1-0"><span class="nav-number">7.1.</span> <span class="nav-text">AP1.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AP2-0"><span class="nav-number">7.2.</span> <span class="nav-text">AP2.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AP3-0"><span class="nav-number">7.3.</span> <span class="nav-text">AP3.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AP3-1"><span class="nav-number">7.4.</span> <span class="nav-text">AP3.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AP4-0"><span class="nav-number">7.5.</span> <span class="nav-text">AP4.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AP5-0"><span class="nav-number">7.6.</span> <span class="nav-text">AP5.0</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">8.</span> <span class="nav-text">报文完整性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0"><span class="nav-number">8.1.</span> <span class="nav-text">密码散列函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0%E7%AE%97%E6%B3%95"><span class="nav-number">8.2.</span> <span class="nav-text">散列函数算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MD5"><span class="nav-number">8.2.1.</span> <span class="nav-text">MD5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SHA-1-Secure-Hash-Algorithm"><span class="nav-number">8.2.2.</span> <span class="nav-text">SHA-1 Secure Hash Algorithm</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E6%91%98%E8%A6%81-message-digests"><span class="nav-number">8.3.</span> <span class="nav-text">报文摘要 message digests</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E8%AE%A4%E8%AF%81"><span class="nav-number">8.4.</span> <span class="nav-text">报文认证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E6%96%87%E8%AE%A4%E8%AF%81%E7%A0%81-MAC-Message-Authentication-Code"><span class="nav-number">8.4.1.</span> <span class="nav-text">报文认证码 MAC Message Authentication Code</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D-Digital-signatures"><span class="nav-number">8.5.</span> <span class="nav-text">数字签名 Digital signatures</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%BE%E5%90%8D%E6%8A%A5%E6%96%87%E6%91%98%E8%A6%81"><span class="nav-number">8.6.</span> <span class="nav-text">签名报文摘要</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E5%88%86%E5%8F%91%E5%92%8C%E5%85%AC%E9%92%A5%E8%AE%A4%E8%AF%81%E4%B8%AD%E5%BF%83-CA"><span class="nav-number">9.</span> <span class="nav-text">密钥分发和公钥认证中心 CA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%88%E5%AF%B9%E7%A7%B0%EF%BC%89%E5%AF%86%E9%92%A5%E5%88%86%E5%8F%91%E4%B8%AD%E5%BF%83-KDC"><span class="nav-number">9.1.</span> <span class="nav-text">（对称）密钥分发中心 KDC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%88%E5%85%AC%E9%92%A5%EF%BC%89%E8%AE%A4%E8%AF%81%E4%B8%AD%E5%BF%83-%EF%BC%88CA%EF%BC%89"><span class="nav-number">9.2.</span> <span class="nav-text">（公钥）认证中心 （CA）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AF%94%E8%90%A8%E6%81%B6%E4%BD%9C%E5%89%A7"><span class="nav-number">9.2.1.</span> <span class="nav-text">比萨恶作剧</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E4%B8%AD%E5%BF%83"><span class="nav-number">9.2.2.</span> <span class="nav-text">认证中心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E8%AF%81%E4%B9%A6%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="nav-number">9.2.3.</span> <span class="nav-text">公钥证书主要内容</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">135k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:03</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
