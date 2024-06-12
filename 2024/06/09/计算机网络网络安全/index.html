@@ -371,6 +371,7 @@
 <li>非对称密钥加密（公开密钥加密）</li>
 </ul>
 <h4 id="流密码"><a href="#流密码" class="headerlink" title="流密码"></a>流密码</h4><p>基本思想：首先利用密钥 K 产生一个密钥流（字节流或者比特流都可以）：Z=Z0Z1Z2…，然后使用如下规则对明文串x=x0x1x2…加密<br>y=y0y1y2…=Ez0(x0)Ez1(x1)Ez2(x2)，使用 Z0 对 x0 加密，一般是异或运算，解密时，使用相同的（对称加密）密钥流与密文做XOR运算。</p>
+<p>一次性密码本属于流密码。</p>
 <h4 id="分组密码"><a href="#分组密码" class="headerlink" title="分组密码"></a>分组密码</h4><p>将明文序列划分为长为 m 的明文组，各明文组在长为 i 的密钥组的控制下变换成长度为 n 的密文组，通常取 n=m；n&gt;m扩展分组密码，n&lt;m压缩分组密码。</p>
 <p>典型分组密码结构：Feistel分组密码结构，在设计密码体制的过程中，Shannon 提出了能够破坏对密码系统进行各种统计分析攻击的两个基本操作：扩散（diffision）和混淆（confusion）。</p>
 <h4 id="Feistel-分组密码结构"><a href="#Feistel-分组密码结构" class="headerlink" title="Feistel 分组密码结构"></a>Feistel 分组密码结构</h4><p>基于扩散和混淆的思考，Feistel提出通过替代和置换交替操作方式构造密码，Feistel 是一种设计原则，并非一个特殊的密码。</p>
