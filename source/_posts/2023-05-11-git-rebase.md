@@ -32,7 +32,7 @@ description: About git rebase
 
 | command | desc                                                                                                      | 
 |---------|-----------------------------------------------------------------------------------------------------------|
-| pick    | pick commits，此时可以 delte 、reorder commits                                                                  |
+| pick    | pick commits，此时可以 delete 、reorder commits                                                                  |
 | reword  | 和 pick 很像，但是会停止 rebase，给你修改 commit message 的机会， 任何当前 commit 做的代码修改都不受影响                                   |
 | edit    | 如果选择 edit commit，此时有机会 amend commit，也就是说，可以增加或改变当前 commit ，甚至在继续进行 rebase 时，添加更多commit或者删除当前 commit 的错误代码 |
 | squash  | 把多个 commit 合并成一个，会把当前命令之上的一行 commit 合并到当前 squash 的 commit 上                                               |
