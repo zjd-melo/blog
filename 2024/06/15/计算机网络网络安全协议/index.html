@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络网络安全协议">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络网络安全协议">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机网络网络安全协议">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/PGP.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E5%BA%94%E7%94%A8%E5%B1%82.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E4%BC%A0%E8%BE%93%E5%B1%82.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E7%BD%91%E7%BB%9C%E5%B1%82.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E6%95%B0%E6%8D%AE%E8%AE%B0%E5%BD%95.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E6%8A%A5%E6%96%87.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E7%AE%80%E5%8C%96SSL.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E5%8D%8F%E8%AE%AE.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E5%8F%82%E6%95%B0.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E8%AE%B0%E5%BD%95.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E8%AE%B0%E5%BD%95%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/PN.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/VPN.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E5%85%B8%E5%9E%8BVPN.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E4%BC%A0%E8%BE%93.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E9%9A%A7%E9%81%93.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SA.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SA%E4%B8%BE%E4%BE%8B.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8FAH.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8FAH.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8FESP.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8FESP.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8F%E5%9B%BE.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8F%E5%9B%BE.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IKE.png">
+<meta property="article:published_time" content="2024-06-15T03:15:08.000Z">
+<meta property="article:modified_time" content="2024-06-15T03:15:08.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/PGP.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机网络网络安全协议 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络网络安全协议
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-06-15 11:15:08" itemprop="dateCreated datePublished" datetime="2024-06-15T11:15:08+08:00">2024-06-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>7.7k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>7 mins.</span>
+            </span>
+            <div class="post-description">计算机网络网络安全协议</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="安全电子邮件"><a href="#安全电子邮件" class="headerlink" title="安全电子邮件"></a>安全电子邮件</h2><h3 id="安全威胁"><a href="#安全威胁" class="headerlink" title="安全威胁"></a>安全威胁</h3><p>使用电子邮件可能的安全威胁：</p>
+<ul>
+<li>垃圾邮件<ul>
+<li>增加网络负荷，占用服务器空间</li>
+</ul>
+</li>
+<li>诈骗邮件<ul>
+<li>能迅速让大量受害者上当</li>
+</ul>
+</li>
+<li>邮件炸弹<ul>
+<li>短时间内向同一个邮箱发送大量电子邮件，占用了用户邮件空间，让用户无法接收正常的邮件</li>
+</ul>
+</li>
+<li>通过电子邮件/附件传播网络蠕虫/病毒</li>
+<li>电子邮件欺骗、钓鱼式攻击</li>
+</ul>
+<h3 id="安全需求"><a href="#安全需求" class="headerlink" title="安全需求"></a>安全需求</h3><p>电子邮件的安全需求：</p>
+<ul>
+<li>机密性<ul>
+<li>只有真正的接收方才能阅读邮件</li>
+</ul>
+</li>
+<li>完整性<ul>
+<li>电子邮件在传输过程中不被修改</li>
+</ul>
+</li>
+<li>身份认证性<ul>
+<li>电子邮件的发送者不被假冒</li>
+</ul>
+</li>
+<li>抗抵赖性<ul>
+<li>发信人无法否认发过电子邮件</li>
+</ul>
+</li>
+</ul>
+<h3 id="安全电子邮件基本原理"><a href="#安全电子邮件基本原理" class="headerlink" title="安全电子邮件基本原理"></a>安全电子邮件基本原理</h3><h4 id="电子邮件的特性"><a href="#电子邮件的特性" class="headerlink" title="电子邮件的特性"></a>电子邮件的特性</h4><ul>
+<li>邮件具有<strong>单向性</strong>和<strong>非实时性</strong><ul>
+<li>不能通过建立隧道来保证安全，只能对邮件本身加密</li>
+</ul>
+</li>
+</ul>
+<h4 id="机密性"><a href="#机密性" class="headerlink" title="机密性"></a>机密性</h4><p>Alice 期望向 Bob 发送机密邮件 m，可以怎么做呢，用 Bob 的<br>公开密钥加密，这是一种解决方案，但是公钥加密计算过程复杂太慢了，<br>可以使用对称密钥和公钥结合的方式。</p>
+<p>Alice ：</p>
+<ul>
+<li>生成随机对称密钥</li>
+<li>利用生成的密钥加密报文（为了效率）</li>
+<li>同时利用 Bob 的公钥加密对称密钥</li>
+<li>将加密后的消息和加密后的对称密钥发送给 Bob</li>
+</ul>
+<p>Bob：</p>
+<ul>
+<li>利用私有密钥解密对称密钥</li>
+<li>利用解密后的对称密钥解密消息邮件</li>
+</ul>
+<h4 id="认证、完整性"><a href="#认证、完整性" class="headerlink" title="认证、完整性"></a>认证、完整性</h4><p>Alice 期望提供发送者认证与报文完整性认证。</p>
+<ul>
+<li>Alice 对报文进行数字签名（Alice 私钥签名报文摘要）</li>
+<li>发送报文（明文）和数字签名</li>
+</ul>
+<h3 id="电子邮件标准"><a href="#电子邮件标准" class="headerlink" title="电子邮件标准"></a>电子邮件标准</h3><h4 id="PEM-Privacy-Enhanced-Mail-标准"><a href="#PEM-Privacy-Enhanced-Mail-标准" class="headerlink" title="PEM Privacy Enhanced Mail 标准"></a>PEM Privacy Enhanced Mail 标准</h4><ul>
+<li>IETF 与 IRTF 研究增强 E-Mail 的保密以及 PEM 的标准化</li>
+<li>1993年初，提出四份 RFC 作为建议标准</li>
+<li>PEM 的运行依赖 PKI 公钥基础设施，如 CA<ul>
+<li>美国对加密软件的出口限制，没有被广泛配置</li>
+</ul>
+</li>
+<li>PEM 提供 4 种安全服务<ul>
+<li>邮件加密</li>
+<li>报文完整性认证</li>
+<li>发送方的认证</li>
+<li>防发送方否认</li>
+</ul>
+</li>
+</ul>
+<h4 id="PGP-Pretty-Good-Privacy-标准"><a href="#PGP-Pretty-Good-Privacy-标准" class="headerlink" title="PGP Pretty Good Privacy 标准"></a>PGP Pretty Good Privacy 标准</h4><p>完美邮件保密系统。</p>
+<ul>
+<li>Philip Zimmermann 于 1991 年发布 PGP 1.0<ul>
+<li>事实上的标准，免费软件</li>
+</ul>
+</li>
+<li>可在各种平台免费运行</li>
+<li>还可用于普通文件加密及军事目的</li>
+<li>所用算法被证实为非常安全<ul>
+<li>公钥加密算法：RSA、DSS 或 Diffie-Hellman</li>
+<li>对称加密算法：CAST、3DES 或 IDEA</li>
+<li>散列算法：MD5 或 SHA-1</li>
+</ul>
+</li>
+</ul>
+<h5 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h5><ul>
+<li>对邮件内容进行数字签名，保证信件内容不被篡改</li>
+<li>使用公钥和对称加密保证邮件内容机密且不可否认</li>
+<li>公钥的权威性由收发双方或所信任的第三方签名认证</li>
+<li>事先不需要任何保密信道来传递对称的会话密钥</li>
+</ul>
+<h5 id="功能框架"><a href="#功能框架" class="headerlink" title="功能框架"></a>功能框架</h5><p>Alice 期望 PGP 提供保密、发送者认证与报文完整性。</p>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/PGP.png" alt="PGP"></p>
+<h5 id="PGP-密钥"><a href="#PGP-密钥" class="headerlink" title="PGP 密钥"></a>PGP 密钥</h5><ul>
+<li>安装 PGP 时，软件为用户生成一个公开密钥对<ul>
+<li>公钥放置用户网站或某公钥服务器上</li>
+<li>私钥则使用用户口令进行保护<ul>
+<li>用户为随机生成的 RSA 私钥指定一个口令，只有给出口令才能将私钥释放出来使用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>PGP 公钥认证机制与传统 CA 差异较大<ul>
+<li>PGP 公钥可以通过可信的 Web 认证</li>
+<li>用户可以自己认证任何其信任的<strong>公钥/用户名</strong></li>
+<li>用户还可以为其他公钥认证提供<strong>担保</strong></li>
+</ul>
+</li>
+<li>防止篡改公钥的方法（Alice）<ul>
+<li>直接从 Bob 手中得到其公钥</li>
+<li>通过电话认证密钥</li>
+<li>从双方信任的 David 那里获得 Bob 的公钥</li>
+<li>通过 CA</li>
+</ul>
+</li>
+</ul>
+<h4 id="S-x2F-MIME"><a href="#S-x2F-MIME" class="headerlink" title="S/MIME"></a>S/MIME</h4><p>Secure/Multipurpose Internet Mail Extensions 标准</p>
+<ul>
+<li>提供数据保密、完整性和认证等安全服务</li>
+<li>不仅限于邮件使用，可用于任何支持 MIME 数据的传输机制，如 HTTP</li>
+<li>增加了新的 MIME 数据类型<ul>
+<li>应用/pkcs7-MIME application/pkcs7-MIME</li>
+<li>复合/已签名 multipart/signed</li>
+</ul>
+</li>
+<li>只保护邮件的邮件主体，对头部信息则不进行加密</li>
+<li>认证机制依赖于层次结构的 CA Tree of Trust 信任树</li>
+<li>证书格式采用 X.509 规范</li>
+</ul>
+<h2 id="Web-安全"><a href="#Web-安全" class="headerlink" title="Web 安全"></a>Web 安全</h2><h3 id="Web-安全威胁"><a href="#Web-安全威胁" class="headerlink" title="Web 安全威胁"></a>Web 安全威胁</h3><ul>
+<li>攻击与破坏事件层出不穷，需要安全 Web 服务<ul>
+<li>Web 应用广泛、服务器底层软件复杂，可能隐藏安全漏洞</li>
+</ul>
+</li>
+<li>Web 安全威胁的分类<ul>
+<li>主动攻击：篡改 C/S 之间信息或篡改 Web 站点信息 （难防易检）</li>
+<li>被动攻击：监听数据流获得信息或进行信息量分析（难检易防）</li>
+</ul>
+</li>
+<li>机密性<ul>
+<li>网络监听、窃取数据</li>
+</ul>
+</li>
+<li>完整性<ul>
+<li>修改用户数据、修改传输的信息</li>
+</ul>
+</li>
+<li>拒绝服务<ul>
+<li>伪造请求淹没服务器</li>
+</ul>
+</li>
+<li>身份认证<ul>
+<li>冒充合法用户、伪造数据</li>
+</ul>
+</li>
+</ul>
+<h4 id="Web-服务器的安全威胁"><a href="#Web-服务器的安全威胁" class="headerlink" title="Web 服务器的安全威胁"></a>Web 服务器的安全威胁</h4><ul>
+<li>Web 服务器越强大，包含安全漏洞概率就越高</li>
+<li>HTTP 服务可在不同权限下运行</li>
+</ul>
+<h4 id="Web-浏览器的安全威胁"><a href="#Web-浏览器的安全威胁" class="headerlink" title="Web 浏览器的安全威胁"></a>Web 浏览器的安全威胁</h4><ul>
+<li>动态 Web 页面可能隐藏恶意程序</li>
+</ul>
+<h4 id="通信信道的安全威胁"><a href="#通信信道的安全威胁" class="headerlink" title="通信信道的安全威胁"></a>通信信道的安全威胁</h4><ul>
+<li>监听程序会威胁通信信道中所传输信息的机密性</li>
+<li>伪造、篡改、重放会威胁所传输信息的完整性</li>
+<li>缺乏身份认证使得冒充他人身份进行中间人攻击</li>
+<li>缺乏数字签名机制使得通信双方能相互攻击</li>
+<li>拒绝服务攻击使得通信信道不能保证可用性</li>
+</ul>
+<h3 id="基于应用层实现-Web-安全"><a href="#基于应用层实现-Web-安全" class="headerlink" title="基于应用层实现 Web 安全"></a>基于应用层实现 Web 安全</h3><ul>
+<li>为特定应用定制特定安全服务，将安全服务直接嵌入在应用程序中</li>
+</ul>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E5%BA%94%E7%94%A8%E5%B1%82.png" alt="应用层"></p>
+<h3 id="基于传输层实现-Web-安全"><a href="#基于传输层实现-Web-安全" class="headerlink" title="基于传输层实现 Web 安全"></a>基于传输层实现 Web 安全</h3><p>直接改造 TCP 不大可能，引入中间层来解决。</p>
+<ul>
+<li>SSL 或 TLS 可作为基础协议栈的组成部分，对应用透明<ul>
+<li>也可直接嵌入到浏览器中使用</li>
+</ul>
+</li>
+<li>使用 SSL 或 TLS 后，传送的应用层数据会被加密<ul>
+<li>保证通信安全，不仅仅限于 Web 应用，可以用于 TCP 之上的所有应用<br><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E4%BC%A0%E8%BE%93%E5%B1%82.png" alt="传输层"></li>
+</ul>
+</li>
+</ul>
+<h3 id="基于网络层实现-Web-安全"><a href="#基于网络层实现-Web-安全" class="headerlink" title="基于网络层实现 Web 安全"></a>基于网络层实现 Web 安全</h3><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E7%BD%91%E7%BB%9C%E5%B1%82.png" alt="网络层"></p>
+<ul>
+<li>IPSec 提供端到端（主机到主机）的安全机制<ul>
+<li>通用解决方案，UDP 也可以用</li>
+</ul>
+</li>
+<li>各种应用程序均可利用 IPSec 提供的安全机制<ul>
+<li>减少了安全漏洞的产生</li>
+</ul>
+</li>
+</ul>
+<h3 id="安全套接字层-Secure-Sockets-Layer-SSL"><a href="#安全套接字层-Secure-Sockets-Layer-SSL" class="headerlink" title="安全套接字层 Secure Sockets Layer SSL"></a>安全套接字层 Secure Sockets Layer SSL</h3><ul>
+<li>广泛部署的安全协议<ul>
+<li>几乎所有浏览器和 Web 服务器都支持</li>
+<li>https</li>
+</ul>
+</li>
+<li>由 Netscape 开发实现</li>
+<li>变体：TLS，虽然和 SSL 相似但也存在差异，不能互操作</li>
+<li>提供：<ul>
+<li>机密性 confidentiality</li>
+<li>完整性 integrity</li>
+<li>认证 authentication</li>
+</ul>
+</li>
+<li>最初目标：<ul>
+<li>Web 电子商务交易</li>
+<li>加密 （卡号）</li>
+<li>Web 服务器认证</li>
+<li>可选的客户认证</li>
+<li>方便与新商户的商务活动 minimum hassle</li>
+</ul>
+</li>
+<li><strong>可用于所有基于 TCP 的网络应用</strong><ul>
+<li>安全 socket 接口</li>
+</ul>
+</li>
+</ul>
+<h4 id="SSL-和-TCP-x2F-IP"><a href="#SSL-和-TCP-x2F-IP" class="headerlink" title="SSL 和 TCP/IP"></a>SSL 和 TCP/IP</h4><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL.png" alt="SSL"></p>
+<ul>
+<li>SSL 为网络应用提供应用编程接口 API</li>
+</ul>
+<p>可以像 PGP 那样实现某些安全功能，但是，SSL 需要发送字节流以及交互数据，邮件是单向的，SSL 需要<br>一组密钥用于整个连接，SSL 需要证书交互作为协议的一部分：握手阶段。</p>
+<h4 id="简化的（Toy）-SSL：一个简单的安全信道"><a href="#简化的（Toy）-SSL：一个简单的安全信道" class="headerlink" title="简化的（Toy） SSL：一个简单的安全信道"></a>简化的（Toy） SSL：一个简单的安全信道</h4><ul>
+<li>握手 handshake：Alice 和 Bob 利用他们的证书、私钥认证（鉴别）彼此，以及交换共享密钥</li>
+<li>密钥派生 key derivation：Alice 和 Bob 利用共享密钥派生出一组密钥</li>
+<li>数据传输 data transfer：待传输的数据分割成一些列记录</li>
+<li>连接关闭 connection closure：通过发送特殊消息，安全关闭连接，不能留有漏洞被攻击方利用（提前关闭连接）</li>
+</ul>
+<h4 id="一个简单的握手过程"><a href="#一个简单的握手过程" class="headerlink" title="一个简单的握手过程"></a>一个简单的握手过程</h4><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL.png" alt="SSL"></p>
+<p>TCP 握手结束后进入 SSL 握手阶段。</p>
+<p>MS：主密钥</p>
+<p>EMS：加密的主密钥</p>
+<h4 id="密钥派生"><a href="#密钥派生" class="headerlink" title="密钥派生"></a>密钥派生</h4><ul>
+<li>不同加密操作使用不同密钥会更加安全<ul>
+<li>例如：报文认证码 MAC 密钥和数据加密密钥（算法不同对密钥的要求也不同）</li>
+</ul>
+</li>
+<li>4个密钥<ul>
+<li>K(c) 用于加密客户向服务器发送数据的密钥，对称加密，服务器和客户端派生算法要一样</li>
+<li>M(c) 用于客户向服务器发送数据的 MAC 密钥</li>
+<li>K(s) 用于加密服务器向客户发送数据的密钥</li>
+<li>M(s) 用于服务器向客户端发送数据的 MAC 密钥</li>
+</ul>
+</li>
+<li>通过密钥派生函数（KDF）实现密钥派生<ul>
+<li>提取主密钥和（可能的）一些额外的随机数，生成密钥</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据记录"><a href="#数据记录" class="headerlink" title="数据记录"></a>数据记录</h4><p>为什么不直接加密发送给 TCP 的字节流？</p>
+<p>MAC 放到哪儿？如果放到最后，则只有全部数据收到才能进行完整性认证。</p>
+<p>比如，对一即时消息应用，在显示一段消息之前，如何针对发送的所有字节进行完整性检验？</p>
+<p>方案：将字节流分割为一系列记录。每个记录携带一个 MAC。接收方可以对每个记录进行完整性检验。</p>
+<p>问题：对于每个记录，接收方需要从数据中识别出 MAC。需要采用边长记录。</p>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E6%95%B0%E6%8D%AE%E8%AE%B0%E5%BD%95.png" alt="SSL数据记录"></p>
+<h4 id="序列号"><a href="#序列号" class="headerlink" title="序列号"></a>序列号</h4><p>问题：攻击者可以捕获和重放记录或者重新排序记录。</p>
+<p>解决方案：在 MAC 中增加序列号。MAC = MAC(M, sequence||data)，记录中没有序列号域。</p>
+<p>问题：攻击者可以重放所有记录。</p>
+<p>解决方案：使用一次性随机数 nonce</p>
+<h4 id="控制信息"><a href="#控制信息" class="headerlink" title="控制信息"></a>控制信息</h4><p>问题：截断攻击，攻击者伪造 TCP 连接的断连段，恶意断开连接，一方或双方认为对方已没有数据发送，则断开连接。</p>
+<p>解决方案：记录类型，利用一个类型的记录专门用于断连，type 0 用于数据记录，type 1 用于断连。</p>
+<p>MAC= MAC(M, sequence||type||data)</p>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E6%8A%A5%E6%96%87.png" alt="SSL报文"></p>
+<h4 id="简化的-SSL"><a href="#简化的-SSL" class="headerlink" title="简化的 SSL"></a>简化的 SSL</h4><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E7%AE%80%E5%8C%96SSL.png" alt="简化SSL"></p>
+<h4 id="简化的-SSL-不完整"><a href="#简化的-SSL-不完整" class="headerlink" title="简化的 SSL 不完整"></a>简化的 SSL 不完整</h4><ul>
+<li>每个域多长？</li>
+<li>采用哪种加密协议？</li>
+<li>需要协商吗？<ul>
+<li>允许客户与服务器支持不同加密算法</li>
+<li>允许客户与服务器在数据传输之前共同选择特定的算法</li>
+</ul>
+</li>
+</ul>
+<h3 id="SSL-协议栈"><a href="#SSL-协议栈" class="headerlink" title="SSL 协议栈"></a>SSL 协议栈</h3><ul>
+<li>介于 HTTP 与 TCP 之间的一个可选层<ul>
+<li>绝大多数应用层协议可直接建立在 SSL 之上</li>
+</ul>
+</li>
+<li>SSL 不是一个单独的协议，而是两层协议</li>
+</ul>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E5%8D%8F%E8%AE%AE.png" alt="SSL协议"></p>
+<h4 id="SSL-密码组-cipher-suite"><a href="#SSL-密码组-cipher-suite" class="headerlink" title="SSL 密码组 cipher suite"></a>SSL 密码组 cipher suite</h4><ul>
+<li>密码组 cipher suite<ul>
+<li>公开密钥算法 public key algorithm</li>
+<li>对称加密算法 symmetric encryption algorithm</li>
+<li>MAC 算法</li>
+</ul>
+</li>
+<li>SSL 支持多个密码组</li>
+<li>协商 negotiation 客户与服务器商定密码组<ul>
+<li>客户提供选项 choice</li>
+<li>服务器挑选其一</li>
+</ul>
+</li>
+</ul>
+<h4 id="SSL-更改密码规格协议"><a href="#SSL-更改密码规格协议" class="headerlink" title="SSL 更改密码规格协议"></a>SSL 更改密码规格协议</h4><ul>
+<li>更改密码规格协议 change cipher spec protocol<ul>
+<li>更新当前连接的密钥组，标志着加密策略的改变</li>
+<li>位于 SSL 记录协议之上</li>
+<li>ContentType = 20</li>
+<li>协议只包含一条消息 一个值为 1 的字节</li>
+</ul>
+</li>
+</ul>
+<h4 id="SSL-警告协议-Alert-Protocol"><a href="#SSL-警告协议-Alert-Protocol" class="headerlink" title="SSL 警告协议 Alert Protocol"></a>SSL 警告协议 Alert Protocol</h4><ul>
+<li>Alert 消息<ul>
+<li>当握手过程或数据加密等出错或发生异常时，为对等实体传递 SSL 警告或终止当前连接</li>
+<li>位于 SSL 记录协议之上</li>
+<li>ContentType = 21</li>
+<li>协议包含两个字节：警告级别和警告代码</li>
+</ul>
+</li>
+</ul>
+<h4 id="握手协议-Handshake-Protocol"><a href="#握手协议-Handshake-Protocol" class="headerlink" title="握手协议 Handshake Protocol"></a>握手协议 Handshake Protocol</h4><ul>
+<li>协商结果是 SSL 记录协议的基础</li>
+<li>ContentType = 22</li>
+<li>SSL v3.0 的握手过程用到三个协议：握手协议、更改密码规格协议和警告协议</li>
+<li>目的是：<ul>
+<li>服务器认证/鉴别</li>
+<li>协商：商定加密算法</li>
+<li>建立密钥</li>
+<li>客户端认证/鉴别（可选）</li>
+</ul>
+</li>
+</ul>
+<h5 id="SSL-握手过程"><a href="#SSL-握手过程" class="headerlink" title="SSL 握手过程"></a>SSL 握手过程</h5><ol>
+<li>客户端发送其支持的算法列表，以及客户一次性随机数 nonce</li>
+<li>服务器从算法列表中选择算法，并发回给客户：选择+证书+服务器一次性随机数</li>
+<li>客户验证证书，提取服务器公钥，生成预主密钥（pre_master_secret），并利用服务器的公钥加密预主密钥，发送给服务器</li>
+<li>客户与服务器基于预主密钥和一次随机数分别独立计算加密密钥和 MAC 密钥</li>
+<li>客户端发送一个针对所有握手消息的 MAC</li>
+<li>服务器发送一个针对所有握手消息的 MAC</li>
+</ol>
+<p>最后两步的意义：保护握手过程免遭篡改，在没有完成密钥分发和密钥派生之前所有握手信息都是明文传输，明文传输很容易被篡改。</p>
+<p>客户提供的算法，安全性有强、有弱，且明文传输，中间人攻击可以从列表中删除安全性强的算法，导致服务端只能从安全性弱的算法中选择，<br>为后续攻击埋下伏笔，最后两步可以预发这种情况发生。</p>
+<p>为什么使用两个一次性随机数？</p>
+<p>假设 Trudy 嗅探 Alice 与 Bob 之间的所有报文，第二天， Trudy 与 Bob 建立 TCP 连接，发送完全相同的记录序列，Bob（如 Amazon）认为 Alice<br>对同一产品下发两个分离的订单。解决方案：Bob 为每次连接发送完全不同的一次性随机数，确保两天的加密密钥不同。</p>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SSL%E5%8F%82%E6%95%B0.png" alt="SSL参数"></p>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png" alt="握手过程"></p>
+<h4 id="SSL-记录协议-Record-Protocol"><a href="#SSL-记录协议-Record-Protocol" class="headerlink" title="SSL 记录协议 Record Protocol"></a>SSL 记录协议 Record Protocol</h4><ul>
+<li>描述 SSL 信息交换过程中的记录格式</li>
+<li>所有数据（含握手信息）都被封装在记录中</li>
+<li>一个记录由两部分组成：记录头和数据</li>
+</ul>
+<h5 id="SSL-记录协议的操作步骤"><a href="#SSL-记录协议的操作步骤" class="headerlink" title="SSL 记录协议的操作步骤"></a>SSL 记录协议的操作步骤</h5><ul>
+<li>将数据分段成可操作的数据块</li>
+<li>对分块数据进行数据压缩</li>
+<li>计算 MAC 值</li>
+<li>对压缩数据及 MAC 值加密</li>
+<li>加入 SSL 记录头 record header：内容类型 ContentType、版本、长度</li>
+</ul>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E8%AE%B0%E5%BD%95.png" alt="记录"></p>
+<p>MAC 包括序列号，MAC密钥，片段 fragment，每个 SSL 片段为 2^14 字节（16KB）</p>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E8%AE%B0%E5%BD%95%E6%A0%BC%E5%BC%8F.png" alt="记录格式"></p>
+<p>数据和 MAC 是加密的（对称密钥加密算法）</p>
+<h4 id="密钥派生-1"><a href="#密钥派生-1" class="headerlink" title="密钥派生"></a>密钥派生</h4><p>客户 nonce、服务器 nonce 和 预主密钥输入伪随机数发生器，产生主密钥 MS，主密钥和新一次随机数输入另一个<br>随机数发生器，生成密钥块 key block，密钥块切片得到四个密钥和客户初始向量、服务器初始向量（用于加密）。</p>
+<h2 id="VPN"><a href="#VPN" class="headerlink" title="VPN"></a>VPN</h2><h3 id="专用网-PN"><a href="#专用网-PN" class="headerlink" title="专用网 PN"></a>专用网 PN</h3><p>用软件思想替代昂贵的硬件成本，构建安全网络。</p>
+<ul>
+<li>动机：安全</li>
+<li>专用网络PN（Private Networks）：基于专属的网络设备、链路或协议等建设的专门服务于特定组织机构的网络<ul>
+<li>民航网络、铁路网络、银行网络</li>
+<li>成本问题：路由器、链路、DNS基础设施等</li>
+</ul>
+</li>
+</ul>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/PN.png" alt="PN"></p>
+<h3 id="虚拟专用网络-VPN"><a href="#虚拟专用网络-VPN" class="headerlink" title="虚拟专用网络 VPN"></a>虚拟专用网络 VPN</h3><p>动机：安全+成本控制<br>虚拟专用网络 VPN Virtual Private Networks：通过建立在公共网络（如Internet）上的安全通道，实现<br>远程用户、 分支机构、业务伙伴等与机构总部网络的安全连接，从而构建针对特定组织机构的专用网络。</p>
+<p>虚拟：<strong>安全通道</strong>不实际独占公共网络的资源，是一条<strong>逻辑</strong>的穿过公共网络的安全、稳定的隧道。</p>
+<p>通过隧道技术、加密技术、密钥管理、认证和访问控制等，实现与专用网类似的安全性能。</p>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/VPN.png" alt="VPN"></p>
+<h3 id="典型-VPN-应用"><a href="#典型-VPN-应用" class="headerlink" title="典型 VPN 应用"></a>典型 VPN 应用</h3><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E5%85%B8%E5%9E%8BVPN.png" alt="典型VPN"></p>
+<h3 id="VPN-的功能"><a href="#VPN-的功能" class="headerlink" title="VPN 的功能"></a>VPN 的功能</h3><p>在公共网络上必须要：</p>
+<ul>
+<li>数据机密性保护</li>
+<li>数据完整性认证</li>
+<li>数据源身份认证</li>
+<li>防重放攻击</li>
+<li>访问控制</li>
+</ul>
+<h3 id="VPN-关键技术"><a href="#VPN-关键技术" class="headerlink" title="VPN 关键技术"></a>VPN 关键技术</h3><ul>
+<li>隧道技术</li>
+<li>数据加密</li>
+<li>身份认证</li>
+<li>密钥管理</li>
+<li>访问控制</li>
+<li>网络管理</li>
+</ul>
+<h3 id="隧道技术"><a href="#隧道技术" class="headerlink" title="隧道技术"></a>隧道技术</h3><ul>
+<li>构建 VPN 的核心技术</li>
+<li>隧道：通过 Internet 提供安全的点到点（或端到端）的数据传输安全通道<ul>
+<li>实质上是一种封装</li>
+</ul>
+</li>
+<li>VPN 隧道利用隧道协议对通过隧道传输的数据进行封装<ul>
+<li>使数据安全穿越公共网络（通常是 Internet）</li>
+<li>通过加密和认证以确保安全</li>
+<li>数据包进入隧道时，由 VPN 封装成 IP 数据报</li>
+<li>通过隧道在 Internet 上安全传输</li>
+<li>离开隧道后，进行解封装，数据便不在被保护</li>
+</ul>
+</li>
+</ul>
+<h3 id="隧道协议"><a href="#隧道协议" class="headerlink" title="隧道协议"></a>隧道协议</h3><p>隧道协议内包括以下三种协议：</p>
+<ul>
+<li>乘客协议 Passenger Protocol</li>
+<li>封装协议 Encapsulating Protocol</li>
+<li>承载协议 Carrier Protocol</li>
+</ul>
+<p>常见 VPN 隧道协议：</p>
+<ul>
+<li>第二层隧道：PPTP、L2TP<ul>
+<li>主要用于远程客户机访问局域网方案</li>
+</ul>
+</li>
+<li>第三层隧道 IPSec<ul>
+<li>主要用于网关到网关、或网关到主机方案</li>
+<li>不支持远程拨号访问</li>
+</ul>
+</li>
+</ul>
+<h3 id="典型-VPN-实现技术"><a href="#典型-VPN-实现技术" class="headerlink" title="典型 VPN 实现技术"></a>典型 VPN 实现技术</h3><ul>
+<li>IPSec 最安全、适用面最广</li>
+<li>SSL 具有高层完全协议的优势，基于 Web，可以不用安装客户端软件</li>
+<li>L2TP 最好的实现远程接入 VPN 技术</li>
+<li>典型 VPN 技术结合使用：IPSec 与 SSL、IPSec 与 L2TP</li>
+</ul>
+<h3 id="IPSec"><a href="#IPSec" class="headerlink" title="IPSec"></a>IPSec</h3><h4 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h4><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec.png" alt="IPSec"></p>
+<h4 id="IPSec-提供的服务"><a href="#IPSec-提供的服务" class="headerlink" title="IPSec 提供的服务"></a>IPSec 提供的服务</h4><ul>
+<li>机密性 confidentiality</li>
+<li>数据完整性 data integrity</li>
+<li>源认证/鉴别 origin authentication</li>
+<li>预防重放攻击 replay attack prevention</li>
+<li>提供不同服务模型的两个协议<ul>
+<li>AH 认证头协议</li>
+<li>ESP 封装载荷协议</li>
+</ul>
+</li>
+</ul>
+<h4 id="IPSec-的传输（transport）模式"><a href="#IPSec-的传输（transport）模式" class="headerlink" title="IPSec 的传输（transport）模式"></a>IPSec 的传输（transport）模式</h4><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E4%BC%A0%E8%BE%93.png" alt="IPSec传输"></p>
+<ul>
+<li>IPSec 部署在端系统上，IPSec 数据报的发送与接收均由端系统完成</li>
+<li>主机是 IPSec 感知的（IPSec-ware）</li>
+</ul>
+<h4 id="IPSec-的隧道（tunneling）模式"><a href="#IPSec-的隧道（tunneling）模式" class="headerlink" title="IPSec 的隧道（tunneling）模式"></a>IPSec 的隧道（tunneling）模式</h4><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E9%9A%A7%E9%81%93.png" alt="IPSec隧道"></p>
+<ul>
+<li>将 IPSec部署在边缘路由器上，边缘路由器是 IPSec 感知的（IPSec-ware）</li>
+<li>主机到路由器之间不安全</li>
+</ul>
+<h4 id="两个-IPSec-协议"><a href="#两个-IPSec-协议" class="headerlink" title="两个 IPSec 协议"></a>两个 IPSec 协议</h4><ul>
+<li>AH：在 IP 数据报文头中的协议号是 51</li>
+<li>ESP：在 IP 数据报文头中的协议号是 50</li>
+</ul>
+<h5 id="认证头协议-AH-Authentication-Header"><a href="#认证头协议-AH-Authentication-Header" class="headerlink" title="认证头协议 AH Authentication Header"></a>认证头协议 AH Authentication Header</h5><ul>
+<li>提供源认证/鉴别和数据完整性检验，但不提供机密性</li>
+</ul>
+<h5 id="封装安全协议-ESP-Encapsulation-Security-Protocol"><a href="#封装安全协议-ESP-Encapsulation-Security-Protocol" class="headerlink" title="封装安全协议 ESP Encapsulation Security Protocol"></a>封装安全协议 ESP Encapsulation Security Protocol</h5><ul>
+<li>提供源认证/鉴别、数据完整性检验以及机密性</li>
+<li>比 AH 应用更广泛</li>
+</ul>
+<h4 id="IPSec-模式与协议的四种组合"><a href="#IPSec-模式与协议的四种组合" class="headerlink" title="IPSec 模式与协议的四种组合"></a>IPSec 模式与协议的四种组合</h4><ol>
+<li>传输模式 AH</li>
+<li>传输模式 ESP</li>
+<li>隧道模式 AH</li>
+<li>隧道模式 ESP 最普遍、最重要</li>
+</ol>
+<h4 id="安全关联-SA"><a href="#安全关联-SA" class="headerlink" title="安全关联 SA"></a>安全关联 SA</h4><ul>
+<li>发送数据前，从发送实体到接收实体之间需要建立安全关联 SA（Security Association）<ul>
+<li>SA 是单工的：单向，可以理解为网络层的单向连接</li>
+</ul>
+</li>
+<li>发送实体与接收实体均需要维护 SA 的状态信息<ul>
+<li>回顾：TCP 连接的端点也需要维护状态信息</li>
+<li>IP 是无连接的，IPSec 是<strong>面向连接的</strong> （逻辑连接）！</li>
+</ul>
+</li>
+</ul>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SA.png" alt="SA"></p>
+<p>R1 和 R2 都需要维护 SA 逻辑连接。</p>
+<h5 id="安全关联的主要参数"><a href="#安全关联的主要参数" class="headerlink" title="安全关联的主要参数"></a>安全关联的主要参数</h5><ul>
+<li>安全参数索引 SPI 32位 SA 唯一标识 ID</li>
+<li>加密密钥、认证密钥</li>
+<li>密码算法标识</li>
+<li>序列号 32 位<ul>
+<li>抗重放攻击</li>
+</ul>
+</li>
+<li>抗重播窗口<ul>
+<li>接收方使用滑动窗口检测恶意主机重放数据报</li>
+</ul>
+</li>
+<li>生存周期<ul>
+<li>规定 SA 的有效使用周期</li>
+</ul>
+</li>
+<li>运行模式：传输模式或者隧道模式</li>
+<li>IPSec 隧道源、目的地址</li>
+</ul>
+<h5 id="SA-举例"><a href="#SA-举例" class="headerlink" title="SA 举例"></a>SA 举例</h5><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/SA%E4%B8%BE%E4%BE%8B.png" alt="SA举例"></p>
+<p>R1 为 SA 存储：</p>
+<ul>
+<li>32 位 SA 标识 ID：安全参数索引 SPI Security Parameter Index</li>
+<li>起点 origin SA 接口 (200.168.1.100)</li>
+<li>终点 destination SA 接口 (193.68.2.23)</li>
+<li>加密类型（如 3DES with CBC）</li>
+<li>加密密钥</li>
+<li>完整性检验类型（如 HMAC with MD5）</li>
+<li>认证/鉴别密钥</li>
+</ul>
+<h5 id="安全关联数据库-SAD"><a href="#安全关联数据库-SAD" class="headerlink" title="安全关联数据库 SAD"></a>安全关联数据库 SAD</h5><ul>
+<li>IPSec 端点将 SA 状态保存在安全关联数据库 SAD（security association database）中<ul>
+<li>在处理 IPSec 数据报时，定位这些信息</li>
+</ul>
+</li>
+<li>对于 n 个销售人员，1 个分支机构的 VPN，总部的路由器 R1 的 SAD 中存储 2 + 2n 条 SAs</li>
+<li>当发送 IPSec 数据报时，R1 访问 SAD，确定如何处理数据报</li>
+<li>当 IPSec 数据报到达 R2<ul>
+<li>R2 检验 IPSec 数据报中的 SPI</li>
+<li>利用 SPI 检索 SAD</li>
+<li>处理数据报</li>
+</ul>
+</li>
+</ul>
+<h5 id="安全策略数据库-SPD"><a href="#安全策略数据库-SPD" class="headerlink" title="安全策略数据库 SPD"></a>安全策略数据库 SPD</h5><ul>
+<li>Security Policy Database</li>
+<li>安全策略：定义了对什么样的数据流实施什么样的安全处理<ul>
+<li>应用IPSec、绕过、丢弃等操作</li>
+</ul>
+</li>
+<li>安全策略组成了 SPD，每个记录就是一条 SP<ul>
+<li>路由器提取关键信息填充到一个称为选择符的结构<ul>
+<li>包括目标 IP、源 IP、传输层协议、源和目标端口等</li>
+</ul>
+</li>
+<li>利用选择符去搜索 SPD，检索匹配的 SP</li>
+</ul>
+</li>
+<li>安全处理需要的参数存储在 SP 指向的 SA 结构</li>
+</ul>
+<h5 id="IPSec-数据报"><a href="#IPSec-数据报" class="headerlink" title="IPSec 数据报"></a>IPSec 数据报</h5><h6 id="传输模式-AH"><a href="#传输模式-AH" class="headerlink" title="传输模式 AH"></a>传输模式 AH</h6><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8FAH.png" alt="传输模式AH"></p>
+<h6 id="隧道模式-AH"><a href="#隧道模式-AH" class="headerlink" title="隧道模式 AH"></a>隧道模式 AH</h6><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8FAH.png" alt="隧道模式AH"></p>
+<h6 id="传输模式-ESP"><a href="#传输模式-ESP" class="headerlink" title="传输模式 ESP"></a>传输模式 ESP</h6><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8FESP.png" alt="传输模式ESP"></p>
+<h6 id="隧道模式-ESP"><a href="#隧道模式-ESP" class="headerlink" title="隧道模式 ESP"></a>隧道模式 ESP</h6><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8FESP.png" alt="隧道模式ESP"></p>
+<h5 id="IPSec-传输模式"><a href="#IPSec-传输模式" class="headerlink" title="IPSec 传输模式"></a>IPSec 传输模式</h5><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8F%E5%9B%BE.png" alt="IPSec传输模式图"></p>
+<h5 id="IPSec-隧道模式"><a href="#IPSec-隧道模式" class="headerlink" title="IPSec 隧道模式"></a>IPSec 隧道模式</h5><p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IPSec%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8F%E5%9B%BE.png" alt="IPSec隧道模式图"></p>
+<h4 id="SA-的建立和密钥管理"><a href="#SA-的建立和密钥管理" class="headerlink" title="SA 的建立和密钥管理"></a>SA 的建立和密钥管理</h4><p>IPSec 支持两种方式的 SA 建立和密钥管理：</p>
+<ul>
+<li>手工方式<ul>
+<li>所有的信息需要手工配置</li>
+<li>静态 SA 永远存在</li>
+<li>适用于结构简单的网络</li>
+</ul>
+</li>
+<li>自动方式<ul>
+<li>SA 可以通过协商方式产生</li>
+<li>SA 过期后重新协商，提高了安全性</li>
+<li>适用于较复杂拓扑和较高安全性的网络</li>
+</ul>
+</li>
+</ul>
+<h4 id="密钥交换-IKE"><a href="#密钥交换-IKE" class="headerlink" title="密钥交换 IKE"></a>密钥交换 IKE</h4><h5 id="手工建立-IPSec-SA"><a href="#手工建立-IPSec-SA" class="headerlink" title="手工建立 IPSec SA"></a>手工建立 IPSec SA</h5><p>example SA</p>
+<ul>
+<li>SPI:12345</li>
+<li>Source IP:200.168.1.100</li>
+<li>Dest IP: 193.68.2.23</li>
+<li>Protocol: ESP </li>
+<li>Encryption algorithm: 3DES-cbc</li>
+<li>HMAC algorithm: MD5</li>
+<li>Encryption key: 0x7aaaa</li>
+<li>HMAC key:0x11111</li>
+</ul>
+<p>对于几百个端点规模的 VPN，手工设置密钥是不可行的</p>
+<p>替代方案：IPSec IKE</p>
+<ul>
+<li>IKE 协议可以自动管理 SA 的建立、协商、修改和删除，是 IPSec 唯一的密钥管理协议</li>
+<li>IKE 包括<ul>
+<li>ISAKMP 通用框架<ul>
+<li>定义了协商、建立、修改和删除 SA过程的通用框架</li>
+</ul>
+</li>
+<li>OAKLEY 密钥交换模式<ul>
+<li>一个密钥交换协议，允许认证过的双方通过不安全的网络交换密钥参数</li>
+</ul>
+</li>
+<li>SKEME 的共享和密钥更新技术<ul>
+<li>提供了 IKE 交换密钥的算法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="IKE-和-IPSec"><a href="#IKE-和-IPSec" class="headerlink" title="IKE 和 IPSec"></a>IKE 和 IPSec</h4><p>IKE 为 IPSec 提供服务：</p>
+<ul>
+<li>密钥交换与管理</li>
+<li>身份认证：通信对等实体的认证</li>
+<li>IPSec SA 的协商与管理</li>
+</ul>
+<p><img src="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/IKE.png" alt="IKE"></p>
+<p>认证可以通过：</p>
+<ul>
+<li>预共享密钥 PSK</li>
+<li>公钥基础设施 PKI<br>来完成。</li>
+</ul>
+<h4 id="IPSec-总结"><a href="#IPSec-总结" class="headerlink" title="IPSec 总结"></a>IPSec 总结</h4><ul>
+<li>IKE 用于交换算法、秘密密钥、SPI</li>
+<li>采用 AH 协议或者 ESP 协议</li>
+<li>IPSec 对等端可以是<ul>
+<li>两个端系统 传输模式</li>
+<li>两个路由器/防火墙 隧道模式</li>
+<li>一个路由器/防火墙与一个端系统</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/06/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" rel="prev" title="计算机网络网络安全">
+      <i class="fa fa-chevron-left"></i> 计算机网络网络安全
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">安全电子邮件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81"><span class="nav-number">1.1.</span> <span class="nav-text">安全威胁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82"><span class="nav-number">1.2.</span> <span class="nav-text">安全需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">安全电子邮件基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">1.3.1.</span> <span class="nav-text">电子邮件的特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%BA%E5%AF%86%E6%80%A7"><span class="nav-number">1.3.2.</span> <span class="nav-text">机密性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E3%80%81%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">1.3.3.</span> <span class="nav-text">认证、完整性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E6%A0%87%E5%87%86"><span class="nav-number">1.4.</span> <span class="nav-text">电子邮件标准</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PEM-Privacy-Enhanced-Mail-%E6%A0%87%E5%87%86"><span class="nav-number">1.4.1.</span> <span class="nav-text">PEM Privacy Enhanced Mail 标准</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PGP-Pretty-Good-Privacy-%E6%A0%87%E5%87%86"><span class="nav-number">1.4.2.</span> <span class="nav-text">PGP Pretty Good Privacy 标准</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E6%A1%86%E6%9E%B6"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">功能框架</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PGP-%E5%AF%86%E9%92%A5"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">PGP 密钥</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#S-x2F-MIME"><span class="nav-number">1.4.3.</span> <span class="nav-text">S&#x2F;MIME</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-%E5%AE%89%E5%85%A8"><span class="nav-number">2.</span> <span class="nav-text">Web 安全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81"><span class="nav-number">2.1.</span> <span class="nav-text">Web 安全威胁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Web-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81"><span class="nav-number">2.1.1.</span> <span class="nav-text">Web 服务器的安全威胁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Web-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81"><span class="nav-number">2.1.2.</span> <span class="nav-text">Web 浏览器的安全威胁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E4%BF%A1%E4%BF%A1%E9%81%93%E7%9A%84%E5%AE%89%E5%85%A8%E5%A8%81%E8%83%81"><span class="nav-number">2.1.3.</span> <span class="nav-text">通信信道的安全威胁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%BA%94%E7%94%A8%E5%B1%82%E5%AE%9E%E7%8E%B0-Web-%E5%AE%89%E5%85%A8"><span class="nav-number">2.2.</span> <span class="nav-text">基于应用层实现 Web 安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E4%BC%A0%E8%BE%93%E5%B1%82%E5%AE%9E%E7%8E%B0-Web-%E5%AE%89%E5%85%A8"><span class="nav-number">2.3.</span> <span class="nav-text">基于传输层实现 Web 安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%BD%91%E7%BB%9C%E5%B1%82%E5%AE%9E%E7%8E%B0-Web-%E5%AE%89%E5%85%A8"><span class="nav-number">2.4.</span> <span class="nav-text">基于网络层实现 Web 安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%A5%97%E6%8E%A5%E5%AD%97%E5%B1%82-Secure-Sockets-Layer-SSL"><span class="nav-number">2.5.</span> <span class="nav-text">安全套接字层 Secure Sockets Layer SSL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SSL-%E5%92%8C-TCP-x2F-IP"><span class="nav-number">2.5.1.</span> <span class="nav-text">SSL 和 TCP&#x2F;IP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8C%96%E7%9A%84%EF%BC%88Toy%EF%BC%89-SSL%EF%BC%9A%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%AE%89%E5%85%A8%E4%BF%A1%E9%81%93"><span class="nav-number">2.5.2.</span> <span class="nav-text">简化的（Toy） SSL：一个简单的安全信道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-number">2.5.3.</span> <span class="nav-text">一个简单的握手过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E6%B4%BE%E7%94%9F"><span class="nav-number">2.5.4.</span> <span class="nav-text">密钥派生</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%AE%B0%E5%BD%95"><span class="nav-number">2.5.5.</span> <span class="nav-text">数据记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8F%B7"><span class="nav-number">2.5.6.</span> <span class="nav-text">序列号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E4%BF%A1%E6%81%AF"><span class="nav-number">2.5.7.</span> <span class="nav-text">控制信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8C%96%E7%9A%84-SSL"><span class="nav-number">2.5.8.</span> <span class="nav-text">简化的 SSL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8C%96%E7%9A%84-SSL-%E4%B8%8D%E5%AE%8C%E6%95%B4"><span class="nav-number">2.5.9.</span> <span class="nav-text">简化的 SSL 不完整</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSL-%E5%8D%8F%E8%AE%AE%E6%A0%88"><span class="nav-number">2.6.</span> <span class="nav-text">SSL 协议栈</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SSL-%E5%AF%86%E7%A0%81%E7%BB%84-cipher-suite"><span class="nav-number">2.6.1.</span> <span class="nav-text">SSL 密码组 cipher suite</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSL-%E6%9B%B4%E6%94%B9%E5%AF%86%E7%A0%81%E8%A7%84%E6%A0%BC%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.6.2.</span> <span class="nav-text">SSL 更改密码规格协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSL-%E8%AD%A6%E5%91%8A%E5%8D%8F%E8%AE%AE-Alert-Protocol"><span class="nav-number">2.6.3.</span> <span class="nav-text">SSL 警告协议 Alert Protocol</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%A1%E6%89%8B%E5%8D%8F%E8%AE%AE-Handshake-Protocol"><span class="nav-number">2.6.4.</span> <span class="nav-text">握手协议 Handshake Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SSL-%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-number">2.6.4.1.</span> <span class="nav-text">SSL 握手过程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSL-%E8%AE%B0%E5%BD%95%E5%8D%8F%E8%AE%AE-Record-Protocol"><span class="nav-number">2.6.5.</span> <span class="nav-text">SSL 记录协议 Record Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SSL-%E8%AE%B0%E5%BD%95%E5%8D%8F%E8%AE%AE%E7%9A%84%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.6.5.1.</span> <span class="nav-text">SSL 记录协议的操作步骤</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E6%B4%BE%E7%94%9F-1"><span class="nav-number">2.6.6.</span> <span class="nav-text">密钥派生</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VPN"><span class="nav-number">3.</span> <span class="nav-text">VPN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%93%E7%94%A8%E7%BD%91-PN"><span class="nav-number">3.1.</span> <span class="nav-text">专用网 PN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E4%B8%93%E7%94%A8%E7%BD%91%E7%BB%9C-VPN"><span class="nav-number">3.2.</span> <span class="nav-text">虚拟专用网络 VPN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B-VPN-%E5%BA%94%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">典型 VPN 应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VPN-%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">3.4.</span> <span class="nav-text">VPN 的功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VPN-%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="nav-number">3.5.</span> <span class="nav-text">VPN 关键技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF"><span class="nav-number">3.6.</span> <span class="nav-text">隧道技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%A7%E9%81%93%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.7.</span> <span class="nav-text">隧道协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B-VPN-%E5%AE%9E%E7%8E%B0%E6%8A%80%E6%9C%AF"><span class="nav-number">3.8.</span> <span class="nav-text">典型 VPN 实现技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPSec"><span class="nav-number">3.9.</span> <span class="nav-text">IPSec</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">3.9.1.</span> <span class="nav-text">体系结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IPSec-%E6%8F%90%E4%BE%9B%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.9.2.</span> <span class="nav-text">IPSec 提供的服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IPSec-%E7%9A%84%E4%BC%A0%E8%BE%93%EF%BC%88transport%EF%BC%89%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.9.3.</span> <span class="nav-text">IPSec 的传输（transport）模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IPSec-%E7%9A%84%E9%9A%A7%E9%81%93%EF%BC%88tunneling%EF%BC%89%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.9.4.</span> <span class="nav-text">IPSec 的隧道（tunneling）模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA-IPSec-%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.9.5.</span> <span class="nav-text">两个 IPSec 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E5%A4%B4%E5%8D%8F%E8%AE%AE-AH-Authentication-Header"><span class="nav-number">3.9.5.1.</span> <span class="nav-text">认证头协议 AH Authentication Header</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%81%E8%A3%85%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE-ESP-Encapsulation-Security-Protocol"><span class="nav-number">3.9.5.2.</span> <span class="nav-text">封装安全协议 ESP Encapsulation Security Protocol</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IPSec-%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BB%84%E5%90%88"><span class="nav-number">3.9.6.</span> <span class="nav-text">IPSec 模式与协议的四种组合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%85%B3%E8%81%94-SA"><span class="nav-number">3.9.7.</span> <span class="nav-text">安全关联 SA</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%85%B3%E8%81%94%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0"><span class="nav-number">3.9.7.1.</span> <span class="nav-text">安全关联的主要参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SA-%E4%B8%BE%E4%BE%8B"><span class="nav-number">3.9.7.2.</span> <span class="nav-text">SA 举例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%85%B3%E8%81%94%E6%95%B0%E6%8D%AE%E5%BA%93-SAD"><span class="nav-number">3.9.7.3.</span> <span class="nav-text">安全关联数据库 SAD</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5%E6%95%B0%E6%8D%AE%E5%BA%93-SPD"><span class="nav-number">3.9.7.4.</span> <span class="nav-text">安全策略数据库 SPD</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#IPSec-%E6%95%B0%E6%8D%AE%E6%8A%A5"><span class="nav-number">3.9.7.5.</span> <span class="nav-text">IPSec 数据报</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8F-AH"><span class="nav-number">3.9.7.5.1.</span> <span class="nav-text">传输模式 AH</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8F-AH"><span class="nav-number">3.9.7.5.2.</span> <span class="nav-text">隧道模式 AH</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8F-ESP"><span class="nav-number">3.9.7.5.3.</span> <span class="nav-text">传输模式 ESP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8F-ESP"><span class="nav-number">3.9.7.5.4.</span> <span class="nav-text">隧道模式 ESP</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#IPSec-%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.9.7.6.</span> <span class="nav-text">IPSec 传输模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#IPSec-%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.9.7.7.</span> <span class="nav-text">IPSec 隧道模式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SA-%E7%9A%84%E5%BB%BA%E7%AB%8B%E5%92%8C%E5%AF%86%E9%92%A5%E7%AE%A1%E7%90%86"><span class="nav-number">3.9.8.</span> <span class="nav-text">SA 的建立和密钥管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2-IKE"><span class="nav-number">3.9.9.</span> <span class="nav-text">密钥交换 IKE</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%B7%A5%E5%BB%BA%E7%AB%8B-IPSec-SA"><span class="nav-number">3.9.9.1.</span> <span class="nav-text">手工建立 IPSec SA</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IKE-%E5%92%8C-IPSec"><span class="nav-number">3.9.10.</span> <span class="nav-text">IKE 和 IPSec</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IPSec-%E6%80%BB%E7%BB%93"><span class="nav-number">3.9.11.</span> <span class="nav-text">IPSec 总结</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">143k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:10</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
