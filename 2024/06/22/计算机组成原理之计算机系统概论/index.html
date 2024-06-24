@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机组成原理之计算机系统概论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成原理之计算机系统概论">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/06/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机组成原理之计算机系统概论">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%BC%96%E7%A8%8B.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/%E5%AD%98%E5%82%A8%E5%99%A8.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/%E6%8E%A7%E5%88%B6%E5%99%A8.png">
+<meta property="article:published_time" content="2024-06-22T03:27:51.000Z">
+<meta property="article:modified_time" content="2024-06-22T03:27:51.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="组成原理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/%E7%BC%96%E7%A8%8B.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/06/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机组成原理之计算机系统概论 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">49</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/06/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机组成原理之计算机系统概论
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-06-22 11:27:51" itemprop="dateCreated datePublished" datetime="2024-06-22T11:27:51+08:00">2024-06-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/" itemprop="url" rel="index"><span itemprop="name">计算机组成</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+            <div class="post-description">计算机组成原理之计算机系统概论</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>面对复杂系统的处理方法：</p>
+<ul>
+<li>抽象</li>
+<li>3 y<ul>
+<li>层次化 Hierachy 将被设计的系统划分为多个模块或子模块</li>
+<li>模块化 Modularity 有明确定义 well-defined 的功能和接口</li>
+<li>规则性 regularity 模块更容易被重用 （标准）</li>
+</ul>
+</li>
+</ul>
+<h3 id="现代计算机的多态性"><a href="#现代计算机的多态性" class="headerlink" title="现代计算机的多态性"></a>现代计算机的多态性</h3><ul>
+<li>Sensors</li>
+<li>Info.applications</li>
+<li>Laptop</li>
+<li>PC/Client</li>
+<li>Server</li>
+<li>Mainframe</li>
+<li>HPC</li>
+<li>智慧地球</li>
+</ul>
+<p>把感应器嵌入到和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，<br>并且被普遍连接，形成所谓的物联网，然后将物联网与现有的互联网整合起来，实现人类社会与物理系统的整<br>合，形成智慧地球。</p>
+<h3 id="计算机体系结构和计算机组成"><a href="#计算机体系结构和计算机组成" class="headerlink" title="计算机体系结构和计算机组成"></a>计算机体系结构和计算机组成</h3><h4 id="计算机体系结构"><a href="#计算机体系结构" class="headerlink" title="计算机体系结构"></a>计算机体系结构</h4><p>程序员所见到的计算机系统的属性概念性的结构与功能特性。（指令系统、数据类型、寻址技术、I/O原理）</p>
+<h4 id="计算机组成"><a href="#计算机组成" class="headerlink" title="计算机组成"></a>计算机组成</h4><p>实现计算机体系结构所体现的属性。（具体指令的实现）</p>
+<h3 id="计算机的基本组成"><a href="#计算机的基本组成" class="headerlink" title="计算机的基本组成"></a>计算机的基本组成</h3><h4 id="冯-诺伊曼结构的特点"><a href="#冯-诺伊曼结构的特点" class="headerlink" title="冯-诺伊曼结构的特点"></a>冯-诺伊曼结构的特点</h4><ul>
+<li>计算机由五大部件组成<ul>
+<li>输入设备 将信息转换成机器能识别的形式</li>
+<li>输出设备 将结果转成人类熟悉的形式</li>
+<li>存储器 存放数据和程序</li>
+<li>运算器 算术运算和逻辑运算</li>
+<li>控制器 指挥控制程序的运行</li>
+</ul>
+</li>
+<li>指令和数据以同等地位存于存储器，可按地址寻址</li>
+<li>指令和数据用二进制表示</li>
+<li>指令由操作码和地址码组成</li>
+<li>存储程序 指令和数据同等地位都存在存储器中</li>
+<li>以运算器为中心</li>
+</ul>
+<p>缺点：以运算器为中心，会导致运算器非常繁忙，成为瓶颈。</p>
+<h3 id="可计算性理论"><a href="#可计算性理论" class="headerlink" title="可计算性理论"></a>可计算性理论</h3><p>一个现实中的问题，如何用计算机来解决，是不是所有的问题都可以用计算的方法解决？</p>
+<p><img src="/blog/%E7%BC%96%E7%A8%8B.png" alt="编程"></p>
+<p>算法的不同对生成的指令条数有很大的影响。</p>
+<h3 id="存储器的基本组成"><a href="#存储器的基本组成" class="headerlink" title="存储器的基本组成"></a>存储器的基本组成</h3><p><img src="/blog/%E5%AD%98%E5%82%A8%E5%99%A8.png" alt="存储器"></p>
+<h4 id="存储单元-Memory-Cell"><a href="#存储单元-Memory-Cell" class="headerlink" title="存储单元 Memory Cell"></a>存储单元 Memory Cell</h4><ul>
+<li>存储单元是计算机存储器中最基本的存储单元</li>
+<li>每个存储单元只能存储一个二进制位</li>
+<li>存储单元是构成存储器的基本构件，大量的存储单元组合在一起形成存储器</li>
+</ul>
+<h4 id="存储字-Memory-Word"><a href="#存储字-Memory-Word" class="headerlink" title="存储字 Memory Word"></a>存储字 Memory Word</h4><ul>
+<li>存储字是由一组固定数量的存储单元组成的一个存储单位</li>
+<li>存储字的长度（即包含的位数）是存储器的一个基本特性</li>
+<li>一个存储字可以存储一个完整的数据单元，例如一个整数或一个指令</li>
+<li>存储字的长度通常是计算机系统架构设计的一部分，例如32 位系统中的存储字长通常为32为</li>
+</ul>
+<h4 id="存储字长-Word-length"><a href="#存储字长-Word-length" class="headerlink" title="存储字长 Word length"></a>存储字长 Word length</h4><ul>
+<li>存储字长是一个存储字中包含的二进制位数</li>
+<li>存储字长决定了存储器能够一次性存储和处理的数据量</li>
+<li>常见的存储字长有8位、16位、32位、64位等</li>
+<li>存储字长通常与处理器的架构相关，影响计算机的性能和数据处理能力。</li>
+</ul>
+<p>举例：<br>在一个 32 位计算机系统中</p>
+<ul>
+<li>每个存储单元存储 1 位</li>
+<li>一个存储字由 32 个存储单元组成，可以存储 32 位的数据</li>
+<li>存储字长为 32 位</li>
+</ul>
+<h4 id="存储单元的其他理解"><a href="#存储单元的其他理解" class="headerlink" title="存储单元的其他理解"></a>存储单元的其他理解</h4><p>在计算机存储体系中，通常的理解是一个存储单元 Memory Cell 可以存储一个二进制位，但是在某些文献或<br>特定上下文中，存储单元也可能指代能够存储更多比特的单位，如字节或更大的存储单位，为了避免混淆：</p>
+<h5 id="位"><a href="#位" class="headerlink" title="位"></a>位</h5><p>最小的存储单位</p>
+<h5 id="存储单元"><a href="#存储单元" class="headerlink" title="存储单元"></a>存储单元</h5><ul>
+<li>在狭义上，通常指一个能存储一个位的物理或逻辑单元</li>
+<li>在广义上，有时也指代能够存储多个位的更复杂的存储结构</li>
+</ul>
+<h5 id="字节"><a href="#字节" class="headerlink" title="字节"></a>字节</h5><p>一般由 8 个连续的位组成，是现代计算机中最常用的存储单位</p>
+<p>为了避免混淆，特别是在讨论具体存储器设计时，明确定义所讨论的“存储单元”的位数是很重要的。<br>如果只讨论最基本的物理存储单元，那么一个存储单元通常理解为存储一个位（bit）。在实际存储器实现中，<br>存储器地址通常是按字节（byte）寻址的，一个地址对应一个字节的存储空间，即8位。</p>
+<p>本文中的存储单元是按字节理解的。</p>
+<h4 id="MAR-Memory-Address-register"><a href="#MAR-Memory-Address-register" class="headerlink" title="MAR Memory Address register"></a>MAR Memory Address register</h4><p>存储器地址寄存器，反映存储单元的个数。</p>
+<ol>
+<li>功能：MAR 用于存储当前访问的内存地址，处理器在执行指令时，需要从内存中读取或向内存中写入数据，这时就需要一个寄存器来保存要访问的内存地址，这就是 MAR 的作用</li>
+<li>用途：当处理器需要从内存读取数据时，地址被载入 MAR，然后通过地址总线发送到内存，当处理器需要向内存写入数据时，地址也同样被载入 MAR</li>
+<li>作用流程：处理器将需要访问的内存地址载入 MAR，内存控制单元使用 MAR 中的地址进行内存访问</li>
+</ol>
+<h4 id="MDR-Memory-Data-Regiser"><a href="#MDR-Memory-Data-Regiser" class="headerlink" title="MDR Memory Data Regiser"></a>MDR Memory Data Regiser</h4><p>存储器数据寄存器，反映存储字长。</p>
+<ol>
+<li>功能：MDR用于存储从内存中读取的数据或即将写入内存的数据。它是处理器和内存之间传递数据的暂存区域</li>
+<li>用途：当处理器从内存中读取数据时，数据首先被加载到 MDR 中，然后处理器再从 MDR 中获取数据。当处理器需要向内存写入数据时，数据首先被加载到 MDR 中，然后再写入指定的内存地址</li>
+<li>作用流程：当读取操作时，内存将指定地址的数据加载到 MDR 中，然后处理器从 MDR 中读取数据，当写入数据时，处理器将数据加载到 MDR 中，然后内存将 MDR 中的数据写入指定的地址</li>
+</ol>
+<p>这两个寄存器在处理器和内存之间的通信过程中起到关键的桥梁作用，使得内存操作能够准确、高效地进行。</p>
+<p>比如 MAR 是 4 位，MDR 是 8 位，则存储单元的个数是 16 ，存储字长是 8。</p>
+<h3 id="运算器"><a href="#运算器" class="headerlink" title="运算器"></a>运算器</h3><p>ALU </p>
+<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><p><img src="/blog/%E6%8E%A7%E5%88%B6%E5%99%A8.png" alt="控制器"></p>
+<ul>
+<li>解释指令</li>
+<li>保证指令的按序执行</li>
+</ul>
+<p>完成一条指令：</p>
+<ol>
+<li>取指令  PC</li>
+<li>分析指令，把操作码部分发送给控制器</li>
+<li>执行指令</li>
+</ol>
+<p>PC 存放当前要执行指令的地址，具有计数功能。</p>
+<p>IR 指令寄存器存放当前要执行的指令。</p>
+<h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><h3 id="机器字长"><a href="#机器字长" class="headerlink" title="机器字长"></a>机器字长</h3><p>CPU 一次能处理数据的位数，与 CPU 中的寄存器位数有关。机器字长越长性能越好。 </p>
+<h3 id="运算速度"><a href="#运算速度" class="headerlink" title="运算速度"></a>运算速度</h3><ul>
+<li>主频</li>
+<li>核数，每个核支持的线程数</li>
+<li>CPI 执行一条指令所需时钟周期数</li>
+<li>MIPS 每秒执行百万条指令 （有一定的问题）</li>
+<li>FLOPS 每秒浮点运算次数</li>
+</ul>
+<h3 id="存储容量"><a href="#存储容量" class="headerlink" title="存储容量"></a>存储容量</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 组成原理</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/06/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE/" rel="prev" title="计算机网络网络安全协议">
+      <i class="fa fa-chevron-left"></i> 计算机网络网络安全协议
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">计算机系统简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%A4%9A%E6%80%81%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">现代计算机的多态性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90"><span class="nav-number">1.2.</span> <span class="nav-text">计算机体系结构和计算机组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">计算机体系结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90"><span class="nav-number">1.2.2.</span> <span class="nav-text">计算机组成</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="nav-number">1.3.</span> <span class="nav-text">计算机的基本组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%AF-%E8%AF%BA%E4%BC%8A%E6%9B%BC%E7%BB%93%E6%9E%84%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">1.3.1.</span> <span class="nav-text">冯-诺伊曼结构的特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%AE%A1%E7%AE%97%E6%80%A7%E7%90%86%E8%AE%BA"><span class="nav-number">1.4.</span> <span class="nav-text">可计算性理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="nav-number">1.5.</span> <span class="nav-text">存储器的基本组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83-Memory-Cell"><span class="nav-number">1.5.1.</span> <span class="nav-text">存储单元 Memory Cell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AD%97-Memory-Word"><span class="nav-number">1.5.2.</span> <span class="nav-text">存储字 Memory Word</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AD%97%E9%95%BF-Word-length"><span class="nav-number">1.5.3.</span> <span class="nav-text">存储字长 Word length</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83%E7%9A%84%E5%85%B6%E4%BB%96%E7%90%86%E8%A7%A3"><span class="nav-number">1.5.4.</span> <span class="nav-text">存储单元的其他理解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%8D"><span class="nav-number">1.5.4.1.</span> <span class="nav-text">位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83"><span class="nav-number">1.5.4.2.</span> <span class="nav-text">存储单元</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%97%E8%8A%82"><span class="nav-number">1.5.4.3.</span> <span class="nav-text">字节</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MAR-Memory-Address-register"><span class="nav-number">1.5.5.</span> <span class="nav-text">MAR Memory Address register</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MDR-Memory-Data-Regiser"><span class="nav-number">1.5.6.</span> <span class="nav-text">MDR Memory Data Regiser</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E5%99%A8"><span class="nav-number">1.6.</span> <span class="nav-text">运算器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="nav-number">1.7.</span> <span class="nav-text">控制器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">2.</span> <span class="nav-text">性能指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%97%E9%95%BF"><span class="nav-number">2.1.</span> <span class="nav-text">机器字长</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E9%80%9F%E5%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">运算速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AE%B9%E9%87%8F"><span class="nav-number">2.3.</span> <span class="nav-text">存储容量</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">145k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:12</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
