@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机组成原理之计算机系统概论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成原理之总线">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="计算机组成原理之计算机系统概论">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%BC%A0%E8%BE%93%E7%B1%BB%E5%9E%8B.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8D%95%E6%80%BB%E7%BA%BF.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8F%8C%E6%80%BB%E7%BA%BF.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%AD%98%E5%82%A8%E5%99%A8%E5%8F%8C%E6%80%BB%E7%BA%BF.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%B8%BB%E6%9D%BF.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E6%80%BB%E7%BA%BF%E6%A0%87%E5%87%86.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E6%80%A7%E8%83%BD.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8F%8C%E6%80%BB%E7%BA%BF%E9%80%9A%E9%81%93.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%B8%89%E6%80%BB%E7%BA%BF.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%B8%89%E6%80%BB%E7%BA%BF%E4%BA%8C.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%9B%9B%E6%80%BB%E7%BA%BF.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/PCI.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E9%93%BE%E5%BC%8F%E6%9F%A5%E8%AF%A2.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E9%93%BE%E5%BC%8F%E6%9F%A5%E8%AF%A2.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E7%8B%AC%E7%AB%8B%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%90%8C%E6%AD%A5%E5%BC%8F%E6%95%B0%E6%8D%AE%E8%BE%93%E5%85%A5.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8D%8A%E5%90%8C%E6%AD%A5.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8D%8A%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F.png">
+<meta property="article:published_time" content="2024-06-28T15:34:19.000Z">
+<meta property="article:modified_time" content="2024-06-28T15:34:19.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="总线">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%BC%A0%E8%BE%93%E7%B1%BB%E5%9E%8B.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>计算机组成原理之总线 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">10</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机组成原理之总线
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-06-28 23:34:19" itemprop="dateCreated datePublished" datetime="2024-06-28T23:34:19+08:00">2024-06-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/" itemprop="url" rel="index"><span itemprop="name">计算机组成</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+            <div class="post-description">计算机组成原理之计算机系统概论</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="总线的基本概念"><a href="#总线的基本概念" class="headerlink" title="总线的基本概念"></a>总线的基本概念</h2><h3 id="为什么要使用总线"><a href="#为什么要使用总线" class="headerlink" title="为什么要使用总线"></a>为什么要使用总线</h3><p>冯-诺伊曼机构把计算机分为五大部分，而现在计算机的组成更加复杂，如果把组件两两互连，则需要的线路条数巨大，印刷电路板需要更大的空间，且接口会占<br>用组件大量的空间。比如几百个组件要和 CPU 互连，则 CPU 需要几百个接口。系统很难扩展。</p>
+<h3 id="什么是总线-bus"><a href="#什么是总线-bus" class="headerlink" title="什么是总线 bus"></a>什么是总线 bus</h3><p>总线是连接各个部件的信息传输线，是各个部件共享的传输介质。如果所有组件都连接在总线上，则会导致总线非常繁忙，其他组件等待使用总线的时间也会增大。</p>
+<h3 id="总线上信息的传输"><a href="#总线上信息的传输" class="headerlink" title="总线上信息的传输"></a>总线上信息的传输</h3><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%BC%A0%E8%BE%93%E7%B1%BB%E5%9E%8B.png" alt="传输类型"></p>
+<h4 id="串行"><a href="#串行" class="headerlink" title="串行"></a>串行</h4><p>数据一位一位的放到总线上，被接收设备接收</p>
+<h4 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h4><p>数据多位同时放到多条线上，接收方同时接收多位信号，需要多条线，如果传输距离长则信号会受到干扰。并行传输距离短可以放到机箱内部，串行可以支持长距离传输。</p>
+<p>如果并行传输需要传输更远的距离需要特殊的技术辅佐。</p>
+<h2 id="总线的不同结构"><a href="#总线的不同结构" class="headerlink" title="总线的不同结构"></a>总线的不同结构</h2><h3 id="单总线结构"><a href="#单总线结构" class="headerlink" title="单总线结构"></a>单总线结构</h3><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8D%95%E6%80%BB%E7%BA%BF.png" alt="单总线"><br>总线是信号的公共传输线，在任何一个时刻只能有一个部件使用总线，总线会成为瓶颈。</p>
+<p>问题：</p>
+<ul>
+<li>比如某个 I/O 设备占用了总线，那么 CPU 和 主存就无法利用总线，如果此时 CPU 需要利用总线，则不得不停止，CPU 的利用率会很低</li>
+<li>如果 I/O 设备很多，则系统总线会很长，效率低</li>
+</ul>
+<h3 id="面向-CPU-的双总线结构"><a href="#面向-CPU-的双总线结构" class="headerlink" title="面向 CPU 的双总线结构"></a>面向 CPU 的双总线结构</h3><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8F%8C%E6%80%BB%E7%BA%BF.png" alt="双总线"></p>
+<p>问题：如果主存要和外部设备通信，则只能依赖 CPU，此时还是会阻断 CPU 任务的执行。</p>
+<h3 id="以存储器为中心的双总线结构"><a href="#以存储器为中心的双总线结构" class="headerlink" title="以存储器为中心的双总线结构"></a>以存储器为中心的双总线结构</h3><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%AD%98%E5%82%A8%E5%99%A8%E5%8F%8C%E6%80%BB%E7%BA%BF.png" alt="存储器双总线"></p>
+<p>结构不只有这些，还可以继续优化。</p>
+<h2 id="总线的分类"><a href="#总线的分类" class="headerlink" title="总线的分类"></a>总线的分类</h2><h3 id="片内总线"><a href="#片内总线" class="headerlink" title="片内总线"></a>片内总线</h3><p>芯片内部的总线</p>
+<h3 id="系统总线-（片外-x2F-片间总线）"><a href="#系统总线-（片外-x2F-片间总线）" class="headerlink" title="系统总线 （片外/片间总线）"></a>系统总线 （片外/片间总线）</h3><p>计算机各部件之间的信息传输线，根据传输信号的不同，系统总线可以分为数据总线、地址总线、控制总线。</p>
+<h4 id="数据总线"><a href="#数据总线" class="headerlink" title="数据总线"></a>数据总线</h4><p>双向的，与机器字长、存储字长有关，通常小于等于机器字长或者存储字长。比如 CPU 是 64 位的，数据总线是 8 位的，则传输 64 位数据需要进行 8 次。 </p>
+<h4 id="地址总线"><a href="#地址总线" class="headerlink" title="地址总线"></a>地址总线</h4><p>单向的，由 CPU或者由主设备发出，地址总线的条数与与存储地址、I/O 地址有关。地址总线的宽度和 MAR寄存器的宽度 或者 I/O 有关。</p>
+<h4 id="控制总线"><a href="#控制总线" class="headerlink" title="控制总线"></a>控制总线</h4><p>向系统的各个部件传输控制信号，或者系统的各个部件把自身的状态信号向外进行传输。有出有入，比如存储器读、存储器写、总线允许、中断确认。</p>
+<h3 id="通信总线"><a href="#通信总线" class="headerlink" title="通信总线"></a>通信总线</h3><p>用于计算机系统之间或计算机系统与其他系统（如控制仪表、移动通信等）之间的通信。</p>
+<p>按传输方式可以分为：串行通信总线和并行通信总线。</p>
+<h2 id="总线特性及性能指标"><a href="#总线特性及性能指标" class="headerlink" title="总线特性及性能指标"></a>总线特性及性能指标</h2><h3 id="总线物理实现"><a href="#总线物理实现" class="headerlink" title="总线物理实现"></a>总线物理实现</h3><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%B8%BB%E6%9D%BF.png" alt="主板"><br>总线印刷在电路板上，这个电路板就是主板或母板。在总线上留出一些接口，计算机系统的其他部件或模块可以通过这些接口连接在主板上。</p>
+<h3 id="总线特性"><a href="#总线特性" class="headerlink" title="总线特性"></a>总线特性</h3><p>为了各部件能连接到主板上，总线需要有如下特性。</p>
+<h4 id="机械特性"><a href="#机械特性" class="headerlink" title="机械特性"></a>机械特性</h4><p>要想连接在主板上，需要规定样式、尺寸等特性，才能连接在一起。</p>
+<ul>
+<li>尺寸</li>
+<li>形状</li>
+<li>管脚数</li>
+<li>排列顺序</li>
+</ul>
+<h4 id="电气特性"><a href="#电气特性" class="headerlink" title="电气特性"></a>电气特性</h4><ul>
+<li>传输方向</li>
+<li>有效电平范围</li>
+</ul>
+<h4 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h4><p>每根线上传输的是什么信号：地址、数据、控制信号。</p>
+<h4 id="时间特性"><a href="#时间特性" class="headerlink" title="时间特性"></a>时间特性</h4><p>信号的时序关系。</p>
+<h3 id="总线的性能指标"><a href="#总线的性能指标" class="headerlink" title="总线的性能指标"></a>总线的性能指标</h3><h4 id="总线宽度"><a href="#总线宽度" class="headerlink" title="总线宽度"></a>总线宽度</h4><p>数据线的根数，一次同时能传输多少位。</p>
+<h4 id="标准传输率"><a href="#标准传输率" class="headerlink" title="标准传输率"></a>标准传输率</h4><p>每秒传输的最大字节数 (MBps)。</p>
+<h4 id="时钟同步-x2F-异步"><a href="#时钟同步-x2F-异步" class="headerlink" title="时钟同步/异步"></a>时钟同步/异步</h4><p>同步、不同步。</p>
+<h4 id="总线复用"><a href="#总线复用" class="headerlink" title="总线复用"></a>总线复用</h4><p>地址线与数据线是否能复用，减少芯片的管脚数。</p>
+<h4 id="信号线数"><a href="#信号线数" class="headerlink" title="信号线数"></a>信号线数</h4><p>地址线、数据线和控制线的总和。</p>
+<h4 id="总线控制方式"><a href="#总线控制方式" class="headerlink" title="总线控制方式"></a>总线控制方式</h4><p>突发、自动、仲裁、逻辑、计数。</p>
+<h4 id="其他指标"><a href="#其他指标" class="headerlink" title="其他指标"></a>其他指标</h4><p>负载能力，能挂载多少设备。</p>
+<h3 id="总线标准"><a href="#总线标准" class="headerlink" title="总线标准"></a>总线标准</h3><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E6%80%BB%E7%BA%BF%E6%A0%87%E5%87%86.png" alt="总线标准"><br>计算机是个复杂的系统，有些厂商只生产 CPU，有些只生产内存，不同的厂商需要准守相同的标准，才能互连。</p>
+<p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E6%80%A7%E8%83%BD.png" alt="性能"></p>
+<h2 id="总线结构"><a href="#总线结构" class="headerlink" title="总线结构"></a>总线结构</h2><h3 id="单总线结构-1"><a href="#单总线结构-1" class="headerlink" title="单总线结构"></a>单总线结构</h3><p>如上</p>
+<h3 id="多总线结构"><a href="#多总线结构" class="headerlink" title="多总线结构"></a>多总线结构</h3><h4 id="双总线结构"><a href="#双总线结构" class="headerlink" title="双总线结构"></a>双总线结构</h4><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8F%8C%E6%80%BB%E7%BA%BF%E9%80%9A%E9%81%93.png" alt="双总线通道"></p>
+<h4 id="三总线结构"><a href="#三总线结构" class="headerlink" title="三总线结构"></a>三总线结构</h4><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%B8%89%E6%80%BB%E7%BA%BF.png" alt="三总线"></p>
+<p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E4%B8%89%E6%80%BB%E7%BA%BF%E4%BA%8C.png" alt="三总线二"><br>多个不同速率的设备都连接在扩展总线上，会影响总线的效率。</p>
+<h4 id="四总线结构"><a href="#四总线结构" class="headerlink" title="四总线结构"></a>四总线结构</h4><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%9B%9B%E6%80%BB%E7%BA%BF.png" alt="四总线"><br>高速设备与低速设备分离。</p>
+<h4 id="PCI-总线结构"><a href="#PCI-总线结构" class="headerlink" title="PCI 总线结构"></a>PCI 总线结构</h4><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/PCI.png" alt="PCI"></p>
+<h4 id="多层-PCI-总线结构"><a href="#多层-PCI-总线结构" class="headerlink" title="多层 PCI 总线结构"></a>多层 PCI 总线结构</h4><h2 id="总线控制"><a href="#总线控制" class="headerlink" title="总线控制"></a>总线控制</h2><p>总线的判优控制，如何完成通信过程。</p>
+<h3 id="总线判优控制"><a href="#总线判优控制" class="headerlink" title="总线判优控制"></a>总线判优控制</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
+<li>主设备（模块）对总线有控制权，可以提出/申请总线占用，并能控制从设备</li>
+<li>从设备（模块）不能对总线进行控制，不能提出总线占用请求，响应从主设备发来的总线命令</li>
+</ul>
+<p>计算机中有些设备既可以作为主设备也可以作为从设备，有些总线可以有多个主设备，有些总线只能有一个主设备。</p>
+<h4 id="总线判优控制方式"><a href="#总线判优控制方式" class="headerlink" title="总线判优控制方式"></a>总线判优控制方式</h4><h5 id="集中式"><a href="#集中式" class="headerlink" title="集中式"></a>集中式</h5><p>把总线判优逻辑做在一个部件上，比如放到 CPU 中。</p>
+<ol>
+<li>链式查询</li>
+<li>计数器定时查询</li>
+<li>独立请求</li>
+</ol>
+<h5 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h5><p>判优逻辑分布到各个设备或者设备的端口上。</p>
+<h5 id="链式查询方式"><a href="#链式查询方式" class="headerlink" title="链式查询方式"></a>链式查询方式</h5><p>三条线，BS、BR、BG。<br><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E9%93%BE%E5%BC%8F%E6%9F%A5%E8%AF%A2.png" alt="链式查询"><br>多个 I/O 接口通过 BR 线提出总线请求， 那么 BG 总线授权线会一个一个向下查询，是哪个 I/O 接口提出了总线占用请求，直到碰到第一个提出总线请求的设备，<br>接口获得了总线控制部件的授权，并通过 BS 线设置总线忙，此时获得总线控制权，接口 n 则得不到总线授权。</p>
+<p>各个设备占用总线的优先级如何确定？受到 BG 线查询顺序影响，它的查询顺序就是各个设备占用总线优先级的顺序，也就是说和连接方式/顺序有关，越靠后的设备可能永远得不到授权。</p>
+<p>电路故障特别敏感，如果 BG 上某个设备接口出现故障，那么信号永远传不下去，优点是结构简单，优先级简单，增删设备方便。</p>
+<p>一般用于微型计算机，或者简单的嵌入式系统。</p>
+<h5 id="计数器定时查询方式"><a href="#计数器定时查询方式" class="headerlink" title="计数器定时查询方式"></a>计数器定时查询方式</h5><p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E9%93%BE%E5%BC%8F%E6%9F%A5%E8%AF%A2.png" alt="链式查询"><br>数据线用于数据传输，地址线用于给出地址，设备地址线（地址由计数器给出），通过这个地址来查找某个设备是否发出总线占用请求。</p>
+<p>I/O 设备或其他主设备通过 BR 线提出总线占用请求，总线控制部件在能能响应（不忙）的情况下，会启动计数器，并通过设备地址线对计数器对应的设备进行查询是否提出了总线占用申请，如果没有，会对计数器操作比如加一，来继续查询。</p>
+<p>优先级确定非常友好、灵活，可以自定义每次查询时的计数器值从几开始，也可以从上次成功查询后的计数值开始。</p>
+<p>设备地址线的宽度（条数）和设备数有关。需要的线更多了。</p>
+<h5 id="独立请求方式"><a href="#独立请求方式" class="headerlink" title="独立请求方式"></a>独立请求方式</h5><p>以上两种都是顺序查找哪个设备提出了占用申请，速度比较慢。独立请求方式与之不同。</p>
+<p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E7%8B%AC%E7%AB%8B%E8%AF%B7%E6%B1%82.png" alt="独立请求"></p>
+<p>内部排队器决定优先级。用到的线比较多，如果是 n 个 设备需要 2n 条线，而计数器方式只要 log 以 2 为低的 n 向上取整条线。</p>
+<h3 id="总线通信控制"><a href="#总线通信控制" class="headerlink" title="总线通信控制"></a>总线通信控制</h3><p>目的：解决通信双方协调配合问题。</p>
+<h4 id="总线的传输周期"><a href="#总线的传输周期" class="headerlink" title="总线的传输周期"></a>总线的传输周期</h4><p>总线的传输周期是指主设备和从设备之间完成一次完整的和可靠的传输所需要的时间。</p>
+<ol>
+<li>申请分配阶段 主模块申请，总线仲裁决定</li>
+<li>寻址阶段 主设备向从设备给出地址和命令</li>
+<li>传数阶段 主设备和从模块交换数据</li>
+<li>结束阶段 主模块撤销有关信息</li>
+</ol>
+<h4 id="总线通信的四种方式"><a href="#总线通信的四种方式" class="headerlink" title="总线通信的四种方式"></a>总线通信的四种方式</h4><h5 id="同步通信"><a href="#同步通信" class="headerlink" title="同步通信"></a>同步通信</h5><p>由统一定宽定距时标控制数据传送。</p>
+<p>同步式数据输入，需要四个周期，在固定的时间点必须要给出具体的信息。</p>
+<p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%90%8C%E6%AD%A5%E5%BC%8F%E6%95%B0%E6%8D%AE%E8%BE%93%E5%85%A5.png" alt="同步式数据输入"></p>
+<p>同步方式，所有从设备使用相同的时标控制，主从设备强制同步，对多个不同速的设备，必须选择速度最慢的设备进行同步。</p>
+<h5 id="异步通信"><a href="#异步通信" class="headerlink" title="异步通信"></a>异步通信</h5><p>采用应答方式（握手信号），没有公共时钟标准。</p>
+<h6 id="异步通信不互锁"><a href="#异步通信不互锁" class="headerlink" title="异步通信不互锁"></a>异步通信不互锁</h6><p>主设备发出请求后过一段时间撤销请求信号（维持在一个高电平上），不管从设备是否接收到请求，从设备应答后经过一段延迟后撤销应答信号，不管主设备是否收到应答信号，这种方式通信不可靠。</p>
+<h6 id="异步通信半互锁"><a href="#异步通信半互锁" class="headerlink" title="异步通信半互锁"></a>异步通信半互锁</h6><p>主设备一直维持请求信号，直到接收到应答信号，从设备发出应答后一段时间撤销应答信号，不管主设备是否收到，有可能导致请求信号一直存在。</p>
+<h6 id="异步通信全互锁"><a href="#异步通信全互锁" class="headerlink" title="异步通信全互锁"></a>异步通信全互锁</h6><p>主设备收到应答后才撤销请求信号，只有主设备的请求信号撤销后从设备才撤销应答信号，这样完成可靠数据传输。</p>
+<h5 id="半同步通信"><a href="#半同步通信" class="headerlink" title="半同步通信"></a>半同步通信</h5><p>总线半同步方式既采用时钟信号，又采用握手信号。<br><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8D%8A%E5%90%8C%E6%AD%A5.png" alt="半同步"></p>
+<p><img src="/blog/2024/06/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E6%80%BB%E7%BA%BF/%E5%8D%8A%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F.png" alt="半同步时序"><br>同步异步结合，主要解决速度不一致的设备之间的通信，既有同步通信的特征又有异步通信的特征。</p>
+<p>同步的特征：发送方用系统时钟前沿发信号，接收方用系统时钟后沿判断、识别。</p>
+<p>异步的特征：允许不同速度的设备和谐工作，增加一条等待响应信号（从设备给出）。</p>
+<p>以输入数据为例的半同步通信时序：<br>T1 主设备发地址、T2主设备发命令（读信号）、T3 从设备提供数据、T4从设备撤销数据，主模块撤销命令。</p>
+<p>比如主设备是高速的 CPU ，从设备是低速的磁盘，在 T2 CPU 发出请求后，当等待响应信号线是低电平时，等待一个 T，在从设备把数据准备好后，设置响应信号线，进入 T3 周期。</p>
+<p>允许不同速设备之间的通信。</p>
+<p>上述三种通信的共同点：一个总线传输周期（以输入数据为例）</p>
+<ul>
+<li>主模块发地址、命令  占用总线</li>
+<li>从模块准备数据   不占用总线  总线空闲</li>
+<li>从模块向主模块发数据  占用总线</li>
+</ul>
+<h5 id="分离式通信"><a href="#分离式通信" class="headerlink" title="分离式通信"></a>分离式通信</h5><p>充分挖掘系统总线每个瞬间的潜力。</p>
+<p>一个总线传输周期分为</p>
+<ul>
+<li>子周期1 主模块申请占用总线，使用完后即释放总线的使用权</li>
+<li>子周期2 从模块申请占用总线，将各种信息送至总线上，此时从模块变成主模块</li>
+</ul>
+<p>分离式通信特点</p>
+<ol>
+<li>各个模块都有权申请占用总线</li>
+<li>采用同步方式通信，不等对方回答</li>
+<li>各模块准备数据时，不占用总线</li>
+<li>总线被占用时，无空闲</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/%E6%80%BB%E7%BA%BF/" rel="tag"><i class="fa fa-tag"></i> 总线</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/06/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E4%B9%8B%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%AE%80%E4%BB%8B/" rel="prev" title="计算机组成原理之计算机系统简介">
+      <i class="fa fa-chevron-left"></i> 计算机组成原理之计算机系统简介
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">总线的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BA%BF"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要使用总线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%80%BB%E7%BA%BF-bus"><span class="nav-number">1.2.</span> <span class="nav-text">什么是总线 bus</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E4%B8%8A%E4%BF%A1%E6%81%AF%E7%9A%84%E4%BC%A0%E8%BE%93"><span class="nav-number">1.3.</span> <span class="nav-text">总线上信息的传输</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%B2%E8%A1%8C"><span class="nav-number">1.3.1.</span> <span class="nav-text">串行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C"><span class="nav-number">1.3.2.</span> <span class="nav-text">并行</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%9A%84%E4%B8%8D%E5%90%8C%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">总线的不同结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">单总线结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%A2%E5%90%91-CPU-%E7%9A%84%E5%8F%8C%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">面向 CPU 的双总线结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E5%8F%8C%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">以存储器为中心的双总线结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">总线的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%87%E5%86%85%E6%80%BB%E7%BA%BF"><span class="nav-number">3.1.</span> <span class="nav-text">片内总线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BA%BF-%EF%BC%88%E7%89%87%E5%A4%96-x2F-%E7%89%87%E9%97%B4%E6%80%BB%E7%BA%BF%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">系统总线 （片外&#x2F;片间总线）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%80%BB%E7%BA%BF"><span class="nav-number">3.2.1.</span> <span class="nav-text">数据总线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%80%BB%E7%BA%BF"><span class="nav-number">3.2.2.</span> <span class="nav-text">地址总线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E6%80%BB%E7%BA%BF"><span class="nav-number">3.2.3.</span> <span class="nav-text">控制总线</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E4%BF%A1%E6%80%BB%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">通信总线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%89%B9%E6%80%A7%E5%8F%8A%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">4.</span> <span class="nav-text">总线特性及性能指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%89%A9%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.1.</span> <span class="nav-text">总线物理实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%89%B9%E6%80%A7"><span class="nav-number">4.2.</span> <span class="nav-text">总线特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%BA%E6%A2%B0%E7%89%B9%E6%80%A7"><span class="nav-number">4.2.1.</span> <span class="nav-text">机械特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%B5%E6%B0%94%E7%89%B9%E6%80%A7"><span class="nav-number">4.2.2.</span> <span class="nav-text">电气特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E7%89%B9%E6%80%A7"><span class="nav-number">4.2.3.</span> <span class="nav-text">功能特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%89%B9%E6%80%A7"><span class="nav-number">4.2.4.</span> <span class="nav-text">时间特性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">4.3.</span> <span class="nav-text">总线的性能指标</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E5%AE%BD%E5%BA%A6"><span class="nav-number">4.3.1.</span> <span class="nav-text">总线宽度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E4%BC%A0%E8%BE%93%E7%8E%87"><span class="nav-number">4.3.2.</span> <span class="nav-text">标准传输率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E9%92%9F%E5%90%8C%E6%AD%A5-x2F-%E5%BC%82%E6%AD%A5"><span class="nav-number">4.3.3.</span> <span class="nav-text">时钟同步&#x2F;异步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E5%A4%8D%E7%94%A8"><span class="nav-number">4.3.4.</span> <span class="nav-text">总线复用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E7%BA%BF%E6%95%B0"><span class="nav-number">4.3.5.</span> <span class="nav-text">信号线数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E6%8E%A7%E5%88%B6%E6%96%B9%E5%BC%8F"><span class="nav-number">4.3.6.</span> <span class="nav-text">总线控制方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%8C%87%E6%A0%87"><span class="nav-number">4.3.7.</span> <span class="nav-text">其他指标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E6%A0%87%E5%87%86"><span class="nav-number">4.4.</span> <span class="nav-text">总线标准</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">总线结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84-1"><span class="nav-number">5.1.</span> <span class="nav-text">单总线结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">5.2.</span> <span class="nav-text">多总线结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8C%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">5.2.1.</span> <span class="nav-text">双总线结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">5.2.2.</span> <span class="nav-text">三总线结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">5.2.3.</span> <span class="nav-text">四总线结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PCI-%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">5.2.4.</span> <span class="nav-text">PCI 总线结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%B1%82-PCI-%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">5.2.5.</span> <span class="nav-text">多层 PCI 总线结构</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E6%8E%A7%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">总线控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E5%88%A4%E4%BC%98%E6%8E%A7%E5%88%B6"><span class="nav-number">6.1.</span> <span class="nav-text">总线判优控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">6.1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E5%88%A4%E4%BC%98%E6%8E%A7%E5%88%B6%E6%96%B9%E5%BC%8F"><span class="nav-number">6.1.2.</span> <span class="nav-text">总线判优控制方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%86%E4%B8%AD%E5%BC%8F"><span class="nav-number">6.1.2.1.</span> <span class="nav-text">集中式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">6.1.2.2.</span> <span class="nav-text">分布式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F"><span class="nav-number">6.1.2.3.</span> <span class="nav-text">链式查询方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%A1%E6%95%B0%E5%99%A8%E5%AE%9A%E6%97%B6%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F"><span class="nav-number">6.1.2.4.</span> <span class="nav-text">计数器定时查询方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%8B%AC%E7%AB%8B%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F"><span class="nav-number">6.1.2.5.</span> <span class="nav-text">独立请求方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E9%80%9A%E4%BF%A1%E6%8E%A7%E5%88%B6"><span class="nav-number">6.2.</span> <span class="nav-text">总线通信控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%9A%84%E4%BC%A0%E8%BE%93%E5%91%A8%E6%9C%9F"><span class="nav-number">6.2.1.</span> <span class="nav-text">总线的传输周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">6.2.2.</span> <span class="nav-text">总线通信的四种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E9%80%9A%E4%BF%A1"><span class="nav-number">6.2.2.1.</span> <span class="nav-text">同步通信</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1"><span class="nav-number">6.2.2.2.</span> <span class="nav-text">异步通信</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1%E4%B8%8D%E4%BA%92%E9%94%81"><span class="nav-number">6.2.2.2.1.</span> <span class="nav-text">异步通信不互锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1%E5%8D%8A%E4%BA%92%E9%94%81"><span class="nav-number">6.2.2.2.2.</span> <span class="nav-text">异步通信半互锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1%E5%85%A8%E4%BA%92%E9%94%81"><span class="nav-number">6.2.2.2.3.</span> <span class="nav-text">异步通信全互锁</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8D%8A%E5%90%8C%E6%AD%A5%E9%80%9A%E4%BF%A1"><span class="nav-number">6.2.2.3.</span> <span class="nav-text">半同步通信</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E7%A6%BB%E5%BC%8F%E9%80%9A%E4%BF%A1"><span class="nav-number">6.2.2.4.</span> <span class="nav-text">分离式通信</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">149k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:15</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
