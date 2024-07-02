@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>328</span>
+              <span>869</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -247,8 +247,28 @@
 
       
         <h2 id="ES-不会平衡单节点上的数据"><a href="#ES-不会平衡单节点上的数据" class="headerlink" title="ES 不会平衡单节点上的数据"></a>ES 不会平衡单节点上的数据</h2><blockquote>
-</blockquote>
 <p>Elasticsearch does not balance shards across a node’s data paths. High disk usage in a single path can trigger a high disk usage watermark for the entire node. If triggered, Elasticsearch will not add shards to the node, even if the node’s other paths have available disk space. If you need additional disk space, we recommend you add a new node rather than additional data paths.</p>
+</blockquote>
+<p>ES 节点在存在多个数据目录时并不会进行自动平衡操作，所以当一个数据路径达到一定的值时会触发一些机制，即使某些数据路径依然有大量存储空间，ES 也不会往那个节点分配分配了，所以不建议在节点上增加磁盘，更好的做法是增加节点。</p>
+<h2 id="集群级别的分片分配和路由设置"><a href="#集群级别的分片分配和路由设置" class="headerlink" title="集群级别的分片分配和路由设置"></a>集群级别的分片分配和路由设置</h2><p>分片配置是指把索引分片分配到各节点上的过程，这个过程会发生在初始化恢复、副本分配、rebalance或者有节点加入/离开集群时。</p>
+<p>Master 节点的一个主要功能就是决定哪个分片应该分配到哪个节点上、什么时候在节点之间移动分片来达到集群的平衡。</p>
+<p>有如下几个设置可以控制分片分配的过程：</p>
+<ul>
+<li>集群级别的分片分配设置控制分配和再平衡操作</li>
+<li>基于磁盘的分片分配设置解释了 ES 如何考虑到磁盘可用空间来控制分片分配</li>
+<li>分片分配感知强制感知控制分片如何在不同的机架或空间/区域上分配</li>
+<li>集群级别的分配分配过滤允许某些节点或者一组节点不参与分片分配，好让这些节点退役</li>
+</ul>
+<h2 id="集群级别的分片分片设置"><a href="#集群级别的分片分片设置" class="headerlink" title="集群级别的分片分片设置"></a>集群级别的分片分片设置</h2><p>可以用以下设置来控制分片的分配和恢复</p>
+<ul>
+<li>cluster.routing.allocation.enable<ul>
+<li>all 默认值 允许所有类型的分片的分配</li>
+<li>primaries 只允许主分片分配</li>
+<li>new_primaries 只允许新创建的索引的主分片分配</li>
+<li>none 不允许任何索引分片进行分片分配</li>
+</ul>
+</li>
+</ul>
 
     </div>
 
@@ -333,7 +353,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ES-%E4%B8%8D%E4%BC%9A%E5%B9%B3%E8%A1%A1%E5%8D%95%E8%8A%82%E7%82%B9%E4%B8%8A%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">ES 不会平衡单节点上的数据</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ES-%E4%B8%8D%E4%BC%9A%E5%B9%B3%E8%A1%A1%E5%8D%95%E8%8A%82%E7%82%B9%E4%B8%8A%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">ES 不会平衡单节点上的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BA%A7%E5%88%AB%E7%9A%84%E5%88%86%E7%89%87%E5%88%86%E9%85%8D%E5%92%8C%E8%B7%AF%E7%94%B1%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">集群级别的分片分配和路由设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BA%A7%E5%88%AB%E7%9A%84%E5%88%86%E7%89%87%E5%88%86%E7%89%87%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">集群级别的分片分片设置</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -413,7 +433,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:15</span>
+    <span title="Reading time total">2:16</span>
 </div>
 
         
