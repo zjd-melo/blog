@@ -226,14 +226,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>869</span>
+              <span>3.5k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>3 mins.</span>
             </span>
             <div class="post-description">ES 备忘录</div>
 
@@ -259,16 +259,56 @@
 <li>分片分配感知强制感知控制分片如何在不同的机架或空间/区域上分配</li>
 <li>集群级别的分配分配过滤允许某些节点或者一组节点不参与分片分配，好让这些节点退役</li>
 </ul>
-<h2 id="集群级别的分片分片设置"><a href="#集群级别的分片分片设置" class="headerlink" title="集群级别的分片分片设置"></a>集群级别的分片分片设置</h2><p>可以用以下设置来控制分片的分配和恢复</p>
-<ul>
-<li>cluster.routing.allocation.enable<ul>
+<h2 id="集群级别的分片分片设置"><a href="#集群级别的分片分片设置" class="headerlink" title="集群级别的分片分片设置"></a>集群级别的分片分片设置</h2><p>可以用以下设置来控制分片的分配和恢复 </p>
+<h3 id="cluster-routing-allocation-enable"><a href="#cluster-routing-allocation-enable" class="headerlink" title="cluster.routing.allocation.enable"></a>cluster.routing.allocation.enable</h3><ul>
 <li>all 默认值 允许所有类型的分片的分配</li>
 <li>primaries 只允许主分片分配</li>
 <li>new_primaries 只允许新创建的索引的主分片分配</li>
 <li>none 不允许任何索引分片进行分片分配</li>
 </ul>
-</li>
+<h3 id="cluster-routing-allocation-node-concurrent-incoming-recoveries"><a href="#cluster-routing-allocation-node-concurrent-incoming-recoveries" class="headerlink" title="cluster.routing.allocation.node_concurrent_incoming_recoveries"></a>cluster.routing.allocation.node_concurrent_incoming_recoveries</h3><p>一个节点允许发生多少并发写入分片恢复。传入恢复是在节点上分配目标分片（很可能是副本，除非分片正在重新定位）的恢复。</p>
+<h3 id="cluster-routing-allocation-node-concurrent-outgoing-recoveries"><a href="#cluster-routing-allocation-node-concurrent-outgoing-recoveries" class="headerlink" title="cluster.routing.allocation.node_concurrent_outgoing_recoveries"></a>cluster.routing.allocation.node_concurrent_outgoing_recoveries</h3><p>一个节点上允许发生多少并发传出分片恢复。传出恢复是在节点上分配源分片（很可能是主分片，除非分片正在重新定位）的恢复。</p>
+<h3 id="cluster-routing-allocation-node-concurrent-recoveries"><a href="#cluster-routing-allocation-node-concurrent-recoveries" class="headerlink" title="cluster.routing.allocation.node_concurrent_recoveries"></a>cluster.routing.allocation.node_concurrent_recoveries</h3><p>一个设置以上两个参数的快捷方式参数。</p>
+<h3 id="cluster-routing-allocation-node-initial-primaries-recoveries"><a href="#cluster-routing-allocation-node-initial-primaries-recoveries" class="headerlink" title="cluster.routing.allocation.node_initial_primaries_recoveries"></a>cluster.routing.allocation.node_initial_primaries_recoveries</h3><p>虽然副本的恢复通过网络进行，但节点重新启动后未分配的主节点的恢复使用本地磁盘中的数据。这些应该很快，以便更多的初始主恢复可以在同一节点上并行发生。</p>
+<h3 id="cluster-routing-allocation-same-shard-host"><a href="#cluster-routing-allocation-same-shard-host" class="headerlink" title="cluster.routing.allocation.same_shard.host"></a>cluster.routing.allocation.same_shard.host</h3><p>允许根据主机名和主机地址执行检查，以防止在单个主机上分配同一分片的多个实例。默认为 false，表示默认不执行任何检查。仅当在同一台计算机上启动多个节点时，此设置才适用。</p>
+<h2 id="分片平衡设置"><a href="#分片平衡设置" class="headerlink" title="分片平衡设置"></a>分片平衡设置</h2><p>可以通过以下参数控制集群中分片平衡过程。</p>
+<h3 id="cluster-routing-rebalance-enable"><a href="#cluster-routing-rebalance-enable" class="headerlink" title="cluster.routing.rebalance.enable"></a>cluster.routing.rebalance.enable</h3><p>为特定类型的分片启用或禁用重新平衡</p>
+<ul>
+<li>all 允许所有类型的分片参与平衡</li>
+<li>primaries 只允许主分片参与平衡</li>
+<li>replicas 只允许副本分片参与平衡</li>
+<li>none 不允许任何索引及任何分片参与平衡</li>
 </ul>
+<h3 id="cluster-routing-allocation-allow-rebalance"><a href="#cluster-routing-allocation-allow-rebalance" class="headerlink" title="cluster.routing.allocation.allow_rebalance"></a>cluster.routing.allocation.allow_rebalance</h3><p>用来控制rebalance触发条件</p>
+<ul>
+<li>always  始终允许重新平衡；</li>
+<li>indices_primaries_active  仅在所有主分片都成功被分配后；</li>
+<li>indices_all_active （默认）仅当所有分片都成功被分配后；</li>
+</ul>
+<h3 id="cluster-routing-allocation-cluster-concurrent-rebalance"><a href="#cluster-routing-allocation-cluster-concurrent-rebalance" class="headerlink" title="cluster.routing.allocation.cluster_concurrent_rebalance"></a>cluster.routing.allocation.cluster_concurrent_rebalance</h3><p>允许集群级别的并发分片平衡数，这个参数只限制由于集群中分片不平衡导致的再平衡过程，并不限制由于分配过滤和强制感知导致的分片再分配。</p>
+<h2 id="分片平衡启发式设置"><a href="#分片平衡启发式设置" class="headerlink" title="分片平衡启发式设置"></a>分片平衡启发式设置</h2><p>以下设置一起使用来确定每个分片的分配位置。当没有允许的重新平衡操作可以使任何节点的权重更接近任何其他节点的权重超过 balance.threshold 时，集群达到平衡。</p>
+<h3 id="cluster-routing-allocation-balance-shard"><a href="#cluster-routing-allocation-balance-shard" class="headerlink" title="cluster.routing.allocation.balance.shard"></a>cluster.routing.allocation.balance.shard</h3><p>定义节点上分配的分片总数的权重因子（浮点数）。默认为 0.45f。提高这个值会增加集群中所有节点的分片数量均衡的趋势（更加积极）。</p>
+<h3 id="cluster-routing-allocation-balance-index"><a href="#cluster-routing-allocation-balance-index" class="headerlink" title="cluster.routing.allocation.balance.index"></a>cluster.routing.allocation.balance.index</h3><p>定义在特定节点上分配的每个索引的分片数量的权重因子（浮点数）。默认为 0.55f。提高这个值会增加集群中所有节点上每个索引的分片数量均衡的趋势。</p>
+<h3 id="cluster-routing-allocation-balance-threshold"><a href="#cluster-routing-allocation-balance-threshold" class="headerlink" title="cluster.routing.allocation.balance.threshold"></a>cluster.routing.allocation.balance.threshold</h3><p>应执行的操作的最小优化值（非负浮点数）。默认为 1.0f。提高这个值将导致集群在优化分片平衡方面不那么积极。</p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>公式=<code>weight(node) = (number_of_shards_on_node * cluster.routing.allocation.balance.shard) + (number_of_indices_on_node * cluster.routing.allocation.balance.index)</code><br>假设有三个节点A、B、C，节点上分别有以下分片和索引数量：</p>
+<ul>
+<li>节点A：10个分片，5个索引</li>
+<li>节点B：8个分片，5个索引</li>
+<li>节点C：12个分片，6个索引</li>
+</ul>
+<p>假设使用默认配置则：</p>
+<ul>
+<li>节点A的权重 = (10 * 0.45) + (5 * 0.55) = 4.5 + 2.75 = 7.25</li>
+<li>节点B的权重 = (8 * 0.45) + (5 * 0.55) = 3.6 + 2.75 = 6.35</li>
+<li>节点C的权重 = (12 * 0.45) + (6 * 0.55) = 5.4 + 3.3 = 8.7</li>
+</ul>
+<p>计算标准差得到: 0.9680，比 1 小不会触发rebalancing，如果超过阈值，则会把权重高的节点往权重低的节点迁移。</p>
+<h2 id="基于磁盘的分片分配设置"><a href="#基于磁盘的分片分配设置" class="headerlink" title="基于磁盘的分片分配设置"></a>基于磁盘的分片分配设置</h2><p>Elasticsearch 在决定是向该节点分配新分片还是主动将分片从该节点重新定位之前，会考虑该节点上的可用磁盘空间。</p>
+<h3 id="cluster-routing-allocation-disk-threshold-enabled"><a href="#cluster-routing-allocation-disk-threshold-enabled" class="headerlink" title="cluster.routing.allocation.disk.threshold_enabled"></a>cluster.routing.allocation.disk.threshold_enabled</h3><p>默认true，开启基于磁盘的使用量来决定是否分配分片</p>
+<h3 id="cluster-routing-allocation-disk-watermark-low-低水位线"><a href="#cluster-routing-allocation-disk-watermark-low-低水位线" class="headerlink" title="cluster.routing.allocation.disk.watermark.low 低水位线"></a>cluster.routing.allocation.disk.watermark.low 低水位线</h3><p>控制磁盘使用的低水位线。默认为 85%，这意味着 Elasticsearch 不会将分片分配给磁盘使用率超过 85% 的节点。它还可以设置为绝对字节值（例如 500mb），以防止 Elasticsearch 在可用空间小于指定数量时分配分片。此设置对新创建索引的主分片没有影响，但会阻止分配其副本。</p>
+<h3 id="cluster-routing-allocation-disk-watermark-high-高水位线"><a href="#cluster-routing-allocation-disk-watermark-high-高水位线" class="headerlink" title="cluster.routing.allocation.disk.watermark.high 高水位线"></a>cluster.routing.allocation.disk.watermark.high 高水位线</h3><p>控制高水位线。它默认为 90%，这意味着 Elasticsearch 将尝试将分片重新分配到磁盘使用率低于 90% 的节点上。它还可以设置为绝对字节值（类似于低水位线），以便在节点的可用空间小于指定数量时将分片重新定位到远离节点的位置。此设置会影响所有分片的分配，无论之前是否已分配。</p>
+<h3 id="cluster-routing-allocation-disk-watermark-flood-stage-范洪水位线"><a href="#cluster-routing-allocation-disk-watermark-flood-stage-范洪水位线" class="headerlink" title="cluster.routing.allocation.disk.watermark.flood_stage 范洪水位线"></a>cluster.routing.allocation.disk.watermark.flood_stage 范洪水位线</h3><p>控制洪水阶段水位线，默认为95%。 Elasticsearch 在节点上分配了一个或多个分片且至少有一个磁盘超过泛洪阶段的每个索引上强制执行只读索引块 (index.blocks.read_only_allow_delete)。此设置是防止节点耗尽磁盘空间的最后手段。当磁盘利用率低于高水位线时，索引块会自动释放。<br>会阻止事件写入，可能会对一些系统索引产生影响导致集群不可用。</p>
+<p>百分比和具体值不能混用，百分比是已使用空间，具体值表示剩余空间。</p>
 
     </div>
 
@@ -353,7 +393,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ES-%E4%B8%8D%E4%BC%9A%E5%B9%B3%E8%A1%A1%E5%8D%95%E8%8A%82%E7%82%B9%E4%B8%8A%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">ES 不会平衡单节点上的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BA%A7%E5%88%AB%E7%9A%84%E5%88%86%E7%89%87%E5%88%86%E9%85%8D%E5%92%8C%E8%B7%AF%E7%94%B1%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">集群级别的分片分配和路由设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BA%A7%E5%88%AB%E7%9A%84%E5%88%86%E7%89%87%E5%88%86%E7%89%87%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">集群级别的分片分片设置</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ES-%E4%B8%8D%E4%BC%9A%E5%B9%B3%E8%A1%A1%E5%8D%95%E8%8A%82%E7%82%B9%E4%B8%8A%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">ES 不会平衡单节点上的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BA%A7%E5%88%AB%E7%9A%84%E5%88%86%E7%89%87%E5%88%86%E9%85%8D%E5%92%8C%E8%B7%AF%E7%94%B1%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">集群级别的分片分配和路由设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E7%BA%A7%E5%88%AB%E7%9A%84%E5%88%86%E7%89%87%E5%88%86%E7%89%87%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">集群级别的分片分片设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-enable"><span class="nav-number">3.1.</span> <span class="nav-text">cluster.routing.allocation.enable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-node-concurrent-incoming-recoveries"><span class="nav-number">3.2.</span> <span class="nav-text">cluster.routing.allocation.node_concurrent_incoming_recoveries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-node-concurrent-outgoing-recoveries"><span class="nav-number">3.3.</span> <span class="nav-text">cluster.routing.allocation.node_concurrent_outgoing_recoveries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-node-concurrent-recoveries"><span class="nav-number">3.4.</span> <span class="nav-text">cluster.routing.allocation.node_concurrent_recoveries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-node-initial-primaries-recoveries"><span class="nav-number">3.5.</span> <span class="nav-text">cluster.routing.allocation.node_initial_primaries_recoveries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-same-shard-host"><span class="nav-number">3.6.</span> <span class="nav-text">cluster.routing.allocation.same_shard.host</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%89%87%E5%B9%B3%E8%A1%A1%E8%AE%BE%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">分片平衡设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-rebalance-enable"><span class="nav-number">4.1.</span> <span class="nav-text">cluster.routing.rebalance.enable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-allow-rebalance"><span class="nav-number">4.2.</span> <span class="nav-text">cluster.routing.allocation.allow_rebalance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-cluster-concurrent-rebalance"><span class="nav-number">4.3.</span> <span class="nav-text">cluster.routing.allocation.cluster_concurrent_rebalance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%89%87%E5%B9%B3%E8%A1%A1%E5%90%AF%E5%8F%91%E5%BC%8F%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">分片平衡启发式设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-balance-shard"><span class="nav-number">5.1.</span> <span class="nav-text">cluster.routing.allocation.balance.shard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-balance-index"><span class="nav-number">5.2.</span> <span class="nav-text">cluster.routing.allocation.balance.index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-balance-threshold"><span class="nav-number">5.3.</span> <span class="nav-text">cluster.routing.allocation.balance.threshold</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B"><span class="nav-number">5.4.</span> <span class="nav-text">举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%A3%81%E7%9B%98%E7%9A%84%E5%88%86%E7%89%87%E5%88%86%E9%85%8D%E8%AE%BE%E7%BD%AE"><span class="nav-number">6.</span> <span class="nav-text">基于磁盘的分片分配设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-disk-threshold-enabled"><span class="nav-number">6.1.</span> <span class="nav-text">cluster.routing.allocation.disk.threshold_enabled</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-disk-watermark-low-%E4%BD%8E%E6%B0%B4%E4%BD%8D%E7%BA%BF"><span class="nav-number">6.2.</span> <span class="nav-text">cluster.routing.allocation.disk.watermark.low 低水位线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-disk-watermark-high-%E9%AB%98%E6%B0%B4%E4%BD%8D%E7%BA%BF"><span class="nav-number">6.3.</span> <span class="nav-text">cluster.routing.allocation.disk.watermark.high 高水位线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-routing-allocation-disk-watermark-flood-stage-%E8%8C%83%E6%B4%AA%E6%B0%B4%E4%BD%8D%E7%BA%BF"><span class="nav-number">6.4.</span> <span class="nav-text">cluster.routing.allocation.disk.watermark.flood_stage 范洪水位线</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -427,13 +467,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">149k</span>
+    <span title="Symbols count total">152k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:16</span>
+    <span title="Reading time total">2:18</span>
 </div>
 
         
