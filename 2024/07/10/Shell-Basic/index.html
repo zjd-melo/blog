@@ -336,7 +336,7 @@
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">统计文件数量，<span class="built_in">ls</span> 在和管道一起时会改变其输出格式 <span class="built_in">ls</span> | <span class="built_in">cat</span></span></span><br><span class="line">ls | wc -l</span><br></pre></td></tr></tbody></table></figure>
 
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>一次可以执行多个命令，中间用分号分开。</p>
-<h3 id="后台"><a href="#后台" class="headerlink" title="后台"></a>后台</h3><p>Sending a Command to the Background。正常情况下，我们在终端输入命令并且等待结果，有些命令执行时间很短，<br>但有时需要很长的时间，这就妨碍我们做其他事情（可能早期终端和现在不一样，现在再打开一个终端就行），此时就需要后台执行。</p>
+<h3 id="后台"><a href="#后台" class="headerlink" title="后台"></a>后台</h3><p>Sending a Command to the Background。正常情况下，我们在终端输入命令并且等待结果，有些命令执行时间很短，<br>但有些命令需要很长的时间，这就妨碍我们做其他事情（可能早期终端和现在不一样，现在再打开一个终端就行），此时就需要后台执行。</p>
 <p>使用 <code>&amp;</code> 符号可以把命令放到后台执行，如果没有任何重定向，那么后台命令的输入依然会出现在终端，如果它需要从标准输入获取信息，那么会停在终端等待输入。</p>
 <p>执行后会返回两个数字，第一个是 job id，第二个是 pid。</p>
 
