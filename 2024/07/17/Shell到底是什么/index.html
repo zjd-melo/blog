@@ -21,20 +21,20 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Programmability and Index Design Carefully Consider Creation of Indexes to Minimize Index and Data Scanning">
+  <meta name="description" content="Shell 到底是什么">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Effective SQL Item 11">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/05/17/Effective-SQL-Item-11/index.html">
+<meta property="og:title" content="Shell到底是什么">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="Programmability and Index Design Carefully Consider Creation of Indexes to Minimize Index and Data Scanning">
+<meta property="og:description" content="Shell 到底是什么">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-17T09:24:53.000Z">
-<meta property="article:modified_time" content="2024-05-17T09:24:53.000Z">
+<meta property="article:published_time" content="2024-07-17T08:51:32.000Z">
+<meta property="article:modified_time" content="2024-07-17T08:51:32.000Z">
 <meta property="article:author" content="朱佳东">
-<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="Shell">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/05/17/Effective-SQL-Item-11/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>Effective SQL Item 11 | Dying Memory</title>
+  <title>Shell到底是什么 | Dying Memory</title>
   
 
 
@@ -178,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/05/17/Effective-SQL-Item-11/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -191,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Effective SQL Item 11
+          Shell到底是什么
         </h1>
 
         <div class="post-meta">
@@ -201,7 +201,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2024-05-17 17:24:53" itemprop="dateCreated datePublished" datetime="2024-05-17T17:24:53+08:00">2024-05-17</time>
+              <time title="Created: 2024-07-17 16:51:32" itemprop="dateCreated datePublished" datetime="2024-07-17T16:51:32+08:00">2024-07-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,7 +209,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
+                  <a href="/blog/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
                 </span>
             </span>
 
@@ -226,16 +226,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.1k</span>
+              <span>577</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>1 mins.</span>
             </span>
-            <div class="post-description">Programmability and Index Design Carefully Consider Creation of Indexes to Minimize Index and Data Scanning</div>
+            <div class="post-description">Shell 到底是什么</div>
 
         </div>
       </header>
@@ -246,38 +246,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>尽管增加硬件资源可能是改善查询性能的一个方法，可以通过修改查询以花更少的钱来提升性能。通常这种问题是由没有索引或者不正确的索引导致的。</p>
-<p>通常称为 <code>index scan and table scans</code>。</p>
-<blockquote>
-<p>An index scan or table scan occurs when the database engine has to scan the index or data pages to find the appropriate records, as opposed to a seek, where an index is used to pinpoint the records that are needed to satisfy the query. The more data that exists, the more time index scans can take to complete.</p>
-</blockquote>
-<h2 id="Index-seek"><a href="#Index-seek" class="headerlink" title="Index seek"></a>Index seek</h2><p><code>SELECT * FROM Customers WHERE CustomerID = 1</code> 和 <code>SELECT CustomerID FROM Customers WHERE CustomerID = 1</code>，假设 CustomerID 列有<strong>唯一</strong>索引，第一个查询通过 index seek 定位到数据，然后回表查询数据，第二个直接返回不需要回表。</p>
-<h2 id="Index-scan"><a href="#Index-scan" class="headerlink" title="Index scan"></a>Index scan</h2><p><code>SELECT * FROM Customers WHERE CustState = 'TX'</code>，假设 CustState 列有索引但不是唯一索引，这就意味着，查询必须查看整个索引来找到所有满足 where 条件的行，这就是一个 <code>index scan</code>，并且查询的列不在索引中，需要 go back to table。</p>
-<h2 id="Table-scan"><a href="#Table-scan" class="headerlink" title="Table scan"></a>Table scan</h2><p><code>SELECT CustomerID FROM Customers WHERE CustAreaCode = '905'</code> CustAreaCode 列没有索引，db engine 会查找表中的每一行。</p>
-<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>There might not seem to be much difference between a table scan and an index scan in many instances, because it is necessary to search through all entries in an object to find a particular value. However, the index is usually much smaller and specially designed to be scanned, so it is generally much faster to do an index scan if you want only a small proportion of the rows in the table.</p>
-<p>但有时 table scan 有更好的查询性能，这依赖于具体情况，比如返回的行很多时。</p>
-<p>There is a risk, though, of assuming that indexes are the solution to all data retrieval problems.</p>
-<p>Many indexes do not speed up retrieval and can actually slow down updates. A problem is that whenever you update an indexed column, you force an update to one or more “index tables”—meaning more disk reads and writes. Because indexes are highly organized, making updates in them is often more expensive than the update to the table.</p>
-<p>OLTP 有大量的更新，建立索引时需谨慎，而 OLAP 更新不频繁，可以使用更多的索引改善查询。</p>
-<p>However, simply applying indexes is not a panacea.</p>
-<h2 id="B-tree"><a href="#B-tree" class="headerlink" title="B-tree"></a>B-tree</h2><p>B-tree 索引对查询性能贡献成都取决于索引类型，有两种索引方式：clustered index and nonclustered。</p>
-<p>A clustered index physically sorts the table’s contents in the order of whichever columns were specified when the index was created.<br>Because it is not possible to order the rows in a table in more than one way, you can have only one clustered index per table.<br>In SQL Server, at least, usually a clustered index has leaf nodes that contain data directly.<br>A nonclustered index has the same index structure as a clustered index, but with two important differences:</p>
-<ul>
-<li>Nonclustered indexes may be sorted differently from the table’s physical order.</li>
-<li>A nonclustered index’s leaf level consists of an index key plus a bookmark that points to the data, rather than containing the data.</li>
-</ul>
-<p>聚簇索引叶子结点包含数据，一般一张表只有一个聚簇索引，一般是主键。</p>
-<p>非聚簇索引性能是否比table scan 更好取决于 table size、row’s storage pattern、rows length and the percentage of rows the query returns。</p>
-<p>A table scan often starts to perform better than a nonclustered index access when at least 10% of the rows are selected. A clustered index usually performs better than a table scan even when the percentage of returned rows is high.</p>
-<h2 id="其他因素"><a href="#其他因素" class="headerlink" title="其他因素"></a>其他因素</h2><p>如果一个列很少出现在 where 中，加索引收益很小，如果一列基数很低，即大量的行拥有相同的数据，同样建力索引收益很小。</p>
-<p>If an index will not result in the database engine reading less than a minimum percentage of the table, the engine will not use the index.(是回表查询导致走索引比直接table scan 慢吗)</p>
-<p>此外，只有当表很大时索引才有意义，大多数数据库直接把小的表加载到内存里面。</p>
-<p>Once a table is in memory, searching it goes quickly, no matter what you do or do not do. What <strong>small</strong> means depends on the number of rows, the size of each row, how it fits into a page, and how much memory your database server has available.</p>
-<p>复合索引同样重要，如果查询需要多个列，可以考虑创建复合索引，建复合索引时的顺序很重要。</p>
-<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
-<li>Analyze your data so that the appropriate indexes are created to improve performance.</li>
-<li>Ensure that the indexes you have created are, in fact, going to be used.</li>
-</ul>
+        <h2 id="The-Kernel-and-the-Utilities"><a href="#The-Kernel-and-the-Utilities" class="headerlink" title="The Kernel and the Utilities"></a>The Kernel and the Utilities</h2><p>![kernel](kernel.png<br>Unix 系统在逻辑上可以分为两个部分：the kernel and the utilities。 或者，如果你愿意的话，内核和其他所有内容通常都通过 shell 访问。</p>
+<p>内核是 Unix 系统的核心，从计算机启动到关闭期间都驻留在计算机的内存中。</p>
+<p>磁盘上各种各样的 tools 构成了完整的 Unix 系统体验，只有当调用这些 utilities 时，才会被加载到内存并执行。事实上，你所知道的每一个 Unix 命令都是一个实用程序；因此，该程序驻留在磁盘上，并且仅根据您的请求才被调入内存。</p>
+<p>比如当执行 <code>date</code> 命令时，Unix 系统会从磁盘上找到名为 <code>date</code> 的程序，并加载到内存中，然后开始执行加载到内存中命令的指令。</p>
+<p>shell 同样也是一个 utility programe，当你执行登陆操作时会被加载到内存执行。事实上，非常值得学习一下在终端开启时启动第一个 shell 所发生的精确的事件顺序。</p>
+<h2 id="The-Login-Shell"><a href="#The-Login-Shell" class="headerlink" title="The Login Shell"></a>The Login Shell</h2><p>在早期的时候，terminals 终端是一个物理设备，通过一条线直接连接到 Unix 硬件系统。如今 terminal programs 让你在自己的电脑上通过网络连接登陆远程系统。</p>
+<p>通常我们打开一个程序（Terminal or xterm）然后使用诸如 <code>ssh</code>、<code>telnet</code>、<code>rlogin</code> 的程序连接远程系统。</p>
 
     </div>
 
@@ -288,7 +263,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/blog/tags/SQL/" rel="tag"><i class="fa fa-tag"></i> SQL</a>
+              <a href="/blog/tags/Shell/" rel="tag"><i class="fa fa-tag"></i> Shell</a>
           </div>
 
         
@@ -297,13 +272,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2024/05/13/Effective-SQL-Item-10/" rel="prev" title="Effective SQL Item 10">
-      <i class="fa fa-chevron-left"></i> Effective SQL Item 10
+    <a href="/blog/2024/07/10/Shell-Basic/" rel="prev" title="Shell Basic">
+      <i class="fa fa-chevron-left"></i> Shell Basic
     </a></div>
-      <div class="post-nav-item">
-    <a href="/blog/2024/05/20/pymysql%E7%B1%BB%E5%9E%8B%E9%97%AE%E9%A2%98/" rel="next" title="pymysql类型问题">
-      pymysql类型问题 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -362,7 +334,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Index-seek"><span class="nav-number">2.</span> <span class="nav-text">Index seek</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Index-scan"><span class="nav-number">3.</span> <span class="nav-text">Index scan</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Table-scan"><span class="nav-number">4.</span> <span class="nav-text">Table scan</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">5.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-tree"><span class="nav-number">6.</span> <span class="nav-text">B-tree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%9B%A0%E7%B4%A0"><span class="nav-number">7.</span> <span class="nav-text">其他因素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">8.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Kernel-and-the-Utilities"><span class="nav-number">1.</span> <span class="nav-text">The Kernel and the Utilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Login-Shell"><span class="nav-number">2.</span> <span class="nav-text">The Login Shell</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
