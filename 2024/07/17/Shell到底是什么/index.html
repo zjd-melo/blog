@@ -29,6 +29,9 @@
 <meta property="og:description" content="Shell 到底是什么">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/getty.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/login.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/user_login.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/shell%E8%81%8C%E8%B4%A3.png">
 <meta property="article:published_time" content="2024-07-17T08:51:32.000Z">
 <meta property="article:modified_time" content="2024-07-17T08:51:32.000Z">
 <meta property="article:author" content="朱佳东">
@@ -228,14 +231,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>807</span>
+              <span>3.5k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>3 mins.</span>
             </span>
             <div class="post-description">Shell 到底是什么</div>
 
@@ -259,7 +262,44 @@
 <p>The getty process.<br><img src="/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/getty.png" alt="getty"></p>
 <p>Unix 系统——更准确地说是一个名为 <code>init</code> 的程序——负责每当系统允许用户登录时，就会自动在每个终端端口上启动一个 <code>getty</code> 程序。</p>
 <p><code>getty</code> 本质上是一个设备驱动程序，让登录程序 <code>login</code> 在其指定的终端上显示消息 <code>login:</code> 并等待用户输入内容。</p>
-<p>如果使用类似 <code>ssh</code> 的程序连接系统，就会被分配一个 <code>pseudo-terminal</code> 或者 <code>pseudo-tty</code>，即伪终端，</p>
+<p>如果使用类似 <code>ssh</code> 的程序连接系统，就会被分配一个 <code>pseudo-terminal</code> 或者 <code>pseudo-tty</code>，即伪终端，这就是为什么使用 <code>who</code> 命令能看到 <code>ptty3</code> 或者 <code>pty1</code> 的原因。</p>
+<p>有一个专门的程序（login）读取用户输入的账号和密码，并进行认证，如果认证通过了，会调用登陆程序。</p>
+<p><img src="/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/login.png" alt="login"></p>
+<p>当 <code>login</code> 开始执行时，它会在终端显示 <code>Password: </code> 字符串，并且等待输入，当输入密码并敲回车后，<code>login</code> 程序会使用 <code>/etc/passwd</code> 文件进行相关认证，这个文件包含每个用户的<br>相关信息，比如 <code>login name</code>、<code>home directory</code>、用户登陆后启动的程序等。文件每行最后一列（冒号分隔）就是 <code>login shell</code>，如果未指定，则默认使用 <code>standard shell</code> 即 <code>/bin/sh</code>。</p>
+<p>如果使用终端程序登陆远程主机，那么会调用本地的 <code>ssh</code> 连接服务器上的 <code>sshd</code>，如果是在自己的电脑上打开终端，会自动帮你进行登陆操作，不需要再次输入密码了。</p>
+<p><code>login</code> 程序验证（<code>/etc/shadow</code>）完加密密码之后，它会检查要执行的登陆程序的名称。大多数情况下都是 <code>/bin/sh</code>、<code>/bin/bash</code>。也允许自定义其他登陆程序，或者为了文件所属者管理不需要进行交互的账号的程序 <code>/bin/nologin</code>。</p>
+<p>这样做的目的就是允许任何登陆账号在任何时候登陆系统时运行任何程序，shell 通常是最通用的，但绝不是唯一的选择。</p>
+<p>一旦用户验证成功，<code>login</code> 会退出，将对用户终端连接的控制权交给标准 shell（<code>login shell</code>），然后从内存中消失。</p>
+<p><code>login shell</code> 和 <code>login</code> 程序不是一回事。</p>
+<p><img src="/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/user_login.png" alt="user_login.png"></p>
+<p>正如前面提到的，<code>init</code> 程序运行类似于 <code>getty</code> 的程序来进行网络连接。例如，<code>sshd</code>、<code>telnetd</code> 和 <code>rlogind</code> 分别通过 <code>ssh</code>、<code>telnet</code> 和 <code>rlogin</code> 应答连接请求。这些程序不是直接连接到特定的物理终端或调制解调器线路，<br>而是将用户的 <code>shell</code>(on server) 连接到 <code>pseudo-ttys</code>(on client)。无论您是通过网络、X Windows 屏幕还是通过网络终端连接程序登陆系统，使用 <code>who</code> 查看，都可以看到 <code>pts</code>。</p>
+<h2 id="Typing-Commands-to-the-Shell"><a href="#Typing-Commands-to-the-Shell" class="headerlink" title="Typing Commands to the Shell"></a>Typing Commands to the Shell</h2><p>当 shell 启动后，会终端显示一个 <code>command prompt</code>，通常是一个 <code>$</code> 符合，并等待用户输入命令。每次输入命令并回车后，shell 都会分析输入的内容并且执行相关命令响应用户请求。</p>
+<p>如果我们向 <code>shell</code> 请求调用一个特定的程序，<code>shell</code> 会根据 <code>PATH</code> 变量指定的路径搜索相关目录直到找到为止。当找到对应的程序后，<code>shell</code> 会 <code>clone</code> 一个自己(<code>subshell</code>)，并向请求内核使用找到的程序替代 <code>subshell</code>，然后<br><code>login shell</code> 会”挂起”直到对应的程序执行完毕。内核复制指定程序开始执行程序对应的指令。复制的程序被叫做 <code>process</code>。这样，保存在磁盘文件中的程序和内存中逐行执行的进程就产生了区别。</p>
+<p>如果执行的程序向标准输出写入内容，如果没有重定向或者使用管道，那么这些内容就会出现在终端上。同样如果标准输入没有被重定向或使用管道，那么就会等待用户的输入。</p>
+<p>当对应的程序执行完毕，它就会从内存中消失，并且控制权重新回到 <code>login shell</code>，并给出命令行提示符，等待用户输入。</p>
+<p>重点：shell 仅仅是一个程序而已，他在系统上并没有什么特权，这就意味着任何有专业知识和热情的人都可以创建自己的 <code>shell</code>，登陆后执行自定义的 <code>shell</code> 或者手动切换。这就是为什么现在有那么多的 <code>shell</code> 的原因。</p>
+<h2 id="shell-的职责"><a href="#shell-的职责" class="headerlink" title="shell 的职责"></a>shell 的职责</h2><p><img src="/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/shell%E8%81%8C%E8%B4%A3.png" alt="shell职责"></p>
+<h3 id="Program-Execution"><a href="#Program-Execution" class="headerlink" title="Program Execution"></a>Program Execution</h3><p><code>shell</code> 负责执行你从终端请求的所有程序。</p>
+<p>每次输入命令后，<code>shell</code> 都会分析命令并决定做哪些事，就 <code>shell</code> 而言，每一行都遵循相同的基本格式：<code>program-name arguments</code>。</p>
+<p>The <code>line</code> that is typed to the shell is known more formally as the <code>command line</code>.</p>
+<p><code>shell</code> 扫描 <code>command line</code>，决定要执行程序的名称和传入程序的参数是什么。</p>
+<p><code>shell</code> 使用特殊字符来确定程序的名称和各个参数从哪里开始到哪里结束，这个特殊字符集体叫做 <code>whitespace characters</code> 即空白字符，通常是 <code>space character</code>、 <code>horizontal tab character</code>、<br><code>end-of-line character</code>，通常也叫做 <code>newline character</code>，多次出现的空白字符通常会被忽略。</p>
+<p>比如 <code>echo Unix       is       cool.</code> 最终会输出 <code>Unix is cool.</code>。</p>
+<p>正如之前所说，<code>shell</code> 会搜索相关的目录去找对应的程序，大多数时候是这样的，但是有些命令是 <code>built in shell</code> 的，比如 <code>cd</code>、<code>pwd</code>、<code>echo</code>。在搜索目录之前会先判断是否是 <code>built-in command</code>，如果是则执行执行。</p>
+<p><code>type cd</code> 返回 <code>cd is a shell builtin</code>，<code>type sleep</code> 返回 <code>sleep is /bin/sleep</code>。  </p>
+<p>在 <code>shell</code> 执行命令之前还要做一些其他工作。</p>
+<h3 id="Variable-and-Filename-Substitution"><a href="#Variable-and-Filename-Substitution" class="headerlink" title="Variable and Filename Substitution"></a>Variable and Filename Substitution</h3><p>变量（$符号）和文件名替换。</p>
+<p><code>shell</code> 会在命令行上进行文件名的替换，事实上，<code>shell</code> 在决定执行文件名称和参数之前会扫描命令行并寻找文件名替换字符：<code>*</code>、<code>?</code>、<code>[...]</code>。</p>
+<p>比如：一个目录下有 4 个文件，那么 <code>echo *</code> 命令有几个参数呢？答案是四个，<code>shell</code> 会进行文件名替换。</p>
+<h3 id="I-x2F-O-Redirection"><a href="#I-x2F-O-Redirection" class="headerlink" title="I/O Redirection"></a>I/O Redirection</h3><p><code>shell</code> 还负责处理输入和输出重定向。</p>
+<p>一个很经典的例子：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wc -l users  # 从文件读</span><br><span class="line">wc -l &lt; users # 从标准输入读</span><br></pre></td></tr></tbody></table></figure>
+<p>上面两个命令的输出是不一样的，第一个命令实际上有两个参数 <code>-l</code> 和 <code>users</code>，第二个只有一个参数 <code>-l</code>，没有文件名，此时 wc 会从标准输入获取输入结果。</p>
+<h3 id="Hooking-up-a-Pipeline"><a href="#Hooking-up-a-Pipeline" class="headerlink" title="Hooking up a Pipeline"></a>Hooking up a Pipeline</h3><p>就像 <code>shell</code> 扫描命令行搜索重定向符号一样，他也会搜索管道符号，并把前一个命令的标准输出连接到后一个命令的标准输入上，然后开始执行两个程序。</p>
+<p><code>who | wc -l</code> <code>shell</code> 发现管道符分隔了 <code>who</code> 和 <code>wc</code> 命令，连接前一个命令的标准输出到后一个命令的标准输入上，然后开始同时执行两个命令。当 <code>who</code> 开始执行后，<br>它把结果输出到标准输出上，并不会意识到最终结果不会写到终端而是另一个命令的标准输入上。</p>
+<p>当 <code>wc</code> 开始执行时，它知道没有指定文件名，会从标准输入读取内容，同样也不会意识到输入来自 <code>who</code> 命令的输出而不是标准输入。</p>
+<h3 id="Enviromment-Control"><a href="#Enviromment-Control" class="headerlink" title="Enviromment Control"></a>Enviromment Control</h3><p>环境控制。</p>
+<h3 id="Interpreted-Programming-Language"><a href="#Interpreted-Programming-Language" class="headerlink" title="Interpreted Programming Language"></a>Interpreted Programming Language</h3><p><code>shell</code> 有它自己的编程语言，这个语言被 <code>shell</code> 解释执行。<code>shell</code> 有它自己语法和数据类型等。</p>
 
     </div>
 
@@ -341,7 +381,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Kernel-and-the-Utilities"><span class="nav-number">1.</span> <span class="nav-text">The Kernel and the Utilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Login-Shell"><span class="nav-number">2.</span> <span class="nav-text">The Login Shell</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Kernel-and-the-Utilities"><span class="nav-number">1.</span> <span class="nav-text">The Kernel and the Utilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Login-Shell"><span class="nav-number">2.</span> <span class="nav-text">The Login Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Typing-Commands-to-the-Shell"><span class="nav-number">3.</span> <span class="nav-text">Typing Commands to the Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell-%E7%9A%84%E8%81%8C%E8%B4%A3"><span class="nav-number">4.</span> <span class="nav-text">shell 的职责</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Execution"><span class="nav-number">4.1.</span> <span class="nav-text">Program Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable-and-Filename-Substitution"><span class="nav-number">4.2.</span> <span class="nav-text">Variable and Filename Substitution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-x2F-O-Redirection"><span class="nav-number">4.3.</span> <span class="nav-text">I&#x2F;O Redirection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hooking-up-a-Pipeline"><span class="nav-number">4.4.</span> <span class="nav-text">Hooking up a Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enviromment-Control"><span class="nav-number">4.5.</span> <span class="nav-text">Enviromment Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interpreted-Programming-Language"><span class="nav-number">4.6.</span> <span class="nav-text">Interpreted Programming Language</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -415,13 +455,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">157k</span>
+    <span title="Symbols count total">159k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:23</span>
+    <span title="Reading time total">2:25</span>
 </div>
 
         
