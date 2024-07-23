@@ -231,7 +231,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.5k</span>
+              <span>3.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -300,7 +300,9 @@
 <p>当 <code>wc</code> 开始执行时，它知道没有指定文件名，会从标准输入读取内容，同样也不会意识到输入来自 <code>who</code> 命令的输出而不是标准输入。</p>
 <h3 id="Enviromment-Control"><a href="#Enviromment-Control" class="headerlink" title="Enviromment Control"></a>Enviromment Control</h3><p>环境控制。</p>
 <h3 id="Interpreted-Programming-Language"><a href="#Interpreted-Programming-Language" class="headerlink" title="Interpreted Programming Language"></a>Interpreted Programming Language</h3><p><code>shell</code> 有它自己的编程语言，这个语言被 <code>shell</code> 解释执行。<code>shell</code> 有它自己语法和数据类型等。</p>
-
+<h2 id="tty"><a href="#tty" class="headerlink" title="tty"></a>tty</h2><p><code>tty</code> 命令可以知道当前使用的是哪个字符设备（终端）。</p>
+<p>在终端或者命令行运行的命令会打开当前使用的终端作为其标准输入、标准输出和标准错误。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tty</span><br><span class="line">cat</span><br><span class="line">^z</span><br><span class="line">jobs -l</span><br><span class="line">ll /proc/pid/fd # 三个软连接都会指向当前终端</span><br></pre></td></tr></tbody></table></figure>
     </div>
 
     
@@ -381,7 +383,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Kernel-and-the-Utilities"><span class="nav-number">1.</span> <span class="nav-text">The Kernel and the Utilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Login-Shell"><span class="nav-number">2.</span> <span class="nav-text">The Login Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Typing-Commands-to-the-Shell"><span class="nav-number">3.</span> <span class="nav-text">Typing Commands to the Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell-%E7%9A%84%E8%81%8C%E8%B4%A3"><span class="nav-number">4.</span> <span class="nav-text">shell 的职责</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Execution"><span class="nav-number">4.1.</span> <span class="nav-text">Program Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable-and-Filename-Substitution"><span class="nav-number">4.2.</span> <span class="nav-text">Variable and Filename Substitution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-x2F-O-Redirection"><span class="nav-number">4.3.</span> <span class="nav-text">I&#x2F;O Redirection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hooking-up-a-Pipeline"><span class="nav-number">4.4.</span> <span class="nav-text">Hooking up a Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enviromment-Control"><span class="nav-number">4.5.</span> <span class="nav-text">Enviromment Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interpreted-Programming-Language"><span class="nav-number">4.6.</span> <span class="nav-text">Interpreted Programming Language</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Kernel-and-the-Utilities"><span class="nav-number">1.</span> <span class="nav-text">The Kernel and the Utilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Login-Shell"><span class="nav-number">2.</span> <span class="nav-text">The Login Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Typing-Commands-to-the-Shell"><span class="nav-number">3.</span> <span class="nav-text">Typing Commands to the Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell-%E7%9A%84%E8%81%8C%E8%B4%A3"><span class="nav-number">4.</span> <span class="nav-text">shell 的职责</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Execution"><span class="nav-number">4.1.</span> <span class="nav-text">Program Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable-and-Filename-Substitution"><span class="nav-number">4.2.</span> <span class="nav-text">Variable and Filename Substitution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-x2F-O-Redirection"><span class="nav-number">4.3.</span> <span class="nav-text">I&#x2F;O Redirection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hooking-up-a-Pipeline"><span class="nav-number">4.4.</span> <span class="nav-text">Hooking up a Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enviromment-Control"><span class="nav-number">4.5.</span> <span class="nav-text">Enviromment Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interpreted-Programming-Language"><span class="nav-number">4.6.</span> <span class="nav-text">Interpreted Programming Language</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tty"><span class="nav-number">5.</span> <span class="nav-text">tty</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
