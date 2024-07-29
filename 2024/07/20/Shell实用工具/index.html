@@ -226,14 +226,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.9k</span>
+              <span>4.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>4 mins.</span>
             </span>
             <div class="post-description">Shell tools</div>
 
@@ -360,7 +360,43 @@
 <p><code>paste -d "ab" file1 file2 file3</code> 连接符号用来分隔不同部分，<code>a</code> 连接 <code>file1</code> 和 <code>file2</code>，<code>b</code> 连接 <code>file2</code> 和 <code>file3</code>。如果只指定一个，那么会应用到多个文件中。</p>
 <p>最好用单引号包裹连接符。</p>
 <p><code>-s</code> 选项对单个文件操作，把单个文件中的每一行用连接符连接起来。<code>paste -s -d '+' numbers</code>。</p>
-<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><p>sed is stream ed</p>
+<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><p>sed is stream ed，a program used for editing data in a pipe or command sequence.</p>
+<p>尽管命令和 <code>ed</code> 相似，但不同的是，它不能交互式使用，通用格式 <code>sed command file</code>，<code>command</code> 是 <code>ed</code> 风格的，作用于文件中的每一行，如果未指定文件，则从 <code>STD IN</code> 读入。</p>
+<p><code>sed 's/Unix/UNIX' intro</code>，养成使用单引号包裹命令的习惯。 把文件中每行第一个出现的 <code>Unix</code> 替换为大写，如果要把行中所有出现的匹配都替换掉要使用全局模式（g）。</p>
+<p><code>who | sed 's/ .*$//'</code> 提取用户名。</p>
+<h3 id="n-Option"><a href="#n-Option" class="headerlink" title="-n Option"></a><code>-n Option</code></h3><p>默认情况下 <code>sed</code> 会把输入的每一行都输出到标准输出，不管行是否发生了变化。有时，只想从文件中提出某些行。</p>
+<p><code>sed -n '1,2p' intro</code>，只打印前两行，<code>sed -n '/UNIX/p' intro</code>，打印包含 <code>UNIX</code> 的行。</p>
+<h3 id="deleting-lines"><a href="#deleting-lines" class="headerlink" title="deleting lines"></a>deleting lines</h3><p><code>sed '1,2d' intro</code> 删除前两行。<code>sed /UNIX/d intro</code> 删除包含 <code>UNIX</code> 的行，其实并不是删除，是过滤掉这些行。</p>
+<h2 id="tr"><a href="#tr" class="headerlink" title="tr"></a>tr</h2><p>translate or delete characters，<code>tr from-chars to-chars</code>，<code>from-chars</code> 和 <code>to-chars</code> 是一个或多个或者一些字符的集合，任何出现在 <code>from-chars</code> 中的字符都会被变成对应 <code>to-chars</code> 位置上的字符。</p>
+<p><code>tr e x &lt; intro</code>，<code>tr</code> 的输入必须要从文件中重定向，因为 <code>tr</code> 是从标准输入读取的，结果输出到标准输出，且源文件不变。</p>
+<p><code>cut -d: -f1,6 /etc/passwd | tr : '\t'</code>，如果想使用不可打印字符，可以在 <code>tr</code> 中使用八进制表示。</p>
+<p><code>date | tr ' ' '\12'</code> 。</p>
+<p><code>tr</code>能转换一系列的字符，<code>tr '[a-z]' '[A-Z]' &lt; intro</code> 把文件中所有小写字符都替换为大写字符。</p>
+<p><code>tr '[a-zA-Z]' '[A-Za-z]'</code> 大写变小写，小写变大写。</p>
+<h3 id="s-Option"><a href="#s-Option" class="headerlink" title="-s Option"></a><code>-s</code> Option</h3><p>使用 <code>-s</code> 可以去掉连续多次出现在 <code>to-chars</code> 中的字符，如果用 <code>to-chars</code> 替换后的连续多次重复出现，则使用单个字符替换。</p>
+<p><code>tr -s ':' '\11'</code> 把所有 <code>colons</code> 转变成 <code>tab</code>，使用单个 <code>tab</code> 替换多个，所以输入中一次或多次出现的 <code>colons</code> 会被一个 <code>tab</code> 替代。</p>
+<p><code>this     is     good</code>，<code>tr -s ' ' ' ' &lt; lotsaspaces</code>。</p>
+<h3 id="d-Option"><a href="#d-Option" class="headerlink" title="-d Option"></a><code>-d</code> Option</h3><p><code>tr -d from-chars</code> 删除 <code>from-chars</code> 中的字符。 <code>tr -d ' ' &lt; intro</code> 删除所有空格。</p>
+<p>同样可以使用 <code>sed 's/ //g' intro</code> 来达到相同的效果，解决方式很多，但是这里 <code>tr</code> 更好点，它更小更快。</p>
+<p><code>tr '()' '{}'</code> 把左括号变成左花括号，右括号变成右花括号。</p>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p><code>grep</code> 允许你搜索一个或多个文件来查找指定内容。<code>grep pattern files</code>。</p>
+<p>每个文件的每一行只要包含来匹配模式都会被输出到标准输出。</p>
+<p><code>grep * file</code> 和 <code>grep '*' file</code> 是不同的，<code>grep -i 'the' intro</code>，<code>-i</code> 忽略大小写。</p>
+<p><code>grep 可以接收正则表达式</code>。</p>
+<h3 id="v-Option"><a href="#v-Option" class="headerlink" title="-v Option"></a><code>-v</code> Option</h3><p><code>grep -v 'UNIX' intro</code> ，不包含 <code>UNIX</code> 的行。</p>
+<h3 id="l-Option"><a href="#l-Option" class="headerlink" title="-l Option"></a><code>-l</code> Option</h3><p>有时希望找到哪些文件包含特定的字符，而不对具体行感兴趣。</p>
+<p><code>grep -l 'Move_history' *.c</code> 找到所有包含 <code>Move_history</code> 的文件。</p>
+<h3 id="n-Option-1"><a href="#n-Option-1" class="headerlink" title="-n Option"></a><code>-n</code> Option</h3><p><code>grep -n 'Move_history' testch.c</code> 打印匹配到的行的行号。</p>
+<h2 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h2><p><code>sort names</code> 默认升序排序。</p>
+<p><code>-u</code> 去掉重复的行，早期的 Unix 使用者通常使用另外一个工具实现相同的效果 <code>sort | uniq</code>。</p>
+<p><code>-r</code> 反向排序。 <code>-n</code> 把行当作数值处理在排序。 <code>-k2n</code> <code>k</code> == <code>skip</code>，跳过某个字段，<code>-k2n</code> 意味着从以第二列为排序列，默认使用 <code>\t</code> 分割行，可以使用 <code>-t</code> 指定分隔符。</p>
+<p><code>sort -k3n -t: /etc/passwd</code> sort by user id。</p>
+<h2 id="uniq"><a href="#uniq" class="headerlink" title="uniq"></a>uniq</h2><p><code>uniq in_file out_file</code>，把输入文件中有重复的行去掉，在输出到第二个文件。<code>uniq</code> 只会找相连的行来判断是否重复，所以一般要和 <code>sort</code> 一起使用。</p>
+<p><code>sort names | uniq</code>。</p>
+<p><code>-d</code> 找到重复的行，<code>sort names | uniq -d</code> 列出重复的行。</p>
+<p><code>sort /etc/passwd | cut -f1 -d: | uniq -d</code> 找到重复的用户。</p>
+<p><code>-c</code> 列出重复出现的次数。</p>
+<p><code>tr '[A-Z]' '[a-z]' datafile | sort | uniq -c | head</code> 找出数据文件中出现最多的单词。</p>
 
     </div>
 
@@ -442,7 +478,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Regular-Expressions"><span class="nav-number">1.</span> <span class="nav-text">Regular Expressions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E4%BB%BB%E6%84%8F%E5%8D%95%E5%AD%97%E7%AC%A6-The-Period"><span class="nav-number">1.1.</span> <span class="nav-text">匹配任意单字符 The Period .</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E5%BC%80%E5%A4%B4-%E6%8F%92%E5%85%A5%E7%AC%A6-The-Caret"><span class="nav-number">1.2.</span> <span class="nav-text">匹配开头 插入符 The Caret ^</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E7%BB%93%E5%B0%BE"><span class="nav-number">1.3.</span> <span class="nav-text">匹配结尾 $</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-%E6%9E%84%E9%80%A0%E5%99%A8%E5%8C%B9%E9%85%8D%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">1.4.</span> <span class="nav-text">使用 [] 构造器匹配字符集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-%E5%8C%B9%E9%85%8D%E4%BB%BB%E6%84%8F%E5%A4%9A%E4%B8%AA%E5%AD%97%E7%AC%A6"><span class="nav-number">1.5.</span> <span class="nav-text">使用 * 匹配任意多个字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E7%B2%BE%E7%A1%AE%E6%95%B0%E9%87%8F%E7%9A%84%E5%AD%97%E7%AC%A6"><span class="nav-number">1.6.</span> <span class="nav-text">匹配精确数量的字符 \{ ...\}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E5%8C%B9%E9%85%8D%E5%88%B0%E7%9A%84%E5%AD%97%E7%AC%A6-%E2%80%A6"><span class="nav-number">1.7.</span> <span class="nav-text">保存匹配到的字符 (…)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cut"><span class="nav-number">2.</span> <span class="nav-text">cut</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#paste"><span class="nav-number">3.</span> <span class="nav-text">paste</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed"><span class="nav-number">4.</span> <span class="nav-text">sed</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Regular-Expressions"><span class="nav-number">1.</span> <span class="nav-text">Regular Expressions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E4%BB%BB%E6%84%8F%E5%8D%95%E5%AD%97%E7%AC%A6-The-Period"><span class="nav-number">1.1.</span> <span class="nav-text">匹配任意单字符 The Period .</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E5%BC%80%E5%A4%B4-%E6%8F%92%E5%85%A5%E7%AC%A6-The-Caret"><span class="nav-number">1.2.</span> <span class="nav-text">匹配开头 插入符 The Caret ^</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E7%BB%93%E5%B0%BE"><span class="nav-number">1.3.</span> <span class="nav-text">匹配结尾 $</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-%E6%9E%84%E9%80%A0%E5%99%A8%E5%8C%B9%E9%85%8D%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">1.4.</span> <span class="nav-text">使用 [] 构造器匹配字符集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-%E5%8C%B9%E9%85%8D%E4%BB%BB%E6%84%8F%E5%A4%9A%E4%B8%AA%E5%AD%97%E7%AC%A6"><span class="nav-number">1.5.</span> <span class="nav-text">使用 * 匹配任意多个字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E7%B2%BE%E7%A1%AE%E6%95%B0%E9%87%8F%E7%9A%84%E5%AD%97%E7%AC%A6"><span class="nav-number">1.6.</span> <span class="nav-text">匹配精确数量的字符 \{ ...\}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E5%8C%B9%E9%85%8D%E5%88%B0%E7%9A%84%E5%AD%97%E7%AC%A6-%E2%80%A6"><span class="nav-number">1.7.</span> <span class="nav-text">保存匹配到的字符 (…)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cut"><span class="nav-number">2.</span> <span class="nav-text">cut</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#paste"><span class="nav-number">3.</span> <span class="nav-text">paste</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed"><span class="nav-number">4.</span> <span class="nav-text">sed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#n-Option"><span class="nav-number">4.1.</span> <span class="nav-text">-n Option</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deleting-lines"><span class="nav-number">4.2.</span> <span class="nav-text">deleting lines</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tr"><span class="nav-number">5.</span> <span class="nav-text">tr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#s-Option"><span class="nav-number">5.1.</span> <span class="nav-text">-s Option</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#d-Option"><span class="nav-number">5.2.</span> <span class="nav-text">-d Option</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grep"><span class="nav-number">6.</span> <span class="nav-text">grep</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#v-Option"><span class="nav-number">6.1.</span> <span class="nav-text">-v Option</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#l-Option"><span class="nav-number">6.2.</span> <span class="nav-text">-l Option</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#n-Option-1"><span class="nav-number">6.3.</span> <span class="nav-text">-n Option</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sort"><span class="nav-number">7.</span> <span class="nav-text">sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uniq"><span class="nav-number">8.</span> <span class="nav-text">uniq</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -516,13 +552,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">165k</span>
+    <span title="Symbols count total">167k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:30</span>
+    <span title="Reading time total">2:32</span>
 </div>
 
         
