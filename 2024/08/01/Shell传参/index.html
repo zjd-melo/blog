@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
+              <span>1.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -246,7 +246,33 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>无论什么时候运行 shell 脚本，shell 会自动把参数保存到 <code>1</code>，<code>2</code> 等变量中，后续使用 <code>$1</code>，<code>$2</code> 来引用。</p>
+<p>这些特殊的变量通常叫做 <code>positional parameters</code>，因为这边变量是和位置相关的，在 shell 完成正常的处理（I/O redirection、variable substitution、filename substitution）后被分配。</p>
+<h2 id=""><a href="#" class="headerlink" title="$#"></a><code>$#</code></h2><p><code>$#</code> 保存了传递的变量的个数。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">args</span></span><br><span class="line">echo $1 arguments passed</span><br><span class="line">echo arg 1 = :$1: arg 2 = :$2:  arg 3 = :$3:</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">args a b c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">args a b</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">args <span class="string">"a b c"</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">args x*   <span class="comment"># 以 x 开头的文件</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">args <span class="variable">$my_bin</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="-1"><a href="#-1" class="headerlink" title="$*"></a><code>$*</code></h2><p><code>$*</code> 保存了所有传递的参数。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">args2</span></span><br><span class="line">echo $# args passed</span><br><span class="line">echo they are :$*:</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">args2 a b c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">args2 one       two</span></span><br><span class="line">2 args passed</span><br><span class="line">they are :one two:</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><h3 id="A-Programe-to-look-up-someone-in-the-phone-book"><a href="#A-Programe-to-look-up-someone-in-the-phone-book" class="headerlink" title="A Programe to look up someone in the phone book"></a>A Programe to look up someone in the phone book</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># look up someone in the phone book</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># grep $1 phonebook</span></span></span><br><span class="line">grep "$1" phonebook</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="A-Programe-to-add-someone-in-the-phone-book"><a href="#A-Programe-to-add-someone-in-the-phone-book" class="headerlink" title="A Programe to add someone in the phone book"></a>A Programe to add someone in the phone book</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add</span></span><br><span class="line">echo "$1    $2" &gt;&gt; phonebook</span><br><span class="line">sort -o phonebook phonebook</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add <span class="string">"John Smith"</span> 871-221-4867</span> </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="A-Programe-to-remove-someone-in-the-phone-book"><a href="#A-Programe-to-remove-someone-in-the-phone-book" class="headerlink" title="A Programe to remove someone in the phone book"></a>A Programe to remove someone in the phone book</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">rem</span></span><br><span class="line">grep -v "$1" phonebook &gt; /tmp/phonebook  # 可能会删除多个</span><br><span class="line">mv /tmp/phonebook phonebook</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="n"><a href="#n" class="headerlink" title="${n}"></a><code>${n}</code></h2><p>当使用超过 9 个参数时，怎么引用第 10 个参数呢？<code>$10</code> 会被解析为第一个参数后加个 0，解决方法是 <code>${10}</code>。</p>
+<h2 id="shift"><a href="#shift" class="headerlink" title="shift"></a>shift</h2><p><code>shift</code> 允许左移位置参数，使用 <code>shift</code> 会把原来保存在 <code>$2</code> 的参数放到 <code>$1</code> 中，<code>$3</code> –&gt; <code>$2</code>，以此类推，而原来的 <code>$1</code> 消失了。</p>
+<p>执行此命令时 <code>$#</code> 也会减1。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">tshift</span></span><br><span class="line">echo $# $*</span><br><span class="line">shift </span><br><span class="line">echo $# $*</span><br><span class="line">shift </span><br><span class="line">echo $# $*</span><br><span class="line">shift </span><br><span class="line">echo $# $*</span><br><span class="line">shift </span><br><span class="line">echo $# $*</span><br><span class="line">shift </span><br><span class="line">echo $# $*</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">./tshift a b c d e</span><br><span class="line">5 a b c d e</span><br><span class="line">4 b c d e</span><br><span class="line">3 c d e</span><br><span class="line">2 d e</span><br><span class="line">1 e</span><br><span class="line">0</span><br></pre></td></tr></tbody></table></figure>
+
+<p>也可以一次移动多个，<code>shift 3</code> 就相当于使用了三次 <code>shift</code>。</p>
+
     </div>
 
     
@@ -327,6 +353,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">$#</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#-1"><span class="nav-number">3.</span> <span class="nav-text">$*</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#demo"><span class="nav-number">4.</span> <span class="nav-text">demo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Programe-to-look-up-someone-in-the-phone-book"><span class="nav-number">4.1.</span> <span class="nav-text">A Programe to look up someone in the phone book</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Programe-to-add-someone-in-the-phone-book"><span class="nav-number">4.2.</span> <span class="nav-text">A Programe to add someone in the phone book</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Programe-to-remove-someone-in-the-phone-book"><span class="nav-number">4.3.</span> <span class="nav-text">A Programe to remove someone in the phone book</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n"><span class="nav-number">5.</span> <span class="nav-text">${n}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shift"><span class="nav-number">6.</span> <span class="nav-text">shift</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -400,13 +427,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">175k</span>
+    <span title="Symbols count total">176k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:39</span>
+    <span title="Reading time total">2:40</span>
 </div>
 
         
