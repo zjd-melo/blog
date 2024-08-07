@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Shell loop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell循环">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/08/04/Shell%E5%BE%AA%E7%8E%AF/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="Shell loop">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-04T04:41:29.000Z">
+<meta property="article:modified_time" content="2024-08-04T04:41:29.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="Shell">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/08/04/Shell%E5%BE%AA%E7%8E%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>Shell循环 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">15</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">59</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/08/04/Shell%E5%BE%AA%E7%8E%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shell循环
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-08-04 12:41:29" itemprop="dateCreated datePublished" datetime="2024-08-04T12:41:29+08:00">2024-08-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+            <div class="post-description">Shell loop</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="The-for-Command"><a href="#The-for-Command" class="headerlink" title="The for Command"></a>The for Command</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for var in word1 word2</span><br><span class="line">do</span><br><span class="line">    command </span><br><span class="line">    command </span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<p>shell 会进行文件替换。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for f in *</span><br><span class="line">do</span><br><span class="line">    run $f</span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="The-Variable"><a href="#The-Variable" class="headerlink" title="The $@ Variable"></a>The <code>$@</code> Variable</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">args</span></span><br><span class="line">echo Number of args passed is $#</span><br><span class="line"></span><br><span class="line">for arg in $*</span><br><span class="line">do</span><br><span class="line">    echo $arg</span><br><span class="line">done </span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./args a b c</span><br><span class="line">./args 'a b' c  # 使用 $* 时，shell 会把 a b c 传给 for loop，导致执行三次</span><br></pre></td></tr></tbody></table></figure>
+
+<p>shell 使用 <code>$1 $2 ...</code> 替换 <code>$*</code>，而使用 <code>$@</code> 时，shell 会使用 <code>"$1" "$2" ...</code> 替换。不同之处就是双引号。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo Number of args passed is $#</span><br><span class="line">for arg in "$@"</span><br><span class="line">do </span><br><span class="line">    echo $arg</span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="The-for-without-the-list"><a href="#The-for-without-the-list" class="headerlink" title="The for without the list"></a>The for without the list</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for arg </span><br><span class="line">do</span><br><span class="line">    echo $arg</span><br><span class="line">done </span><br></pre></td></tr></tbody></table></figure>
+<p>如果省略 <code>in list</code>，那么 shell 会命令行的参数替换到这里，类似 <code>for arg in "$@"</code>。</p>
+<h2 id="The-while-Command"><a href="#The-while-Command" class="headerlink" title="The while Command"></a>The <code>while</code> Command</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">while commandt</span><br><span class="line">do</span><br><span class="line">    command    </span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">i=1</span><br><span class="line">while [ "$i" -le 5 ]</span><br><span class="line">do</span><br><span class="line">    echo $i</span><br><span class="line">    i=$((i + 1)) </span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>while</code> 循环一般和 <code>shift</code> 配合使用来处理未知数量的命令行参数。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">while [ "$#" -ne 0 ]</span><br><span class="line">do</span><br><span class="line">    echo "$1"</span><br><span class="line">    shift   </span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="The-until-Command"><a href="#The-until-Command" class="headerlink" title="The until Command"></a>The <code>until</code> Command</h2><p><code>while</code> 命令是当判断为真是继续执行，而 <code>until</code> 则相反，如果条件为假则执行，为真不执行。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">until [ command ]</span><br><span class="line">do</span><br><span class="line">    command    </span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认情况下，当 <code>log off</code> 系统时，你启动的程序都会退出，如果想要程序继续执行则可以使用 <code>nohup</code>。</p>
+<h2 id="More-on-loops"><a href="#More-on-loops" class="headerlink" title="More on loops"></a>More on loops</h2><h3 id="Breaking-Out-of-a-Loop"><a href="#Breaking-Out-of-a-Loop" class="headerlink" title="Breaking Out of a Loop"></a>Breaking Out of a Loop</h3><p><code>break</code> 退出循环，<code>break n</code>，退出最近的 n 次循环。</p>
+<h3 id="Skipping-the-Remaining-Commands-in-a-Loop"><a href="#Skipping-the-Remaining-Commands-in-a-Loop" class="headerlink" title="Skipping the Remaining Commands in a Loop"></a>Skipping the Remaining Commands in a Loop</h3><p><code>continue</code> <code>continue n</code>。</p>
+<h3 id="Executing-a-Loop-in-the-Background"><a href="#Executing-a-Loop-in-the-Background" class="headerlink" title="Executing a Loop in the Background"></a>Executing a Loop in the Background</h3><p>可以使用 <code>&amp;</code> 符号把整个循环放到后台执行。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="keyword">for</span> file <span class="keyword">in</span> *</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="keyword">do</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">run <span class="variable">$file</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="keyword">done</span> &amp;</span></span><br></pre></td></tr></tbody></table></figure>
+<p>shell 把循环当作命令处理，所以可以在结构结束时（done、fi、esac）执行重定向、后台执行甚至使用管道。</p>
+<h3 id="I-x2F-O-Redirection-on-a-Loop"><a href="#I-x2F-O-Redirection-on-a-Loop" class="headerlink" title="I/O Redirection on a Loop"></a>I/O Redirection on a Loop</h3><p>可以在循环上执行重定向操作，作用于循环体的输入重定向会应用到循环体中的所有命令，输出重定向也是如此，<code>block redirection</code>。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="keyword">for</span> i <span class="keyword">in</span> 1 2 3 4</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="keyword">do</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">    <span class="built_in">echo</span> <span class="variable">$i</span>   <span class="comment"># 每个命令都受到重定向的影响</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="keyword">done</span> &gt; loopout</span>  </span><br></pre></td></tr></tbody></table></figure>
+
+<p>单个语句可以覆盖块重定向（block redirection），就像 shell 程序中的任何其他语句可以显式从指定源读取或将输出发送到指定目标一样。</p>
+<p>要强制输入或输出来自或去往终端，使用 <code>/dev/tty</code>，它始终指您的终端程序，无论使用的是 Mac、Linux 还是 Unix 系统。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for file</span><br><span class="line">do</span><br><span class="line">    echo "processing file $file" &gt; /dev/tty</span><br><span class="line">    # other command</span><br><span class="line">done &gt; output</span><br></pre></td></tr></tbody></table></figure>
+
+<p>同样可以重定向循环的标准错误输出，在 <code>done</code> 后直接输入 <code>2&gt; file</code>。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">while [ "$endofdata" -ne TRUE ]</span><br><span class="line">do</span><br><span class="line">    :</span><br><span class="line">done  2&gt; errors # 标准错误输出重定向</span><br></pre></td></tr></tbody></table></figure>
+<p>循环体中所有命令的标准错误输出都被重定向到 <code>errors</code> 文件。</p>
+<p><code>2&gt;</code> 格式的一种变体通常用于确保错误消息到达终端，即使脚本可能将其输出重定向到文件或管道：</p>
+<p><code>echo "Error: no file" 1&gt;&amp;2</code>，默认情况下，<code>echo</code> 将其输出发送到标准输出（文件描述符 1），而文件描述符 2 保留标准错误，默认情况下不会在文件重定向或管道上重定向。因此，上面的符号意味着来自 <code>echo</code> 的错误消息应该将其 <code>file #1</code> 输出重定向到<code>file #2</code>，即标准错误。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for i in "once"</span><br><span class="line">do </span><br><span class="line">    echo "stdout msg"</span><br><span class="line">    echo "Error msg" 1&gt;&amp;2</span><br><span class="line">done &gt; /dev/null</span><br></pre></td></tr></tbody></table></figure>
+<p>即使整个循环体的标准输出都重定向了，里面的单个命令可以覆盖这种行为，第二个命令，把标准输出重定向到标准错误了。或者这样理解，标准输出被重定向了，但是第二个命令又把标准输出重定向到标准错误了。</p>
+<h3 id="Piping-Data-into-and-out-of-a-Loop"><a href="#Piping-Data-into-and-out-of-a-Loop" class="headerlink" title="Piping Data into and out of a Loop"></a>Piping Data into and out of a Loop</h3><p>一个命令的输出可以使用管道传递给一个循环体，而一个循环体的输出也可以通过管道传递给别的命令。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="keyword">for</span> i <span class="keyword">in</span> 1 2 3 4</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="keyword">do</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">  <span class="built_in">echo</span> <span class="variable">$i</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="keyword">done</span> | <span class="built_in">wc</span> -l</span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="Typing-a-Loop-on-One-Line"><a href="#Typing-a-Loop-on-One-Line" class="headerlink" title="Typing a Loop on One Line"></a>Typing a Loop on One Line</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for i in 1 2 3 4</span><br><span class="line">do</span><br><span class="line">    echo $i</span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+<p>可以改写为一行 <code>for i in 1 2 3 4; do echo $i; done</code>。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if [condition]; then</span><br><span class="line">    commad</span><br><span class="line">fi</span><br></pre></td></tr></tbody></table></figure>
+
+<p>推荐这种形式写 shell。</p>
+<h2 id="The-getopts-Command"><a href="#The-getopts-Command" class="headerlink" title="The getopts Command"></a>The <code>getopts</code> Command</h2><p>给 shell 脚本添加 <code>options</code>，当开始写这种程序时，会发现非常会变得特别复杂。</p>
+<p>但是 shell 提供了内置的叫做 <code>getopts</code> 的命令，让命令行参数变得更加容易。</p>
+<p><code>getopts options variable</code>，<code>options</code> 是一些字符，比如 <code>ab:c</code>，意味着 <code>-a</code> 和 <code>-c</code> 是合法的选项，而 <code>-b</code> 则需要一个参数。</p>
+<p>然而，<code>getopts</code> 命令被设计为在循环内执行，因为它可以轻松地执行每个用户指定选项所需的任何操作。每次循环时，<code>getopts</code> 都会检查下一个命令行参数，并通过检查该参数是否以减号开头并后跟指定为选项的任何字母来确定它是否是有效选项。如果是，<code>getopts</code> 将匹配的选项字母存储在指定变量内并返回零退出状态。</p>
+<p>如果减号后面的字母未在选项中列出，则 <code>getopts</code> 在以零退出状态返回之前会在变量内存储一个问号。它还将有关用户指定的错误参数的错误消息写入标准错误。</p>
+<p>如果命令行上没有留下更多参数，或者当前参数不以减号开头，则 <code>getopts</code> 返回非零退出状态，允许脚本处理任何后续参数。</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>比如，想写一个脚本让它能识别 <code>-a</code> <code>-i</code> <code>-r</code> 选项，那么命令就像这样 <code>getopts "air" option</code>，这里第一个参数 <code>air</code> 指定了三个可接收的命令行标志(command flags) <code>-a -i -r</code>，<code>option</code> 是 <code>getopts</code> 将用来存储遇到的每个匹配值的变量的名称。</p>
+<p><code>group/clustered options</code> <code>foo -a -i -r</code> == <code>foo -air</code>。</p>
+<p>通过 <code>:</code> 告诉 <code>getopts</code> 某个选项需要参数。如果 <code>getopts</code> 在需要参数的选项后找不到参数，它会在变量中存储一个问号，并向标准错误输出一条错误消息。否则，它将变量中的字符和用户指定的参数存储在名为 <code>OPTARG</code> 的特殊变量中。</p>
+<p>关于 <code>getopts</code> 的最后一点：另一个称为 <code>OPTIND</code> 的特殊变量最初设置为 1，并且每次 <code>getopts</code> 返回时都会更新以反映要处理的下一个命令行参数的编号。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Wait until a specified user logs on</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"></span><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">setup default values</span></span><br><span class="line">mailopt=FALSE</span><br><span class="line">interval=60</span><br><span class="line"></span><br><span class="line">while getopts mt: option</span><br><span class="line">do</span><br><span class="line">    case "$option"</span><br><span class="line">    in</span><br><span class="line">        m ) mailopt=TRUE;;</span><br><span class="line">        t ) interval=$OPTARG;;</span><br><span class="line">       \? ) echo "Usage: waitfor [-m] [-t n] user"</span><br><span class="line">            echo "       -m means to be informed by mail"</span><br><span class="line">            echo "       -t means check every n secs"</span><br><span class="line">            exit 1;;</span><br><span class="line">    esac</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">if [ "$OPTIND" -gt "$#" ]</span><br><span class="line">then</span><br><span class="line">    echo "Missing user name!"</span><br><span class="line">    exit 2</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">shiftcount=$((OPTIND - 1))</span><br><span class="line">shift $shiftcount</span><br><span class="line">user=$1</span><br><span class="line"></span><br><span class="line">until who | grep "^$user " &gt; /dev/null</span><br><span class="line">do</span><br><span class="line">   sleep $interval</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">if [ "$mailopt" = FALSE ]</span><br><span class="line">then</span><br><span class="line">    echo "$user has logged on"</span><br><span class="line">else</span><br><span class="line">    runner=$(who am i | cut -c1-8)</span><br><span class="line">    echo "$user has logged on | mail $runner"</span><br><span class="line">fi</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/Shell/" rel="tag"><i class="fa fa-tag"></i> Shell</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/08/03/Shell%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD/" rel="prev" title="Shell条件判断">
+      <i class="fa fa-chevron-left"></i> Shell条件判断
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-for-Command"><span class="nav-number">1.</span> <span class="nav-text">The for Command</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Variable"><span class="nav-number">1.1.</span> <span class="nav-text">The $@ Variable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-for-without-the-list"><span class="nav-number">1.2.</span> <span class="nav-text">The for without the list</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-while-Command"><span class="nav-number">2.</span> <span class="nav-text">The while Command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-until-Command"><span class="nav-number">3.</span> <span class="nav-text">The until Command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More-on-loops"><span class="nav-number">4.</span> <span class="nav-text">More on loops</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Breaking-Out-of-a-Loop"><span class="nav-number">4.1.</span> <span class="nav-text">Breaking Out of a Loop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Skipping-the-Remaining-Commands-in-a-Loop"><span class="nav-number">4.2.</span> <span class="nav-text">Skipping the Remaining Commands in a Loop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executing-a-Loop-in-the-Background"><span class="nav-number">4.3.</span> <span class="nav-text">Executing a Loop in the Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-x2F-O-Redirection-on-a-Loop"><span class="nav-number">4.4.</span> <span class="nav-text">I&#x2F;O Redirection on a Loop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Piping-Data-into-and-out-of-a-Loop"><span class="nav-number">4.5.</span> <span class="nav-text">Piping Data into and out of a Loop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Typing-a-Loop-on-One-Line"><span class="nav-number">4.6.</span> <span class="nav-text">Typing a Loop on One Line</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-getopts-Command"><span class="nav-number">5.</span> <span class="nav-text">The getopts Command</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">5.1.</span> <span class="nav-text">例子</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">186k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:49</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
