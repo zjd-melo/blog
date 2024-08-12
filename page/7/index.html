@@ -21,33 +21,30 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Data Model Design Understand Why Storing Calculated Data Is Usually a Bad Idea">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Effective SQL Item 5">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/04/26/Effective-SQL-Item-5/index.html">
+  <meta name="description" content="melon">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dying Memory">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/page/7/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="Data Model Design Understand Why Storing Calculated Data Is Usually a Bad Idea">
+<meta property="og:description" content="melon">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-04-26T01:52:15.000Z">
-<meta property="article:modified_time" content="2024-04-26T01:52:15.000Z">
 <meta property="article:author" content="朱佳东">
-<meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/04/26/Effective-SQL-Item-5/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/page/7/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
+    isHome : true,
+    isPost : false,
     lang   : 'zh_CN'
   };
 </script>
 
-  <title>Effective SQL Item 5 | Dying Memory</title>
+  <title>Dying Memory</title>
   
 
 
@@ -171,14 +168,13 @@
         <div class="content-wrap">
           
 
-          <div class="content post posts-expand">
+          <div class="content index posts-expand">
             
-
-    
+      
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/04/26/Effective-SQL-Item-5/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/05/09/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -190,9 +186,10 @@
       <meta itemprop="name" content="Dying Memory">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Effective SQL Item 5
-        </h1>
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blog/2023/05/09/hello-world/" class="post-title-link" itemprop="url">hello world</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -201,32 +198,16 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2024-04-26 09:52:15" itemprop="dateCreated datePublished" datetime="2024-04-26T09:52:15+08:00">2024-04-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/DataBase/" itemprop="url" rel="index"><span itemprop="name">DataBase</span></a>
-                </span>
+              <time title="Created: 2023-05-09 17:10:49" itemprop="dateCreated datePublished" datetime="2023-05-09T17:10:49+08:00">2023-05-09</time>
             </span>
 
-          
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="Symbols count in article">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.1k</span>
+              <span>30</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -235,7 +216,6 @@
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               <span>1 mins.</span>
             </span>
-            <div class="post-description">Data Model Design Understand Why Storing Calculated Data Is Usually a Bad Idea</div>
 
         </div>
       </header>
@@ -246,55 +226,34 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>You might sometimes <strong>be tempted to</strong> store calculated data, especially when the calculation depends on data in a related table.</p>
-<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>订单表中有个字段来是有详细订单和其他表计算而来的字段，这种设计看上去很好，我们每次查总额时不需要关联其他子表进行计算了。</p>
-<p>calculated fields 在数据仓库中可能没什么问题，但是在 OLTP 数据库中会带来很大的性能问题。并且这种设计很难维护数据完整性，子表的每次增、删、改都需要重新计算该字段并且反映到主表上。</p>
-<h2 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h2><p>好消息是现代数据库系统允许你在定义子表时写触发器来计算这种字段，但是触发器是很重的并且编写困难。</p>
-<h2 id="Potentially-比触发器更好选择"><a href="#Potentially-比触发器更好选择" class="headerlink" title="Potentially 比触发器更好选择"></a>Potentially 比触发器更好选择</h2><p>现代的某些数据库系统允许你在定义表的同时定义计算字段，为什么说这种做法比触发器好呢，在定义表时定义计算字段比触发器来的简单，减少了很多复杂性（complex code of triggers）。</p>
-<p>如果计算字段来源于同一张表可以使用表达式直接定义，如果需要关联表的字段则需要定一个函数来处理，</p>
-<p>Note that because the function depends on data from another table, it is <strong>nondeterministic</strong>, so you cannot build an index on the calculated field.</p>
-<h2 id="Deterministic-versus-Nondeterministic"><a href="#Deterministic-versus-Nondeterministic" class="headerlink" title="Deterministic versus Nondeterministic"></a>Deterministic versus Nondeterministic</h2><p>对于相同的输入，确定性函数每次调用都会返回相同的结果，非确定性函数返回结果会不一样。</p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>使用非确定性函数作为计算列/虚拟列是一个很不好的设计，这个列并不能像其他列一样持久化存储，并且不能对它构建索引（有些数据库可以），也会遇到很多性能问题。</p>
-<h2 id="Things-to-Remember"><a href="#Things-to-Remember" class="headerlink" title="Things to Remember"></a>Things to Remember</h2><ul>
-<li>很多数据库系统允许在建表的时候使用求值字段，必须考虑性能问题，尤其是使用了非确定性函数的时候</li>
-<li>可以把求值字段当作普通列存储，然后使用触发器去维护，但是触发器代码很难维护</li>
-<li>求值字段会给系统带来额外开销，只有在明确这样做的收益超过开销时才能这样做</li>
-<li>大多数时候，会希望在计算列上创建索引，以获得一些好处，以换取增加的存储空间和较慢的更新速度</li>
-<li>Using views to define calculations is often a desirable alternative to actually storing calculations on a table for cases where indexing does not apply</li>
-</ul>
-
+          <p>how this site was built.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/blog/2023/05/09/hello-world/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
     </div>
 
     
     
     
-
       <footer class="post-footer">
-          
-          <div class="post-tags">
-              <a href="/blog/tags/SQL/" rel="tag"><i class="fa fa-tag"></i> SQL</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/blog/2024/04/25/Effective-SQL-Item-4/" rel="prev" title="Effective SQL Item 4">
-      <i class="fa fa-chevron-left"></i> Effective SQL Item 4
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/blog/2024/04/28/Effective-SQL-Item-6/" rel="next" title="Effective SQL Item 6">
-      Effective SQL Item 6 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
+        <div class="post-eof"></div>
       </footer>
-    
   </article>
   
   
   
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/blog/page/6/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/6/">6</a><span class="page-number current">7</span>
+  </nav>
 
 
 
@@ -346,7 +305,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">触发器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Potentially-%E6%AF%94%E8%A7%A6%E5%8F%91%E5%99%A8%E6%9B%B4%E5%A5%BD%E9%80%89%E6%8B%A9"><span class="nav-number">4.</span> <span class="nav-text">Potentially 比触发器更好选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deterministic-versus-Nondeterministic"><span class="nav-number">5.</span> <span class="nav-text">Deterministic versus Nondeterministic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">6.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Things-to-Remember"><span class="nav-number">7.</span> <span class="nav-text">Things to Remember</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
