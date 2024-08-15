@@ -21,20 +21,20 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Shell 参数">
+  <meta name="description" content="Shell 非标准特性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Shell 参数">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/08/10/Shell-%E5%8F%82%E6%95%B0/index.html">
+<meta property="og:title" content="Shell 非标准特性">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/08/11/Shell-%E9%9D%9E%E6%A0%87%E5%87%86%E7%89%B9%E6%80%A7/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="Shell 参数">
+<meta property="og:description" content="Shell 非标准特性">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-08-10T05:52:06.000Z">
-<meta property="article:modified_time" content="2024-08-10T05:52:06.000Z">
+<meta property="article:published_time" content="2024-08-11T05:15:25.000Z">
+<meta property="article:modified_time" content="2024-08-11T05:15:25.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="Shell">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/08/10/Shell-%E5%8F%82%E6%95%B0/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/08/11/Shell-%E9%9D%9E%E6%A0%87%E5%87%86%E7%89%B9%E6%80%A7/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>Shell 参数 | Dying Memory</title>
+  <title>Shell 非标准特性 | Dying Memory</title>
   
 
 
@@ -178,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/08/10/Shell-%E5%8F%82%E6%95%B0/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/08/11/Shell-%E9%9D%9E%E6%A0%87%E5%87%86%E7%89%B9%E6%80%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -191,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Shell 参数
+          Shell 非标准特性
         </h1>
 
         <div class="post-meta">
@@ -201,7 +201,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2024-08-10 13:52:06" itemprop="dateCreated datePublished" datetime="2024-08-10T13:52:06+08:00">2024-08-10</time>
+              <time title="Created: 2024-08-11 13:15:25" itemprop="dateCreated datePublished" datetime="2024-08-11T13:15:25+08:00">2024-08-11</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,16 +226,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1k</span>
+              <span>2.7k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
-            <div class="post-description">Shell 参数</div>
+            <div class="post-description">Shell 非标准特性</div>
 
         </div>
       </header>
@@ -246,28 +246,42 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>从技术上讲，参数包括传递给程序的参数（位置参数）、特殊的 shell 变量（例如 $# 和 $?）以及普通变量（也称为关键字参数）。位置参数不能直接赋值，但可以使用 set 命令重新赋值。</p>
-</blockquote>
-<h2 id="参数替换"><a href="#参数替换" class="headerlink" title="参数替换"></a>参数替换</h2><p>参数值替换最简单形式就是使用 <code>$</code>，比如 <code>$i</code> 或者 <code>$9</code>。</p>
-<h3 id="parameter"><a href="#parameter" class="headerlink" title="${parameter}"></a>${parameter}</h3><p><code>mv $file ${file}x</code></p>
-<h3 id="parameter-value"><a href="#parameter-value" class="headerlink" title="${parameter:-value}"></a>${parameter:-value}</h3><p>如果 <code>parameter</code> 为空则使用 <code>value</code> <code>echo ${nosuch:-hello}</code>。</p>
-<p><code>echo Using editor ${EDITOR:-/bin/vi}</code>。</p>
-<h3 id="parameter-x3D-value"><a href="#parameter-x3D-value" class="headerlink" title="${parameter:=value}"></a>${parameter:=value}</h3><p>和上面的一样，但是在 <code>parameter</code> 为空时，会使用 <code>value</code> 给它赋值。</p>
-<p>不能给位置参数使用这种方式赋值，即 <code>parameter</code> 不能是数字。</p>
-<p>上面的命令不能单独使用，因为 shell 在替换后，会立马执行命令，会报错。</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">PHONEBOOK=</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">{PHONEBOOK:=<span class="variable">$HOME</span>/phonebook}</span></span><br><span class="line">sh: /users/steve/phonebook: cannot execute</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">: {PHONEBOOK:=<span class="variable">$HOME</span>/phonebook}</span></span><br></pre></td></tr></tbody></table></figure>
+        <h2 id="使用正确的-shell"><a href="#使用正确的-shell" class="headerlink" title="使用正确的 shell"></a>使用正确的 shell</h2><p>事实证明，所有主要的交互式 shell 都允许指定应该使用哪个 shell（实际上是 Unix 或 Linux 发行版中包含的数千个程序）来运行该文件。如果文件第一行的前两个字符是 <code>#!</code>，则该行的其余部分指定该文件的解释器。因此 <code>#!/bin/ksh</code> 指定 <code>Korn shell</code>，<code>#!/bin/bash</code> 指定 <code>Bash</code>。</p>
+<p>如果使用特定于某个 shell 的构造或符号约定，则可以使用此功能强制该 shell 运行您的程序，从而避免兼容性问题。由于可以指定所需的任何程序，因此以 <code>#!/usr/bin/perl</code> 开头的 <code>Perl</code> 程序会强制 <code>shell</code> 调用 <code>/usr/bin/perl</code> 来解释文件中的行。然而，必须谨慎使用此功能，因为许多程序（例如 Perl）并不驻留在每个 Unix 系统上的标准位置。此外，<code>POSIX</code> 标准并未指定这一点，尽管它存在于每个现代 <code>shell</code> 中，甚至在许多 <code>Unix</code> 版本的操作系统级别上实现。</p>
+<p>最常见的是，会看到系统 shell 程序使用此表示法来确保使用 <code>Bourne Shell</code>，无论用户的登录 shell 是什么，都以 <code>#!/bin/sh</code> 开头。</p>
+<h2 id="ENV-file"><a href="#ENV-file" class="headerlink" title="ENV file"></a>ENV file</h2><p>当启动 shell 时，它所做的第一件事就是在环境中查找名为 <code>ENV</code> 的变量。如果找到它并且它不为空，则将执行 <code>ENV</code> 指定的文件，就像登录时执行 <code>.profile</code> 一样。<code>ENV</code> 文件包含用于设置 shell 环境的命令。</p>
+<p>如果要使用 <code>ENV file</code>，应该在 <code>.profile</code> 中设置并 <code>export</code> 这个变量，<code>export ENV=$HOME/.alias</code>。</p>
+<h2 id="Command-line-Editing"><a href="#Command-line-Editing" class="headerlink" title="Command line Editing"></a>Command line Editing</h2><p><code>set -o vi</code>，可以在命令行中使用 <code>vi</code> 的指令。<code>ESC</code> 进入 <code>vi</code> 模式，<code>$</code>到行尾，<code>0</code> 到行首，<code>w</code> <code>b</code> <code>2w</code> 在单词间快速移动。</p>
+<h2 id="alias"><a href="#alias" class="headerlink" title="alias"></a>alias</h2><p>别名是 shell 提供的速记符号，用于允许自定义命令。 shell 保留一个别名列表，在任何其他替换发生之前输入命令时将搜索该列表。如果命令行的第一个单词是别名，则它将被别名的文本替换。</p>
+<p><code>alias name='string'</code>，<code>alias ll='ls -l'</code></p>
+<p><code>echo ${PWD##*/}</code> 获取当前目录名称，<code>##*/</code> 这是一种参数扩展语法，这部分是一个参数扩展（Parameter Expansion）的用法，其中 <code>##*/</code> 是模式匹配操作符。<code>#</code>：从字符串的开头删除匹配的模式（最短匹配）。<code>##</code>：从字符串的开头删除匹配的模式（最长匹配）。<code>*/</code>：匹配路径中的任意字符直到最后一个斜杠 <code>/</code>。</p>
+<p>定义别名时要注意引号的使用。</p>
+<p><code>alias dir="echo ${PWD##*/}"</code>，其实就相当于 <code>alias dir="echo somedir"</code>，在切换目录后，别名不起左右，这里应该使用单引号。</p>
+<p>如果在定义别名时，值后包含一个引号，shell 会检查别名后的内容，尝试进行 别名替换。</p>
+<p><code>alias nohup="/bin/nohup "</code>，<code>nohup ll</code>，shell 会尝试别名替换 <code>ll</code>。</p>
+<p>Quoting a command or prefacing it with a backslash prevents alias substitution。</p>
+<h3 id="removing-aliases"><a href="#removing-aliases" class="headerlink" title="removing aliases"></a>removing aliases</h3><p><code>unalias name</code>，<code>unalias –a</code> 移除所以别名。</p>
+<h2 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h2><p>略</p>
+<h2 id="Job-Control"><a href="#Job-Control" class="headerlink" title="Job Control"></a>Job Control</h2><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sleep</span> 100 &amp;</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sleep</span> 200 &amp;</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sleep</span> 300 &amp;</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">jobs</span> -l</span></span><br><span class="line">[1]   Running                 sleep 100 &amp;</span><br><span class="line">[2]-  Running                 sleep 200 &amp;</span><br><span class="line">[3]+  Running                 sleep 300 &amp;</span><br></pre></td></tr></tbody></table></figure>
+<p>最近放到后台执行的后面有个 <code>+</code>，其次是 <code>-</code>，某些内置命令可以利用这些符号。</p>
+<p>比如 <code>kill</code>，the argument to it can be a process ID or a percent sign (%) followed by a job number, a + (current job), a – (previous job), or another % (also current job)</p>
+<h3 id="Stopped-Jobs-and-the-fg-and-bg-Commands"><a href="#Stopped-Jobs-and-the-fg-and-bg-Commands" class="headerlink" title="Stopped Jobs and the fg and bg Commands"></a>Stopped Jobs and the fg and bg Commands</h3><p>如果一个任务在前台运行可以使用 <code>ctrl+z</code>，停止这个任务，并且会成为当前作业，即有个 <code>+</code> 号。</p>
+<p>要让它继续执行的话可以使用 <code>fg</code> 和 <code>bg</code>：</p>
+<ol>
+<li>fg: The fg command causes the current job to resume execution in the foreground</li>
+<li>bg: The bg causes the current job to resume execution in the background</li>
+</ol>
+<p>都是针对 current job 即有 <code>+</code> 的进程。也可以通过 job number、命令的前几个字符、+、-、% 等来使用。</p>
+<p>后台运行的程序输出默认到终端，有时会干扰工作，可以设置 <code>stty tostop</code>，当后台程序要输出东西时立马停止，并打印一些内容到终端，此时可以使用 <code>fg</code> 查看输出内容。</p>
+<h2 id="Order-of-search"><a href="#Order-of-search" class="headerlink" title="Order of search"></a>Order of search</h2><ol>
+<li>The shell first checks to see whether the command is a reserved word (such as for or do).</li>
+<li>If it’s not a reserved word and is not quoted, the shell next checks its alias list, and if it finds a match, performs the substitution. If the alias definition ends in a space, it also attempts alias substitution on the next word. The final result is then checked against the reserved word list, and if it’s not a reserved word, the shell proceeds to step 3.</li>
+<li>The shell checks the command against its function list and executes the eponymous function if found.</li>
+<li>The shell checks to see whether the command is a built-in command (such as cd and pwd).</li>
+<li>Finally, the shell searches the PATH to locate the command.</li>
+<li>If the command still isn’t found, a “command not found” error message is issued.</li>
+</ol>
 
-<h3 id="parameter-value-1"><a href="#parameter-value-1" class="headerlink" title="${parameter:?value}"></a>${parameter:?value}</h3><p>如果 <code>parameter</code> 不为空，则 shell 使用 <code>parameter</code> 的值替换，如果为空，那么 shell 会把 <code>value</code> 写到标准错误然后退出，如果是 login shell，并不会真的退出。</p>
-<p>如果 value 为空，那么 shell 使用默认值输出到标准错误 <code>prog: parameter: parameter null or not set</code>。</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">PHONEBOOK=</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">: <span class="variable">${PHONEBOOK:?"No PHONEBOOK file"}</span></span></span><br></pre></td></tr></tbody></table></figure>
-<p>使用此构造器，可以轻松检查程序所需的变量是否已全部设置且不为空，通过返回值判断：</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">: ${TOOLS:?} ${EXPTOOLS:?} ${TOOLBIN:?} </span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="parameter-value-2"><a href="#parameter-value-2" class="headerlink" title="${parameter:+value}"></a>${parameter:+value}</h3><p>和 <code>${parameter:-value}</code> 效果相反。</p>
-<p>以上命令中的 value 可以是命令。<code>WORKDIR=${DBDIR:-$(pwd)}</code></p>
-<h3 id="Pattern-Matching-Constructs"><a href="#Pattern-Matching-Constructs" class="headerlink" title="Pattern Matching Constructs"></a>Pattern Matching Constructs</h3><p>略</p>
-<h3 id=""><a href="#" class="headerlink" title="$"></a>$</h3>
     </div>
 
     
@@ -286,13 +300,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2024/08/09/Shell-env/" rel="prev" title="Shell env">
-      <i class="fa fa-chevron-left"></i> Shell env
+    <a href="/blog/2024/08/11/Shell-%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86%E7%82%B9/" rel="prev" title="Shell 其他知识点">
+      <i class="fa fa-chevron-left"></i> Shell 其他知识点
     </a></div>
-      <div class="post-nav-item">
-    <a href="/blog/2024/08/11/Shell-%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86%E7%82%B9/" rel="next" title="Shell 其他知识点">
-      Shell 其他知识点 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -351,7 +362,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E6%9B%BF%E6%8D%A2"><span class="nav-number">1.</span> <span class="nav-text">参数替换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#parameter"><span class="nav-number">1.1.</span> <span class="nav-text">${parameter}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parameter-value"><span class="nav-number">1.2.</span> <span class="nav-text">${parameter:-value}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parameter-x3D-value"><span class="nav-number">1.3.</span> <span class="nav-text">${parameter:&#x3D;value}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parameter-value-1"><span class="nav-number">1.4.</span> <span class="nav-text">${parameter:?value}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parameter-value-2"><span class="nav-number">1.5.</span> <span class="nav-text">${parameter:+value}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pattern-Matching-Constructs"><span class="nav-number">1.6.</span> <span class="nav-text">Pattern Matching Constructs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.7.</span> <span class="nav-text">$</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A3%E7%A1%AE%E7%9A%84-shell"><span class="nav-number">1.</span> <span class="nav-text">使用正确的 shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ENV-file"><span class="nav-number">2.</span> <span class="nav-text">ENV file</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Command-line-Editing"><span class="nav-number">3.</span> <span class="nav-text">Command line Editing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alias"><span class="nav-number">4.</span> <span class="nav-text">alias</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#removing-aliases"><span class="nav-number">4.1.</span> <span class="nav-text">removing aliases</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Array"><span class="nav-number">5.</span> <span class="nav-text">Array</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Job-Control"><span class="nav-number">6.</span> <span class="nav-text">Job Control</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Stopped-Jobs-and-the-fg-and-bg-Commands"><span class="nav-number">6.1.</span> <span class="nav-text">Stopped Jobs and the fg and bg Commands</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Order-of-search"><span class="nav-number">7.</span> <span class="nav-text">Order of search</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
