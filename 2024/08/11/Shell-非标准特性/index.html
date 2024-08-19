@@ -247,7 +247,7 @@
 
       
         <h2 id="使用正确的-shell"><a href="#使用正确的-shell" class="headerlink" title="使用正确的 shell"></a>使用正确的 shell</h2><p>事实证明，所有主要的交互式 shell 都允许指定应该使用哪个 shell（实际上是 Unix 或 Linux 发行版中包含的数千个程序）来运行该文件。如果文件第一行的前两个字符是 <code>#!</code>，则该行的其余部分指定该文件的解释器。因此 <code>#!/bin/ksh</code> 指定 <code>Korn shell</code>，<code>#!/bin/bash</code> 指定 <code>Bash</code>。</p>
-<p>如果使用特定于某个 shell 的构造或符号约定，则可以使用此功能强制该 shell 运行您的程序，从而避免兼容性问题。由于可以指定所需的任何程序，因此以 <code>#!/usr/bin/perl</code> 开头的 <code>Perl</code> 程序会强制 <code>shell</code> 调用 <code>/usr/bin/perl</code> 来解释文件中的行。然而，必须谨慎使用此功能，因为许多程序（例如 Perl）并不驻留在每个 Unix 系统上的标准位置。此外，<code>POSIX</code> 标准并未指定这一点，尽管它存在于每个现代 <code>shell</code> 中，甚至在许多 <code>Unix</code> 版本的操作系统级别上实现。</p>
+<p>如果使用特定于某个 shell 的构造或符号约定，则可以使用此功能强制该 shell 运行你的程序，从而避免兼容性问题。由于可以指定所需的任何程序，因此以 <code>#!/usr/bin/perl</code> 开头的 <code>Perl</code> 程序会强制 <code>shell</code> 调用 <code>/usr/bin/perl</code> 来解释文件中的行。然而，必须谨慎使用此功能，因为许多程序（例如 Perl）并不驻留在每个 Unix 系统上的标准位置。此外，<code>POSIX</code> 标准并未指定这一点，尽管它存在于每个现代 <code>shell</code> 中，甚至在许多 <code>Unix</code> 版本的操作系统级别上实现。</p>
 <p>最常见的是，会看到系统 shell 程序使用此表示法来确保使用 <code>Bourne Shell</code>，无论用户的登录 shell 是什么，都以 <code>#!/bin/sh</code> 开头。</p>
 <h2 id="ENV-file"><a href="#ENV-file" class="headerlink" title="ENV file"></a>ENV file</h2><p>当启动 shell 时，它所做的第一件事就是在环境中查找名为 <code>ENV</code> 的变量。如果找到它并且它不为空，则将执行 <code>ENV</code> 指定的文件，就像登录时执行 <code>.profile</code> 一样。<code>ENV</code> 文件包含用于设置 shell 环境的命令。</p>
 <p>如果要使用 <code>ENV file</code>，应该在 <code>.profile</code> 中设置并 <code>export</code> 这个变量，<code>export ENV=$HOME/.alias</code>。</p>
