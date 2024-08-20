@@ -21,20 +21,20 @@
     var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="The C programming language ch-2">
+  <meta name="description" content="关于 argparse 的 cli 程序。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C-2">
-<meta property="og:url" content="https://zjd-melo.github.io/blog/2023/06/12/C-2/index.html">
+<meta property="og:title" content="argparse">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/08/13/argparse/index.html">
 <meta property="og:site_name" content="Dying Memory">
-<meta property="og:description" content="The C programming language ch-2">
+<meta property="og:description" content="关于 argparse 的 cli 程序。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-06-12T12:02:00.000Z">
-<meta property="article:modified_time" content="2023-06-12T12:02:00.000Z">
+<meta property="article:published_time" content="2024-08-13T03:21:04.000Z">
+<meta property="article:modified_time" content="2024-08-13T03:21:04.000Z">
 <meta property="article:author" content="朱佳东">
-<meta property="article:tag" content="C">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zjd-melo.github.io/blog/2023/06/12/C-2/">
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/08/13/argparse/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>C-2 | Dying Memory</title>
+  <title>argparse | Dying Memory</title>
   
 
 
@@ -178,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
-    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2023/06/12/C-2/">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/08/13/argparse/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.png">
@@ -191,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          C-2
+          argparse
         </h1>
 
         <div class="post-meta">
@@ -201,7 +201,7 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-06-12 20:02:00" itemprop="dateCreated datePublished" datetime="2023-06-12T20:02:00+08:00">2023-06-12</time>
+              <time title="Created: 2024-08-13 11:21:04" itemprop="dateCreated datePublished" datetime="2024-08-13T11:21:04+08:00">2024-08-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,7 +209,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                  <a href="/blog/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
                 </span>
             </span>
 
@@ -226,16 +226,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>689</span>
+              <span>2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
-            <div class="post-description">The C programming language ch-2</div>
+            <div class="post-description">关于 argparse 的 cli 程序。</div>
 
         </div>
       </header>
@@ -246,20 +246,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>变量（Variables）和常量（constants）是一个程序中基本的操作对象。<br>对象的类型决定了值域和对应的操作。</p>
-</blockquote>
-<hr>
-<p><strong>lower case for variable names</strong></p>
-<p><strong>upper case for symbolic constant</strong></p>
-<p>At least the first 31 characters of an internal name are significant. For function names and external variables, the number may be less than 31, because external names may be used by assemblers and loaders over which the language has no control. For external names, the standard guarantees uniqueness only for 6 characters and a single case.<br>不同编译器有不同的实现。</p>
-<h3 id="数据类型和长度"><a href="#数据类型和长度" class="headerlink" title="数据类型和长度"></a>数据类型和长度</h3><p>C语言中的类型很少：<code>char</code>, <code>int</code>, <code>float</code>, <code>double</code></p>
-<p>除此之外还有一些qualifiers可以修饰这些类型<br>比如 <code>short</code>, <code>long</code>, <code>signed</code>, <code>unsigned</code></p>
-<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">short</span> <span class="type">int</span> sh;</span><br><span class="line"><span class="type">long</span> <span class="type">int</span> counter;</span><br><span class="line"><span class="comment">// int 可以省略</span></span><br></pre></td></tr></tbody></table></figure>
-<p><code>short</code> 和 <code>long</code> 的目的是提供不同长度的整型数据，<code>int</code>一般是机器的 nature size<br><code>short</code> 一般是 16 bits，<code>int</code>一般是16 bits 或者 32 bits，取决于编译器</p>
-<p>&lt;limits.h&gt;  和 &lt;float.h&gt; 中定义了关于类型大小的符号常量。</p>
-<p><strong>写一个程序打印各个类型的取值范围</strong></p>
+        <h2 id="cli"><a href="#cli" class="headerlink" title="cli"></a>cli</h2><p>command line interface，<code>argparse</code> 模块可以轻松编写用户友好的命令行界面。应用程序定义它需要什么参数，然后 <code>argparse</code> 将找出如何从 <code>sys.argv</code> 中解析这些参数，<code>argparse</code> 模块还会自动生成帮助和使用信息。当用户给程序提供无效参数时，该模块也会发出错误。</p>
+<h2 id="命令行参数类型"><a href="#命令行参数类型" class="headerlink" title="命令行参数类型"></a>命令行参数类型</h2><ul>
+<li>positional arguments 位置参数，基于位置信息的参数</li>
+<li>optional arguments 选项参数</li>
+</ul>
+<p><code>argparse</code> 如何区分可选参数和位置参数？When parse_args() is called, optional arguments will be identified by the - prefix, and the remaining arguments will be assumed to be positional: controled by prefix_chars param in ArgumentParser。其实有个参数可以控制这个行为。</p>
+<h2 id="parent-argparse"><a href="#parent-argparse" class="headerlink" title="parent argparse"></a>parent argparse</h2><p>parents 的 <code>add_help</code> 参数一般都为 False，要先初始化 parent parser 再传参，如果在子 parser 后修改 parent parser ，则对子不可见。</p>
+<h2 id="nargs"><a href="#nargs" class="headerlink" title="nargs"></a>nargs</h2><p>If the nargs keyword argument is not provided, the number of arguments consumed is determined by the action. Generally this means a single command-line argument will be consumed and a single item (not a list) will be produced.</p>
+<p>ArgumentParser objects usually associate a single command-line argument with a single action to be taken. The nargs keyword argument associates a different number of command-line arguments with a single action.</p>
+<p>默认参数和 action 是一对一的，但是 nargs 可以多对一。</p>
+<h2 id="dest"><a href="#dest" class="headerlink" title="dest"></a>dest</h2><p>Most ArgumentParser actions add some value as an attribute of the object returned by parse_args(). The name of this attribute is determined by the dest keyword argument of add_argument(). For positional argument actions, dest is normally supplied as the first argument to add_argument()。</p>
+<p>For optional argument actions, the value of dest is normally inferred from the option strings. ArgumentParser generates the value of dest by taking the first long option string and stripping away the initial <code>--</code> string. If no long option strings were supplied, dest will be derived from the first short option string by stripping the initial <code>-</code> character. Any internal <code>-</code> characters will be converted to <code>_</code> characters to make sure the string is a valid attribute name. </p>
+<p>对于选项参数，变量名优先使用长选项，在使用短选项，如果长选项中有连字符，则使用下划线替换。</p>
+<h2 id="模糊的参数"><a href="#模糊的参数" class="headerlink" title="模糊的参数"></a>模糊的参数</h2><p>有时传参会导致解析不明确，可以使用 <code>--</code>，在 <code>--</code> 之后的参数都是位置参数。</p>
+<h2 id="subparser"><a href="#subparser" class="headerlink" title="subparser"></a>subparser</h2><p>一个 sub parser 就相当于一个子命令，一般使用 set_defaults 绑定一个函数使用。参考 <code>airflow</code>。</p>
+<p>使用抽象可以让调用方和参数互换，parser.add_arguments，arg.add_to_parser(parser).</p>
+<h2 id="group"><a href="#group" class="headerlink" title="group"></a>group</h2><p>可以把相似的命令放到同一个 group 下。</p>
+<h2 id="互斥参数"><a href="#互斥参数" class="headerlink" title="互斥参数"></a>互斥参数</h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">group = parser.add_mutually_exclusive_group()</span><br><span class="line">group.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbose"</span>, action=<span class="string">"store_true"</span>)</span><br><span class="line">group.add_argument(<span class="string">"-q"</span>, <span class="string">"--quiet"</span>, action=<span class="string">"store_true"</span>)</span><br></pre></td></tr></tbody></table></figure>
 
+<h2 id="i18n"><a href="#i18n" class="headerlink" title="i18n"></a>i18n</h2>
     </div>
 
     
@@ -269,7 +275,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/blog/tags/C/" rel="tag"><i class="fa fa-tag"></i> C</a>
+              <a href="/blog/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
           </div>
 
         
@@ -278,13 +284,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2023/06/02/C-1/" rel="prev" title="C-1">
-      <i class="fa fa-chevron-left"></i> C-1
+    <a href="/blog/2024/08/11/Shell-%E9%9D%9E%E6%A0%87%E5%87%86%E7%89%B9%E6%80%A7/" rel="prev" title="Shell 非标准特性">
+      <i class="fa fa-chevron-left"></i> Shell 非标准特性
     </a></div>
-      <div class="post-nav-item">
-    <a href="/blog/2023/07/10/hbase/" rel="next" title="HBase">
-      HBase <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -343,7 +346,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E9%95%BF%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">数据类型和长度</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cli"><span class="nav-number">1.</span> <span class="nav-text">cli</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">命令行参数类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parent-argparse"><span class="nav-number">3.</span> <span class="nav-text">parent argparse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nargs"><span class="nav-number">4.</span> <span class="nav-text">nargs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dest"><span class="nav-number">5.</span> <span class="nav-text">dest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E7%B3%8A%E7%9A%84%E5%8F%82%E6%95%B0"><span class="nav-number">6.</span> <span class="nav-text">模糊的参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#subparser"><span class="nav-number">7.</span> <span class="nav-text">subparser</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#group"><span class="nav-number">8.</span> <span class="nav-text">group</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%E5%8F%82%E6%95%B0"><span class="nav-number">9.</span> <span class="nav-text">互斥参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#i18n"><span class="nav-number">10.</span> <span class="nav-text">i18n</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
