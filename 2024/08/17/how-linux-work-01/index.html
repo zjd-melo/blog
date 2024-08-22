@@ -28,13 +28,13 @@
 <meta property="og:site_name" content="Dying Memory">
 <meta property="og:description" content="how linux work 01 - summary">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/layers.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/17/how-linux-work-01/layers.png">
 <meta property="article:published_time" content="2024-08-17T04:02:14.000Z">
 <meta property="article:modified_time" content="2024-08-17T04:02:14.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zjd-melo.github.io/blog/layers.png">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/08/17/how-linux-work-01/layers.png">
 
 <link rel="canonical" href="https://zjd-melo.github.io/blog/2024/08/17/how-linux-work-01/">
 
@@ -141,7 +141,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">66</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">67</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -253,7 +253,7 @@
 </blockquote>
 <p>软件开发人员在构建操作系统及其应用程序时使用抽象作为工具。计算机软件中的抽象细分有很多术语，包括子系统 subsystem、模块 module 和包 packages，这里使用术语组件 component，因为它很简单。在构建软件组件时，开发人员通常不会过多考虑其他组件的内部结构，但他们确实关心可以使用哪些其他组件以及如何使用它们。</p>
 <h2 id="levels-and-layers-of-abstraction-in-a-linux-system"><a href="#levels-and-layers-of-abstraction-in-a-linux-system" class="headerlink" title="levels and layers of abstraction in a linux system"></a>levels and layers of abstraction in a linux system</h2><p>使用抽象把计算机系统分成若干组件更易于理解，但是如果没有组织结构的话，这些组件也不会正常工作。</p>
-<p><img src="/blog/layers.png" alt="layers"></p>
+<p><img src="/blog/2024/08/17/how-linux-work-01/layers.png" alt="layers"></p>
 <p>Linux 有三层抽象：</p>
 <h3 id="hardware"><a href="#hardware" class="headerlink" title="hardware"></a>hardware</h3><p>主要包括内存、CPU、硬盘和网卡等。</p>
 <h3 id="kernel"><a href="#kernel" class="headerlink" title="kernel"></a>kernel</h3><p>操作系统的核心，内核是驻留在内存的软件，告诉 CPU 做什么事情。内核管理硬件并主要充当硬件和任何正在运行的程序之间的接口。</p>
@@ -329,7 +329,10 @@
     <a href="/blog/2024/08/13/argparse/" rel="prev" title="argparse">
       <i class="fa fa-chevron-left"></i> argparse
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/blog/2024/08/18/how-linux-work-02/" rel="next" title="how linux work 02">
+      how linux work 02 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -404,7 +407,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -462,13 +465,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">205k</span>
+    <span title="Symbols count total">208k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:07</span>
+    <span title="Reading time total">3:09</span>
 </div>
 
         
