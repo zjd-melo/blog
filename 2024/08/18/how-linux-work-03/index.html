@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="how linux work 03 - devices">
+<meta property="og:type" content="article">
+<meta property="og:title" content="how linux work 03">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/08/18/how-linux-work-03/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="how linux work 03 - devices">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-18T06:03:54.000Z">
+<meta property="article:modified_time" content="2024-08-18T06:03:54.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/08/18/how-linux-work-03/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>how linux work 03 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">69</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/08/18/how-linux-work-03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          how linux work 03
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-08-18 14:03:54" itemprop="dateCreated datePublished" datetime="2024-08-18T14:03:54+08:00">2024-08-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>9 mins.</span>
+            </span>
+            <div class="post-description">how linux work 03 - devices</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本章是对正常运行的 Linux 系统中内核提供的设备基础结构的基本介绍。纵观 Linux 的历史，内核向用户呈现设备的方式发生了许多变化。我们首先查看传统的设备文件系统，了解内核如何通过 <code>sysfs</code> 提供设备配置信息。我们的目标是能够提取有关系统上设备的信息，以便了解一些基本操作。后面的章节将更详细地介绍与特定类型设备的交互。了解新设备出现时内核如何与用户空间交互非常重要。 <code>udev</code> 系统使用户空间程序能够自动配置和使用新设备。将了解内核如何通过 <code>udev</code> 向用户空间进程发送消息的基本工作原理，以及进程如何处理该消息。</p>
+</blockquote>
+<h2 id="Device-files-设备文件"><a href="#Device-files-设备文件" class="headerlink" title="Device files 设备文件"></a>Device files 设备文件</h2><p>在 Unix 系统上操作大多数设备都很容易，因为内核将许多设备 I/O 接口作为文件呈现给用户进程。一切皆文件。这些设备文件有时称为设备节点 <code>device nodes</code>。程序员不仅可以使用常规文件操作来处理设备，而且某些设备也可以通过标准程序（例如 cat）访问，因此不必是程序员亦可使用设备。但是，使用文件接口可以执行的操作是有限的，因此并非所有设备或设备功能都可以通过标准文件 I/O 访问。Linux 使用与其他 Unix 风格相同的设备文件设计。设备文件位于 /dev 目录中，运行 ls /dev 会显示 /dev 中的多个文件。那么如何使用设备呢？</p>
+<p><code>echo hello &gt; /dev/null</code>，输出到文件，这个文件代表一个设备，由内核决定如何处理。</p>
+<h2 id="设备类型"><a href="#设备类型" class="headerlink" title="设备类型"></a>设备类型</h2><p><code>ls -l /dev</code> 查看第一个字符，标识了设备类型。</p>
+<h3 id="Block-device"><a href="#Block-device" class="headerlink" title="Block device"></a>Block device</h3><p>Programs access data from a <code>block device</code> in fixed chunks。程序以固定块的形式从块设备访问数据。磁盘就是典型的块设备文件，磁盘可以轻松分割成数据块。由于块设备的总大小是固定的并且易于索引，因此进程可以在内核的帮助下随机访问设备中的任何块。</p>
+<h3 id="Character-device"><a href="#Character-device" class="headerlink" title="Character device"></a>Character device</h3><p>Character devices work with data streams。只能从字符设备读取字符或向字符设备写入字符，如前面使用 <code>/dev/null</code> 那样。字符设备是没有大小的，当从字符设备读写时，内核通常向设备发起读写命令。直接连接到计算机的打印机由字符设备表示。需要注意的是，在字符设备交互期间，内核在将数据传递到设备后无法备份和重新检查数据流。不可重复读写多次数据流。</p>
+<h3 id="Pipe-device"><a href="#Pipe-device" class="headerlink" title="Pipe device"></a>Pipe device</h3><p>Named pipes 命名管道就像字符设备，I/O 流的另一端有另一个进程而不是内核驱动程序。</p>
+<h3 id="Socket-device"><a href="#Socket-device" class="headerlink" title="Socket device"></a>Socket device</h3><p>套接字是经常用于进程间通信的特殊用途接口。它们通常位于 /dev 目录之外。套接字文件代表 Unix 域套接字。</p>
+<p>Unix Domain Sockets (UDS) 是一种在同一台主机上的进程之间进行通信的机制。与通过网络进行的通信不同，Unix Domain Sockets 是专为在同一台机器上运行的进程间通信（IPC）设计的。它们提供了一种非常高效的通信方式，不需要通过网络协议栈，因此比基于 TCP/IP 的通信速度更快，开销更小。</p>
+<p>并非所有设备都有设备文件，因为块和字符设备 I/O 接口并不适合所有情况。例如，网络接口没有设备文件。理论上可以使用单个字符设备与网络接口进行交互，但由于这非常困难，因此内核使用其他 I/O 接口。</p>
+<h2 id="sysfs-device-path"><a href="#sysfs-device-path" class="headerlink" title="sysfs device path"></a>sysfs device path</h2><p>传统的 Unix <code>/dev</code> 目录是用户进程引用和连接内核支持的设备的一种便捷方式，但它也是一个非常简单的方案。<code>/dev</code> 中的设备名称告诉我们有关该设备的一些信息，但不是很多。另一个问题是内核按照设备被发现的顺序分配设备，因此设备在重新启动之间可能有不同的名称。</p>
+<p>为了根据设备的实际硬件属性提供统一的视角，Linux 内核通过文件和目录系统提供 <code>sysfs</code> 接口，<code>/sys/devices</code>。比如 <code>devices/pci0000:00/0000:00:06.0/virtio1/block/vda/vda1</code>。</p>
+<p>正如所看到的，与同样是目录的 <code>/dev/vda</code> 文件名相比，该路径相当长。但你无法真正比较这两条路径，因为它们有不同的目的。 <code>/dev</code> 文件的存在是为了让用户进程可以使用设备，而 <code>/sys/devices</code> 路径用于查看信息并管理设备。</p>
+<p>这个目录中的文件是给程序使用的而不是用户。<code>cat longpath/dev</code> 可以看到和 <code>/dev/vda</code> 一样的设备号。 </p>
+<p><code>/sys</code> 目录中有一些快捷目录，比如 <code>/sys/block</code> 包含所有的块设备，其实就是一些软连接。</p>
+<p>在 /dev 中找到设备的 sysfs 位置可能很困难。使用 udevadm 命令显示路径和其他属性：<br><code>udevadm info --query=all --name=/dev/vda</code>。</p>
+<h3 id="sysfs"><a href="#sysfs" class="headerlink" title="sysfs"></a>sysfs</h3><p>sysfs 是 Linux 内核中的一个虚拟文件系统，旨在通过文件和目录的形式向用户空间提供系统内核对象的信息和配置接口。它将内核内部的各种子系统、设备、内核模块等信息以层次化的方式暴露出来，使得用户和系统管理工具能够方便地查看和修改系统的状态。</p>
+<p>sysfs 的特点：</p>
+<ul>
+<li>虚拟文件系统：sysfs 是一个虚拟文件系统，类似于 /proc 和 /dev 文件系统。它并不占用磁盘空间，而是内核在内存中动态生成的。</li>
+<li>结构化信息：sysfs 以目录树的形式组织信息，反映了内核对象的层次结构。例如，PCI 设备、USB 设备、块设备等都可以在 sysfs 中找到它们对应的信息。</li>
+<li>可读可写：sysfs 中的大部分文件是可读的，有些文件是可写的，这意味着你可以直接通过文件操作来修改内核对象的属性（需要有足够的权限）。</li>
+</ul>
+<p>sysfs 的挂载点。sysfs 通常挂载在 /sys 目录下。你可以通过以下命令确认它是否已挂载： <code>mount | grep sysfs</code> 或者手动挂载 <code>mount -t sysfs sysfs /sys</code></p>
+<p>sysfs 的用途</p>
+<ul>
+<li>查看系统硬件信息：可以在 /sys 目录中查看系统中的设备信息。例如，在 /sys/class/net/ 下可以看到所有的网络接口信息。</li>
+<li>设备管理：sysfs 提供了与设备相关的详细信息和控制接口。比如在 /sys/block/ 目录下，你可以查看和管理系统中的块设备（如硬盘）。</li>
+<li>驱动程序与模块：sysfs 还可以用于查看加载的内核模块、驱动程序及其属性。例如，你可以在 /sys/module/ 目录下查看加载的内核模块。</li>
+<li>电源管理： 通过 /sys/class/power_supply/ 目录，你可以查看系统电源管理相关的信息，包括电池状态、AC 电源状态等。</li>
+<li>控制设备行为：可以通过写入特定的文件来改变设备的行为。例如，写入 /sys/class/leds/led0/brightness 可以控制 LED 的亮度。</li>
+</ul>
+<p>sysfs 和 udev，sysfs 通常与 udev 一起使用。udev 通过 sysfs 提供的设备信息来管理 /dev 目录中的设备节点文件。sysfs 提供的详细设备信息让 udev 能够根据设备属性创建和删除设备节点。</p>
+<p>总结：sysfs 是一个虚拟文件系统，主要用于以文件系统的形式向用户空间暴露内核对象的信息和控制接口。它提供了系统中几乎所有设备、驱动程序、内核模块的详细信息，并允许用户在某些情况下通过修改 sysfs 中的文件来控制系统行为。sysfs 通常与 udev 协同工作，用于动态管理设备文件。通过 sysfs，用户和系统管理员可以直接访问内核对象的信息，进行系统配置和设备管理，这是 Linux 内核对外提供的重要接口之一。</p>
+<h2 id="dd-and-devices"><a href="#dd-and-devices" class="headerlink" title="dd and devices"></a>dd and devices</h2><p>程序 dd 在使用块设备和字符设备时非常有用。该程序的唯一功能是从输入文件或流中读取并写入输出文件或流，可能会在此过程中进行一些编码转换。</p>
+<p><code>dd if=/dev/zero of=new_file bs=1024 count=1</code>，可以看到 dd 的参数命令风格和其他的不一样，它使用 <code>=</code> 号而不是 <code>-</code>。</p>
+<h2 id="x2F-dev-x2F-zero"><a href="#x2F-dev-x2F-zero" class="headerlink" title="/dev/zero"></a>/dev/zero</h2><p><code>/dev/zero</code> 是 Linux 和其他类 Unix 操作系统中的一个特殊文件，它是一个伪设备文件，用于生成无限量的零字节流（0x00 字节）。读取 <code>/dev/zero</code> 的时候，系统会返回无限个零字节，而写入 <code>/dev/zero</code> 则会被系统丢弃。</p>
+<p>主要用途：<strong>初始化文件或内存</strong>。</p>
+<p>dd 命令可以通过读取 <code>/dev/zero</code> 来创建一个指定大小的文件并将其全部填充为零。这在初始化存储空间或测试磁盘性能时非常有用。<code>dd if=/dev/zero of=emptyfile bs=1M count=10</code> 这个命令会创建一个名为 emptyfile 的文件，大小为 10 MB，文件内容全部为零。</p>
+<p>分区和文件系统初始化： 在创建新的分区或文件系统时，<code>/dev/zero</code> 可以用于清除磁盘上的数据，确保没有残留的旧数据影响新的文件系统。<code>dd if=/dev/zero of=/dev/sdX bs=1M</code> 这个命令会将 /dev/sdX 磁盘上的所有内容都写为零，通常在完全擦除磁盘时使用。</p>
+<p>内存分配：程序可以通过 mmap 将 <code>/dev/zero</code> 映射到内存，从而快速分配和初始化一块全为零的内存区域。许多低层次的编程场景下，<code>/dev/zero</code> 可以用于内存管理。</p>
+<p>虚拟内存分页：/dev/zero 有时也用作虚拟内存分页的一个源，来分配一块初始化为零的匿名内存。</p>
+<p><code>/dev/zero</code> 与 <code>/dev/null</code> 的区别</p>
+<ul>
+<li>/dev/zero：读取时返回零字节流，写入时数据被丢弃。</li>
+<li>/dev/null：读取时返回 EOF（表示文件结束），写入时数据被立即丢弃。</li>
+</ul>
+<p>总结<br>/dev/zero 是一个伪设备文件，提供无限的零字节流。它常用于初始化文件或内存、分区和文件系统的清除、内存管理等场景。与 <code>/dev/null</code> 不同，<code>/dev/zero</code> 主要用于生成数据（零字节流），而不是简单地丢弃数据。</p>
+<h2 id="Device-name-summary"><a href="#Device-name-summary" class="headerlink" title="Device name summary"></a>Device name summary</h2><p>有时很难找到设备的名称（例如，对磁盘进行分区时）。以下是一些找到它的方法：</p>
+<ol>
+<li>Query udevd using udevadm</li>
+<li>Look for the device in the /sys directory.</li>
+<li>Guess the name from the output of the dmesg command </li>
+<li>For a disk device that is already visible to the system, you can check the output of the mount command.</li>
+<li>Run cat /proc/devices to see the block and character devices for which your system currently has drivers.</li>
+</ol>
+<p>这些命令中只有第一个是可靠的，但是它需要有 <code>udev</code> 才行。如果没有的话，可以尝试使用其他办法，但是得记住，内核可能没有适用于某些硬件的设备文件。</p>
+<p>以下部分列出了最常见的 Linux 设备及其命名约定。</p>
+<h3 id="Hard-Disk-x2F-dev-x2F-sd"><a href="#Hard-Disk-x2F-dev-x2F-sd" class="headerlink" title="Hard Disk /dev/sd*"></a>Hard Disk /dev/sd*</h3><p>当前Linux系统挂接的大多数硬盘都对应带有sd前缀的设备名称，例如 <code>/dev/sda</code>、<code>/dev/sdb</code> 等，这些代表了整个磁盘，内核为磁盘上的分区创建单独的设备文件，例如 <code>/dev/sda1</code> 和 <code>/dev/sda2</code>。名称的 sd 部分代表 <code>SCSI disk</code>。</p>
+<p>小型计算机系统接口 <code>Small Computer System Interface</code> (SCSI) 最初是作为磁盘和其他外围设备等设备之间通信的硬件和协议标准而开发的。尽管大多数现代机器中并未使用传统的 SCSI 硬件，但 SCSI 协议由于其适应性而无处不在。例如，USB 存储设备就使用它来进行通信。 SATA 磁盘的情况稍微复杂一些，但 Linux 内核在与它们通信时在某个时刻仍然使用 SCSI 命令。</p>
+<p>要列出系统上的 SCSI 设备，请使用一个实用程序来遍历 sysfs 提供的设备路径。最简洁的工具之一是 <code>lsscsi</code>。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> lsscsi</span><br><span class="line">[0:0:0:0] diskv ATA WDC WD3200AAJS-2 01.0 /dev/sdaw </span><br><span class="line">[1:0:0:0] cd/dvd Slimtype DVD A DS8A5SH XA15 /dev/sr0 </span><br><span class="line">[2:0:0:0] disk FLASH Drive UT_USB20 0.00 /dev/sdb</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一列是设备在系统上的地址，第二列描述了具体的设备是什么，最后一列是设备文件地址，其他是供应商信息。</p>
+<p>Linux 按照其驱动程序遇到设备的顺序将设备分配给设备文件。Linux assigns devices to device files in the order in which its drivers encounter devices。所以上面的例子表明内核先发现了磁盘。然后是光盘，最后是 flash 磁盘。</p>
+<p>这种方式是有问题的，比如，有三个磁盘 <code>/dev/sda</code>、<code>/dev/sdb</code>、<code>/dev/sdc</code>，如果 <code>/dev/sdb</code>坏了，把这个磁盘拿走后，<code>/dev/sdc</code> 就变成了 <code>/dev/sdb</code>，如果在 <code>fstab</code> 文件中用这种方式引用磁盘，机会有问题，现代的系统使用 Universally Unique Identifier (UUID) 来解决这个问题。</p>
+<h3 id="CD-and-DVD-Drivers-x2F-dev-x2F-sr"><a href="#CD-and-DVD-Drivers-x2F-dev-x2F-sr" class="headerlink" title="CD and DVD Drivers /dev/sr*"></a>CD and DVD Drivers /dev/sr*</h3><p>Linux 将大多数光存储驱动器识别为 SCSI 设备 <code>/dev/sr0</code>、<code>/dev/sr1</code> 等。但是，如果驱动器使用较旧的接口，它可能会显示为 PATA 设备，如下所述。 <code>/dev/sr*</code> 设备是只读的，它们仅用于从光盘读取。对于光学设备的写入和重写功能，将使用通用 SCSI 设备，例如 <code>/dev/sg0</code>。</p>
+<h3 id="PATA-Hard-Disks-x2F-dev-x2F-hd"><a href="#PATA-Hard-Disks-x2F-dev-x2F-hd" class="headerlink" title="PATA Hard Disks /dev/hd*"></a>PATA Hard Disks /dev/hd*</h3><p>Linux 块设备 <code>/dev/hda</code>、<code>/dev/hdb</code>、<code>/dev/hdc</code> 和 <code>/dev/hdd</code> 在旧版本的 Linux 内核和旧硬件上很常见。这些是基于接口 0 和 1 上的主设备和从设备的固定分配。有时，可能会发现 SATA 驱动器被识别为这些磁盘之一。这意味着 SATA 驱动器正在兼容模式下运行，这会影响性能。检查 BIOS 设置，看是否可以将 SATA 控制器切换到其本机模式。</p>
+<h3 id="Terminals-x2F-dev-x2F-tty-x2F-dev-x2F-pts-x2F-and-x2F-dev-x2F-tty"><a href="#Terminals-x2F-dev-x2F-tty-x2F-dev-x2F-pts-x2F-and-x2F-dev-x2F-tty" class="headerlink" title="Terminals: /dev/tty*, /dev/pts/*, and /dev/tty"></a>Terminals: /dev/tty*, /dev/pts/*, and /dev/tty</h3><p>终端是用于在用户进程和 I/O 设备之间移动字符的设备，通常用于将文本输出到终端屏幕。终端设备接口可以追溯到很久以前，当时终端是基于打字机的设备。</p>
+<p>伪终端设备是模拟终端，它了解真实终端的 I/O 功能。但内核不是与真实的硬件对话，而是向软件提供 I/O 接口，例如你可能在其中输入大部分命令的 shell 终端窗口。</p>
+<p>两个常见的终端设备是/dev/tty1（第一个虚拟控制台）和/dev/pts/0（第一个伪终端设备）。 /dev/pts 目录本身是一个专用文件系统。</p>
+<p><code>/dev/tty</code> 设备是当前进程的控制终端。如果程序当前正在读取和写入终端，则该设备是该终端的相同东西。进程不需要附加到终端。</p>
+<h4 id="Display-mode-and-virtual-console"><a href="#Display-mode-and-virtual-console" class="headerlink" title="Display mode and virtual console"></a>Display mode and virtual console</h4><p>Linux 有两种主要的显示模式：text mode 和 X Window System Server（graphics mode，usually via a display manager）。</p>
+<p>尽管 Linux 系统传统上以文本模式启动，但现在大多数发行版都使用内核参数和临时图形显示机制（如 plymouth 等的启动启动画面）来在系统启动时完全隐藏文本模式。在这种情况下，系统会在启动过程接近结束时切换到全图形模式。</p>
+<p>Linux 支持虚拟控制台 virtual console 来复用显示器。每个虚拟控制台可以以图形或文本模式运行。在文本模式 text mode 下，可以使用 alt-Function 组合键在控制台之间切换，例如，alt-F1 将转到 <code>/dev/tty1</code>，alt-F2 将转到 <code>/dev/tty2</code>，依此类推。其中许多可能被运行登录提示的 getty 进程占用。</p>
+<h3 id="Serial-Ports-x2F-dev-x2F-ttyS"><a href="#Serial-Ports-x2F-dev-x2F-ttyS" class="headerlink" title="Serial Ports /dev/ttyS*"></a>Serial Ports /dev/ttyS*</h3><p>较旧的 RS-232 类型和类似的串行端口是特殊的终端设备。无法在命令行上对串行端口设备执行太多操作，因为有太多设置需要担心，例如波特率和流量控制。</p>
+<h3 id="Parallel-Ports-x2F-dev-x2F-lp0-and-x2F-dev-x2F-lp1"><a href="#Parallel-Ports-x2F-dev-x2F-lp0-and-x2F-dev-x2F-lp1" class="headerlink" title="Parallel Ports: /dev/lp0 and /dev/lp1"></a>Parallel Ports: /dev/lp0 and /dev/lp1</h3><p>单向并行端口设备 <code>/dev/lp0</code> 和 <code>/dev/lp1</code> 代表已被 USB 很大程度上取代的接口类型。</p>
+<h3 id="Audio-Devices-x2F-dev-x2F-snd-x2F-x2F-dev-x2F-dsp-x2F-dev-x2F-audio-and-More"><a href="#Audio-Devices-x2F-dev-x2F-snd-x2F-x2F-dev-x2F-dsp-x2F-dev-x2F-audio-and-More" class="headerlink" title="Audio Devices: /dev/snd/*, /dev/dsp, /dev/audio, and More"></a>Audio Devices: /dev/snd/*, /dev/dsp, /dev/audio, and More</h3><p>音频设备。</p>
+<h3 id="create-device-files"><a href="#create-device-files" class="headerlink" title="create device files"></a>create device files</h3><p>在现代 Linux 系统中，不需要创建自己的设备文件；而是创建自己的设备文件。这是通过 <code>devtmpfs</code> 和 <code>udev</code> 完成的。但是，了解它是如何完成的很有启发性，并且在极少数情况下，可能需要创建命名管道。 <code>mknod</code> 命令创建一台设备。必须知道设备名称及其主设备号和次设备号。例如，创建 <code>/dev/sda1</code> 需要使用以下命令：<code>mknod /dev/sda1 b 8 2</code>。<br>The b 8 2 specifies a block device with a major number 8 and a minor number 2.</p>
+<p>如前所述，<code>mknod</code> 命令仅对于创建偶尔使用的命名管道有用。曾经，它有时对于在系统恢复期间以单用户模式创建丢失的设备也很有用。</p>
+<h2 id="udev"><a href="#udev" class="headerlink" title="udev"></a>udev</h2><p><code>udev</code> 是 Linux 系统中的一个设备管理系统，用于动态管理设备节点和设备文件的创建和删除。它是 Linux 内核设备管理子系统的一部分，负责处理内核生成的设备事件并在用户空间执行相应的操作。</p>
+<p><code>udevd</code> 进程。</p>
+<h3 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h3><h4 id="动态设备节点管理"><a href="#动态设备节点管理" class="headerlink" title="动态设备节点管理"></a>动态设备节点管理</h4><p><code>udev</code> 负责在 <code>/dev</code> 目录中创建和删除设备文件。当你插入一个新的硬件设备（如 USB 驱动器）时，<code>udev</code> 会根据设备的属性和规则自动创建相应的设备节点文件（如 <code>/dev/sda</code>），并删除设备移除时对应的节点。</p>
+<h4 id="设备事件处理"><a href="#设备事件处理" class="headerlink" title="设备事件处理"></a>设备事件处理</h4><p><code>udev</code> 监听内核发送的设备事件（如设备添加、移除或属性更改），并根据预定义的规则在用户空间执行相应的动作，例如加载驱动程序、创建符号链接、设置设备权限、或触发用户定义的脚本。</p>
+<h4 id="设备属性管理"><a href="#设备属性管理" class="headerlink" title="设备属性管理"></a>设备属性管理</h4><p><code>udev</code> 可以根据设备的属性（如设备类型、制造商、序列号等）应用特定的规则，以便在系统中一致地管理设备。例如，<code>udev</code> 可以确保特定设备总是分配到同一个设备节点，或者在设备插入时自动挂载文件系统。</p>
+<h4 id="udev-的工作流程"><a href="#udev-的工作流程" class="headerlink" title="udev 的工作流程"></a>udev 的工作流程</h4><ol>
+<li>设备事件生成：当设备连接到系统时，Linux 内核检测到这个事件并生成一个 <code>uevent</code>，它包含关于设备的信息，如设备的路径、类型、属性等。</li>
+<li>设备事件处理: <code>udev</code> 守护进程接收到这个 <code>uevent</code>，然后根据系统中定义的 <code>udev</code> 规则决定如何处理这个事件。规则文件通常位于 <code>/etc/udev/rules.d/</code> 和 <code>/lib/udev/rules.d/</code> 目录中。</li>
+<li>执行操作：根据匹配的规则，<code>udev</code> 可能会执行以下操作之一或多个：在 <code>/dev/</code> 目录中创建或删除设备文件。设置设备文件的权限或所有者。创建符号链接。运行指定的脚本或命令。</li>
+</ol>
+<h4 id="udev-规则"><a href="#udev-规则" class="headerlink" title="udev 规则"></a>udev 规则</h4><p><code>udev</code> 规则是一些文本文件，用于定义 udev 如何处理设备事件。每条规则都包含一些匹配条件（如设备属性）和相应的操作。规则的格式如下：<code>ACTION=="add", KERNEL=="sd*", SUBSYSTEM=="block", RUN+="/path/to/script"</code></p>
+<p>在上面的规则中，当一个块设备（SUBSYSTEM==”block”）被添加（ACTION==”add”）且设备名匹配 sd*（例如 sda、sdb），<code>udev</code> 将运行指定的脚本。</p>
+<h4 id="udev-的历史"><a href="#udev-的历史" class="headerlink" title="udev 的历史"></a>udev 的历史</h4><p><code>udev</code> 是传统 Linux 设备管理方法的现代替代品。在 <code>udev</code> 出现之前，Linux 使用 <code>devfs</code> 和 <code>hotplug</code> 来管理设备节点，但这些方法都存在一些局限性。<code>udev</code> 被设计为一种更加灵活和可配置的系统，能够在动态环境中更好地管理设备节点。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><code>udev</code> 是 Linux 系统中一个关键的设备管理工具，负责动态创建和删除设备文件、处理设备事件、执行与设备相关的用户空间任务。它通过规则文件来灵活配置不同设备的行为，是现代 Linux 系统中不可或缺的一部分。</p>
+<p>udev 中的 u 代表 “user”（用户），表示它是用户空间中的设备管理守护进程。udev 结合了 “user” 和 “device”，表示它是一个在用户空间中运行的设备管理工具。与内核空间不同，用户空间指的是操作系统中应用程序运行的环境。<code>udev</code> 的设计初衷就是在用户空间中动态管理设备节点，这与早期的设备管理机制（如 <code>devfs</code>）不同，它们主要在内核空间中运行。</p>
+<h4 id="udevadm"><a href="#udevadm" class="headerlink" title="udevadm"></a>udevadm</h4><p><code>udevadm</code> 是 Linux 系统中的一个命令行工具，用于管理和调试 <code>udev</code>，这是 Linux 的设备管理系统。<code>udev</code> 负责动态管理 /dev 目录中的设备文件，并在设备插入或移除时触发相应的用户空间动作。<code>udevadm</code> 工具提供了一系列子命令，可以用于监控、控制、测试和管理设备的 <code>udev</code> 规则及事件。</p>
+<h5 id="主要功能和常见用法"><a href="#主要功能和常见用法" class="headerlink" title="主要功能和常见用法"></a>主要功能和常见用法</h5><ol>
+<li>监控设备事件<br><code>udevadm monitor</code> 子命令可以实时监控系统中设备的添加、移除、或更改事件。</li>
+</ol>
+<p><code>udevadm monitor</code> 这会在终端中显示正在发生的 <code>udev</code> 事件，适合用于调试设备连接问题或验证 <code>udev</code> 规则。</p>
+<ol start="2">
+<li>查看设备属性<br><code>udevadm info</code> 子命令可以用来获取设备的详细信息和属性。</li>
+</ol>
+<p><code>udevadm info /dev/sda</code> 或 <code>udevadm info --query=all --name=/dev/sda</code> 这个命令会显示与指定设备相关的所有信息，包括设备的 <code>udev</code> 属性。</p>
+<ol start="3">
+<li>测试 udev 规则<br><code>udevadm test</code> 可以用于测试一个设备的 <code>udev</code> 规则，而不会实际改变系统状态。</li>
+</ol>
+<p><code>udevadm test /sys/class/block/sda</code> 这个命令会模拟设备添加事件并显示 <code>udev</code> 规则的处理结果，适合用于调试 <code>udev</code> 规则。</p>
+<ol start="4">
+<li>触发 <code>udev</code> 事件<br><code>udevadm trigger</code> 可以手动触发 <code>udev</code> 事件，通常用于在修改 <code>udev</code> 规则后重新应用规则。</li>
+</ol>
+<p><code>udevadm trigger</code> 这个命令会重新扫描设备并触发相应的 udev 事件。</p>
+<ol start="5">
+<li>控制 udev 守护进程<br><code>udevadm control</code> 命令用于控制 <code>udev</code> 守护进程的行为，例如重新加载规则文件或重新启动守护进程。</li>
+</ol>
+<p><code>udevadm control --reload</code> 这个命令会重新加载所有 udev 规则，而不会影响正在运行的守护进程。</p>
+<h5 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h5><p><code>udevadm</code> 是一个强大的工具，用于管理和调试 Linux 系统中的设备及其 <code>udev</code> 规则。通过 <code>udevadm</code>，管理员可以监控设备事件、查看设备属性、测试和触发 <code>udev</code> 规则，以及控制 <code>udev</code> 守护进程的行为。</p>
+<h2 id="怎么查看磁盘"><a href="#怎么查看磁盘" class="headerlink" title="怎么查看磁盘"></a>怎么查看磁盘</h2><p><code>lsblk</code> <code>fdisk -l</code></p>
+<h2 id="设备号"><a href="#设备号" class="headerlink" title="设备号"></a>设备号</h2><p>在 Linux 系统中，每个设备都有一个与之关联的设备号（device number），这个设备号由两个部分组成：major 设备号和 minor 设备号。这些设备号在系统中唯一标识一个设备。</p>
+<ol>
+<li><p>Major Device Number（主设备号）<br>major 设备号用来标识设备驱动程序。每个类型的设备驱动程序都有一个唯一的 major 设备号。内核使用 major 设备号来决定应该调用哪个设备驱动程序来处理请求。例如，所有的硬盘设备可能共享同一个 major 设备号，但由不同的 minor 设备号区分具体的硬盘或分区。</p>
+</li>
+<li><p>Minor Device Number（次设备号）<br>minor 设备号用来标识设备驱动程序所管理的具体设备或设备实例。对于一个特定的 major 设备号，minor 设备号可以区分多个设备或设备的不同部分。例如，同一个硬盘设备的不同分区可能共享一个 major 设备号，但 minor 设备号会不同。</p>
+</li>
+</ol>
+<p>假设你有一个硬盘 <code>/dev/sda</code> 和它的第一个分区 <code>/dev/sda1</code>，使用 <code>ls -l /dev/sda*</code> 可以查看它们的设备号：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brw-rw---- 1 root disk 8, 0 Aug 14 10:00 /dev/sda</span><br><span class="line">brw-rw---- 1 root disk 8, 1 Aug 14 10:00 /dev/sda</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>/dev/sda</code> 的设备号是 8:0，其中 8 是 major 设备号，0 是 minor 设备号。</p>
+<p><code>/dev/sda1</code> 的设备号是 8:1，其中 8 是 major 设备号，1 是 minor 设备号。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>当系统访问 <code>/dev/sda</code> 时，内核会通过 major 设备号 8 找到对应的硬盘驱动程序。</p>
+<p>该驱动程序通过 minor 设备号 0 确定它正在处理的具体设备（在这个例子中是整个硬盘）。</p>
+<p>类似地，访问 <code>/dev/sda1</code> 时，内核同样通过 major 设备号找到硬盘驱动程序，但驱动程序通过 minor 设备号 1 确定它正在处理的是 <code>/dev/sda</code> 上的第一个分区。</p>
+<h3 id="Major-和-Minor-设备号的分配"><a href="#Major-和-Minor-设备号的分配" class="headerlink" title="Major 和 Minor 设备号的分配"></a>Major 和 Minor 设备号的分配</h3><p>major 和 minor 设备号通常是由操作系统分配和管理的。major 设备号可能在不同的系统之间有所不同，具体分配可以参考系统文档或在 <code>/proc/devices</code> 中查看。</p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>Major 设备号：用于标识设备类型或驱动程序。</li>
+<li>Minor 设备号：用于标识同一类型设备中的不同设备实例或分区。</li>
+</ul>
+<p>这些设备号帮助内核正确地将设备请求路由到适当的设备驱动程序和具体设备实例。了解 major 和 minor 设备号对于理解 Linux 系统中的设备管理非常重要，特别是在调试设备问题时。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/08/18/how-linux-work-02/" rel="prev" title="how linux work 02">
+      <i class="fa fa-chevron-left"></i> how linux work 02
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Device-files-%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">Device files 设备文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">设备类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-device"><span class="nav-number">2.1.</span> <span class="nav-text">Block device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Character-device"><span class="nav-number">2.2.</span> <span class="nav-text">Character device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipe-device"><span class="nav-number">2.3.</span> <span class="nav-text">Pipe device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket-device"><span class="nav-number">2.4.</span> <span class="nav-text">Socket device</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sysfs-device-path"><span class="nav-number">3.</span> <span class="nav-text">sysfs device path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sysfs"><span class="nav-number">3.1.</span> <span class="nav-text">sysfs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dd-and-devices"><span class="nav-number">4.</span> <span class="nav-text">dd and devices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x2F-dev-x2F-zero"><span class="nav-number">5.</span> <span class="nav-text">&#x2F;dev&#x2F;zero</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Device-name-summary"><span class="nav-number">6.</span> <span class="nav-text">Device name summary</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hard-Disk-x2F-dev-x2F-sd"><span class="nav-number">6.1.</span> <span class="nav-text">Hard Disk &#x2F;dev&#x2F;sd*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CD-and-DVD-Drivers-x2F-dev-x2F-sr"><span class="nav-number">6.2.</span> <span class="nav-text">CD and DVD Drivers &#x2F;dev&#x2F;sr*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PATA-Hard-Disks-x2F-dev-x2F-hd"><span class="nav-number">6.3.</span> <span class="nav-text">PATA Hard Disks &#x2F;dev&#x2F;hd*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Terminals-x2F-dev-x2F-tty-x2F-dev-x2F-pts-x2F-and-x2F-dev-x2F-tty"><span class="nav-number">6.4.</span> <span class="nav-text">Terminals: &#x2F;dev&#x2F;tty*, &#x2F;dev&#x2F;pts&#x2F;*, and &#x2F;dev&#x2F;tty</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Display-mode-and-virtual-console"><span class="nav-number">6.4.1.</span> <span class="nav-text">Display mode and virtual console</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial-Ports-x2F-dev-x2F-ttyS"><span class="nav-number">6.5.</span> <span class="nav-text">Serial Ports &#x2F;dev&#x2F;ttyS*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parallel-Ports-x2F-dev-x2F-lp0-and-x2F-dev-x2F-lp1"><span class="nav-number">6.6.</span> <span class="nav-text">Parallel Ports: &#x2F;dev&#x2F;lp0 and &#x2F;dev&#x2F;lp1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Devices-x2F-dev-x2F-snd-x2F-x2F-dev-x2F-dsp-x2F-dev-x2F-audio-and-More"><span class="nav-number">6.7.</span> <span class="nav-text">Audio Devices: &#x2F;dev&#x2F;snd&#x2F;*, &#x2F;dev&#x2F;dsp, &#x2F;dev&#x2F;audio, and More</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-device-files"><span class="nav-number">6.8.</span> <span class="nav-text">create device files</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#udev"><span class="nav-number">7.</span> <span class="nav-text">udev</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD"><span class="nav-number">7.1.</span> <span class="nav-text">主要功能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%AE%BE%E5%A4%87%E8%8A%82%E7%82%B9%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.1.</span> <span class="nav-text">动态设备节点管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86"><span class="nav-number">7.1.2.</span> <span class="nav-text">设备事件处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.3.</span> <span class="nav-text">设备属性管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">7.1.4.</span> <span class="nav-text">udev 的工作流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E8%A7%84%E5%88%99"><span class="nav-number">7.1.5.</span> <span class="nav-text">udev 规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="nav-number">7.1.6.</span> <span class="nav-text">udev 的历史</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udevadm"><span class="nav-number">7.1.8.</span> <span class="nav-text">udevadm</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%92%8C%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="nav-number">7.1.8.1.</span> <span class="nav-text">主要功能和常见用法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">7.1.8.2.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98"><span class="nav-number">8.</span> <span class="nav-text">怎么查看磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%8F%B7"><span class="nav-number">9.</span> <span class="nav-text">设备号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">9.1.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Major-%E5%92%8C-Minor-%E8%AE%BE%E5%A4%87%E5%8F%B7%E7%9A%84%E5%88%86%E9%85%8D"><span class="nav-number">9.2.</span> <span class="nav-text">Major 和 Minor 设备号的分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">9.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">219k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">3:19</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
