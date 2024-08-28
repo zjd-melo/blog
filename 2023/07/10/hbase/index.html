@@ -310,7 +310,7 @@
 </ol>
 <h4 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h4><ol>
 <li>为 region server 分配 region</li>
-<li>负责 region server 的负责均衡</li>
+<li>负责 region server 的负载均衡</li>
 <li>发现失效的 region server，并重新分配其上的 region</li>
 <li>HDFS 上垃圾文件的回收</li>
 <li>处理 schema 更新请求</li>
@@ -332,8 +332,8 @@
 <li>将更新写入 memStore</li>
 <li>判断 memStore 是否需要 flush</li>
 </ol>
-<h4 id="Region-分配"><a href="#Region-分配" class="headerlink" title="Region 分配"></a>Region 分配</h4><p>任何时刻，一个 Region 只能分配给一个 Region Server，HMaster 记录了当前有哪些 Region Server，以及当前哪些 Region 分配给了哪些 Region server，哪些 Region 还未分配，当存在未分配的 Region，并且有一个 Region Server 上有可用空间时，HMaster 就给这个 Region Server  发送一个装载请求，把 Region 分配给这个 Region Server</p>
-<h4 id="Region-Server-上线"><a href="#Region-Server-上线" class="headerlink" title="Region Server 上线"></a>Region Server 上线</h4><p>HMaster 使用 zookeeper 来跟踪 Region Server 状态。当某个 Region Server 启动时，会首先在 zookeeper 上的 server 目录下建立代表自己的文件，并获得该文件的独占锁。由于 master 订阅了 server 目录上的变更消息，当 server 目录下的文件出现新增或删除操作时，master 可以得到来自 zookeeper 的实时通知。因此一旦 Region Server 上线，master能马上得到消息。</p>
+<h4 id="Region-分配"><a href="#Region-分配" class="headerlink" title="Region 分配"></a>Region 分配</h4><p>任何时刻，一个 Region 只能分配给一个 Region Server，HMaster 记录了当前有哪些 Region Server，以及当前哪些 Region 分配给了哪些 Region server，哪些 Region 还未分配，当存在未分配的 Region，并且有一个 Region Server 上有可用空间时，HMaster 就给这个 Region Server  发送一个装载请求，把 Region 分配给这个 Region Server。</p>
+<h4 id="Region-Server-上线"><a href="#Region-Server-上线" class="headerlink" title="Region Server 上线"></a>Region Server 上线</h4><p>HMaster 使用 zookeeper 来跟踪 Region Server 状态。当某个 Region Server 启动时，会首先在 zookeeper 上的 server 目录下建立代表自己的文件，并获得该文件的独占锁。由于 master 订阅了 server 目录上的变更消息，当 server 目录下的文件出现新增或删除操作时，master 可以得到来自 zookeeper 的实时通知。因此一旦 Region Server 上线，master 能马上得到消息。</p>
 <h4 id="Region-Server-下线"><a href="#Region-Server-下线" class="headerlink" title="Region Server 下线"></a>Region Server 下线</h4><p>当 Region Server 下线时，它和 zookeeper 的会话断开，zookeeper 自动释放代表这台 server 的文件上的独占锁。而 master 不断轮询 server 目录下文件的锁状态。如果 master 发现某个 Region Server 丢失了它自己的独占锁，(或者 master 连续几次和 Region Server 通信都无法成功),master 就会尝试去获取代表这个 Region Server 的读写锁，一旦获取成功，就可以确定：1、Region Server 和 zookeeper 之间的网络断开了 2、 Region Server 挂了 的其中一种情况发生了，无论哪种情况，Region Server 都无法继续为它的 region 提供服务了，此时 master 会删除 server 目录下代表这台 Region Server 的文件，并将这台 Region Server 的 region 分配给其它还活着的同志。如果网络短暂出现问题导致 Region Server 丢失了它的锁，那么 Region Server 重新连接到 zookeeper 之后，只要代表它的文件还在，它就会不断尝试获取这个文件上的锁，一旦获取到了，就可以继续提供服务。</p>
 <h4 id="Hmaster-上线"><a href="#Hmaster-上线" class="headerlink" title="Hmaster 上线"></a>Hmaster 上线</h4><ol>
 <li>从 zookeeper 上获取唯一一个代表 master 的锁，用来阻止其它 master 成为 master</li>
