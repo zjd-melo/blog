@@ -263,7 +263,7 @@
 <h3 id="查看一个分区表"><a href="#查看一个分区表" class="headerlink" title="查看一个分区表"></a>查看一个分区表</h3><p><code>parted -l</code> 或者 <code>fdisk -l</code> 查看分区表。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vda: 85.9GB</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: msdos  # MBR</span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start   End     Size    Type     File system  Flags</span><br><span class="line"> 1      1049kB  85.9GB  85.9GB  primary  ext4         boot</span><br><span class="line">                                主分区</span><br></pre></td></tr></tbody></table></figure>
 
-<h3 id="MBR-分区表"><a href="#MBR-分区表" class="headerlink" title="MBR 分区表"></a>MBR 分区表</h3><p>MBR 分区表，包括 priamry、extended 和 logical 分区，主分区就是普通的磁盘上的分区。MBR 只支持 4 个主分区，如果想要更多的分区，就要把其中的一个主分区设计为扩展分区，在扩展分区类划分逻辑分区。</p>
+<h3 id="MBR-分区表"><a href="#MBR-分区表" class="headerlink" title="MBR 分区表"></a>MBR 分区表</h3><p>MBR 分区表，包括 priamry、extended 和 logical 分区，主分区就是普通的磁盘上的分区。MBR 只支持 4 个主分区，如果想要更多的分区，就要把其中的一个主分区设计为扩展分区，在扩展分区内划分逻辑分区。</p>
 
     </div>
 
