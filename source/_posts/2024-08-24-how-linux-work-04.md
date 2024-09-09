@@ -42,4 +42,4 @@ Number  Start   End     Size    Type     File system  Flags
 ```
 
 ### MBR 分区表
-MBR 分区表，包括 priamry、extended 和 logical 分区，主分区就是普通的磁盘上的分区。MBR 只支持 4 个主分区，如果想要更多的分区，就要把其中的一个主分区设计为扩展分区，在扩展分区类划分逻辑分区。
+MBR 分区表，包括 priamry、extended 和 logical 分区，主分区就是普通的磁盘上的分区。MBR 只支持 4 个主分区，如果想要更多的分区，就要把其中的一个主分区设计为扩展分区，在扩展分区内划分逻辑分区。
