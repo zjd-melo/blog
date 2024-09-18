@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="page cache and disk cache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="page cache 和 disk cache">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/09/17/page-cache-%E5%92%8C-disk-cache/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="page cache and disk cache">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-17T12:00:43.000Z">
+<meta property="article:modified_time" content="2024-09-17T12:00:43.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/09/17/page-cache-%E5%92%8C-disk-cache/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>page cache 和 disk cache | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">71</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/09/17/page-cache-%E5%92%8C-disk-cache/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          page cache 和 disk cache
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-09-17 20:00:43" itemprop="dateCreated datePublished" datetime="2024-09-17T20:00:43+08:00">2024-09-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>8.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+            <div class="post-description">page cache and disk cache</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="page-cache-and-disk-cache"><a href="#page-cache-and-disk-cache" class="headerlink" title="page cache and disk cache"></a>page cache and disk cache</h2><p>Disk cache 和 page cache 是相关但不同的概念，它们在功能上有所重叠，但技术细节和应用层面有所不同。</p>
+<p>以下是它们的区别和联系：</p>
+<h3 id="Page-Cache（页面缓存）："><a href="#Page-Cache（页面缓存）：" class="headerlink" title="Page Cache（页面缓存）："></a>Page Cache（页面缓存）：</h3><ul>
+<li>定义：由操作系统内核管理的内存区域，用于缓存文件系统中的数据。它缓存的是文件的内容，即文件系统层面的数据。每次文件被读取时，数据会首先进入页面缓存，从而减少对磁盘的直接访问。</li>
+<li>作用：主要用于缓存文件的内容，以加速后续的读写操作。如果某个文件已经在页面缓存中，下次读取该文件时，可以直接从缓存中读取，而无需访问磁盘，从而减少磁盘I/O。</li>
+<li>场景：与文件系统相关联，主要针对文件级别的数据缓存。</li>
+<li>实现方式：操作系统的内核自动管理，通常通过虚拟内存的一部分作为页面缓存。</li>
+</ul>
+<h3 id="Disk-Cache（磁盘缓存）："><a href="#Disk-Cache（磁盘缓存）：" class="headerlink" title="Disk Cache（磁盘缓存）："></a>Disk Cache（磁盘缓存）：</h3><ul>
+<li>定义：通常指的是磁盘驱动器自身的缓存，尤其是硬盘（HDD）或固态硬盘（SSD）内置的缓存。这些缓存是硬件层面的，由磁盘控制器管理，旨在加速磁盘读写操作。</li>
+<li>作用：用于缓存磁盘块的读写数据。当系统请求读写数据时，磁盘会先将数据存入自身的高速缓存中（通常为静态RAM，容量较小，几MB到几百MB不等），从而加速传输。对于写操作，磁盘缓存可以先将数据临时存储，稍后再写入磁盘，减少写操作的延迟。</li>
+<li>场景：硬件层面的缓存，作用在块设备级别。</li>
+<li>实现方式：磁盘驱动器上的硬件控制器负责管理这部分缓存。</li>
+</ul>
+<h3 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h3><h4 id="管理层面"><a href="#管理层面" class="headerlink" title="管理层面"></a>管理层面</h4><ul>
+<li>Page Cache：由操作系统内核管理，用于缓存文件系统的数据。</li>
+<li>Disk Cache：由硬件（磁盘控制器）管理，直接作用于物理磁盘的读写操作。</li>
+</ul>
+<h4 id="缓存的数据类型"><a href="#缓存的数据类型" class="headerlink" title="缓存的数据类型"></a>缓存的数据类型</h4><ul>
+<li>Page Cache：缓存的是文件系统中的文件内容，主要是逻辑文件数据。</li>
+<li>Disk Cache：缓存的是物理磁盘块，直接与硬盘的物理读写操作相关。</li>
+</ul>
+<h4 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h4><ul>
+<li>Page Cache：在系统内存（RAM）中，由操作系统的虚拟内存管理部分负责。</li>
+<li>Disk Cache：在磁盘本身内置的缓存中，通常是硬盘或SSD的控制器进行管理。</li>
+</ul>
+<h4 id="缓存作用的层次"><a href="#缓存作用的层次" class="headerlink" title="缓存作用的层次"></a>缓存作用的层次</h4><ul>
+<li>Page Cache：高层次缓存，位于操作系统的文件系统层。</li>
+<li>Disk Cache：底层缓存，位于硬件的物理磁盘控制器层。</li>
+</ul>
+<h3 id="联系"><a href="#联系" class="headerlink" title="联系"></a>联系</h3><p>尽管这两种缓存处于不同的层次，但它们有时会协同工作。例如：<br>当系统从磁盘读取文件时，数据会首先经过Disk Cache（如果磁盘控制器缓存了数据），再进入Page Cache。下次访问同一数据时，可以直接从Page Cache中读取。<br>当写入数据时，Disk Cache 和 Page Cache 也可能都临时存储数据，从而加速写操作。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Disk cache 和 page cache 并不是完全相同的东西，它们作用在不同的层面。Disk cache 是硬件级的缓存，由磁盘控制器管理，作用于磁盘块级别；而 page cache 是操作系统内核管理的缓存，作用于文件系统的内容。在现代系统中，这两种缓存通常协同工作，共同提高读写性能。</p>
+<h3 id="disk-cache-是什么"><a href="#disk-cache-是什么" class="headerlink" title="disk cache 是什么"></a>disk cache 是什么</h3><p>磁盘缓存（disk cache）是计算机系统中的一块高速存储区域，用于加速数据的读取和写入操作。它通常通过在内存（RAM）中存储最近从磁盘读取的数据，减少对磁盘的频繁访问，从而提高系统性能。</p>
+<p>磁盘缓存的工作原理包括以下几方面：</p>
+<ul>
+<li>数据预读取：当系统读取某个数据块时，磁盘缓存会将相邻的数据块也加载到缓存中，假设这些数据可能会很快被访问到。</li>
+<li>写缓存：当系统要写入数据时，磁盘缓存会先将数据临时存放在缓存中，然后再批量写入磁盘，从而减少磁盘的写操作。</li>
+<li>缓存命中：当系统请求的数据已经存在于磁盘缓存中时，数据直接从缓存中返回，避免了磁盘访问，从而大幅减少读写延迟。</li>
+</ul>
+<h3 id="磁盘缓存一般分为两种"><a href="#磁盘缓存一般分为两种" class="headerlink" title="磁盘缓存一般分为两种"></a>磁盘缓存一般分为两种</h3><ul>
+<li>硬件级缓存：内置在硬盘或SSD中的缓存，通常是专用的静态RAM（SRAM），容量较小（几MB到几百MB不等），用于加速数据传输。</li>
+<li>操作系统级缓存：操作系统使用部分内存作为磁盘缓存，以减少频繁的磁盘访问。</li>
+</ul>
+<h2 id="如何保证一致性"><a href="#如何保证一致性" class="headerlink" title="如何保证一致性"></a>如何保证一致性</h2><p>操作系统级的缓存怎么保证数据一致性，比如写数据时，数据缓存在ram中，此时突然停电，这部分数据不就丢失了吗？</p>
+<p>操作系统级的缓存通过多种机制来保证数据一致性，尤其是在突然断电或系统崩溃的情况下，以减少数据丢失的风险。下面是一些常见的技术手段：</p>
+<h3 id="写入策略"><a href="#写入策略" class="headerlink" title="写入策略"></a>写入策略</h3><p>操作系统级缓存在写数据时通常有两种策略：</p>
+<ul>
+<li>Write-through（直写模式）：数据在写入缓存的同时，立即同步写入磁盘。这种方式确保了数据在写入时立即持久化到磁盘上，即使系统突然断电，缓存中的数据已经写到磁盘，不会丢失。然而，这种方式的写性能较低，因为每次写操作都需要等待磁盘完成。</li>
+<li>Write-back（延迟写/回写模式）：数据先写入缓存，之后再批量写入磁盘。这种方式提高了性能，但存在风险——如果在数据从缓存写入磁盘之前系统发生故障，数据可能会丢失。为了降低这个风险，操作系统会引入其他机制来保证一致性。</li>
+</ul>
+<h3 id="文件系统的同步机制"><a href="#文件系统的同步机制" class="headerlink" title="文件系统的同步机制"></a>文件系统的同步机制</h3><p>操作系统和文件系统提供了同步（sync）操作，用于强制将缓存中的数据写入磁盘。常见的方式包括：</p>
+<ul>
+<li>定期同步：操作系统会在一定的时间间隔（5秒）内自动执行同步操作，将缓存中的数据写入磁盘。这种机制可以减少数据丢失的窗口时间。</li>
+<li>手动同步：应用程序或管理员可以使用系统调用（如 fsync 或 sync）手动触发数据同步，确保数据从缓存写入磁盘。</li>
+</ul>
+<h3 id="日志文件系统-Journaling-Filesystem"><a href="#日志文件系统-Journaling-Filesystem" class="headerlink" title="日志文件系统 Journaling Filesystem"></a>日志文件系统 Journaling Filesystem</h3><p>大多数现代操作系统使用日志文件系统（如 ext4、XFS、NTFS 等）来进一步保证数据一致性。日志文件系统在执行写操作之前，先将即将写入的数据记录到一个独立的日志中，这称为日志记录或元数据写入。如果系统在写操作过程中崩溃或断电，系统可以通过日志恢复未完成的操作，从而保证数据一致性。</p>
+<p>工作流程：</p>
+<ul>
+<li>数据先写入日志并标记为即将执行。</li>
+<li>当日志成功写入后，才会实际写入文件系统。</li>
+<li>最后更新日志，标记该操作完成。</li>
+</ul>
+<h3 id="非易失性缓存"><a href="#非易失性缓存" class="headerlink" title="非易失性缓存"></a>非易失性缓存</h3><p>一些存储设备，如企业级的硬盘和固态硬盘（SSD），配备了非易失性缓存（如电池备份缓存或使用非易失性内存技术），即使在断电时，缓存中的数据也不会丢失。这可以保证缓存中的数据在系统恢复时仍然可以安全地写入磁盘。</p>
+<h3 id="UPS-不间断电源"><a href="#UPS-不间断电源" class="headerlink" title="UPS 不间断电源"></a>UPS 不间断电源</h3><p>在数据中心等关键环境中，通常会使用UPS（不间断电源）等硬件设施来防止突然断电对系统造成影响，从而保证操作系统有足够时间将缓存中的数据写入磁盘。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>操作系统通过写入策略（如 write-through 或 write-back）、定期同步机制、日志文件系统等方式来减少数据丢失的可能性。</li>
+<li>对于关键任务应用，管理员或程序应结合这些机制，主动执行数据同步或采用 UPS 等硬件解决方案来进一步提高数据的可靠性。</li>
+</ol>
+<h2 id="page-cache"><a href="#page-cache" class="headerlink" title="page cache"></a>page cache</h2><p>操作系统提供的这种功能在学术上通常被称为页面缓存（Page Cache）。它是操作系统内存管理的一部分，专门用于缓存从磁盘读取的数据，以提高读写性能。</p>
+<h3 id="页面缓存的关键点"><a href="#页面缓存的关键点" class="headerlink" title="页面缓存的关键点"></a>页面缓存的关键点</h3><ul>
+<li>读缓存：当操作系统读取文件时，会将文件的页面缓存在内存中。下次访问相同的文件时，数据可以直接从内存中读取，避免磁盘I/O，从而加速文件访问。</li>
+<li>写缓存：当数据写入文件时，操作系统并不会立即将其写入磁盘，而是先将数据保存在页面缓存中（这就是所谓的“延迟写”或“写回缓存”）。随后在适当的时候，操作系统会将这些数据批量写入磁盘。</li>
+</ul>
+<h3 id="页面缓存的特点"><a href="#页面缓存的特点" class="headerlink" title="页面缓存的特点"></a>页面缓存的特点</h3><ul>
+<li>透明性：对于应用程序而言，页面缓存的操作是透明的，应用程序无需感知缓存的存在。</li>
+<li>提高性能：通过减少磁盘I/O次数，页面缓存显著提高了读写操作的性能，尤其是在大量重复读写同一文件或区域时。</li>
+</ul>
+<h3 id="页面缓存与缓冲区缓存的区别"><a href="#页面缓存与缓冲区缓存的区别" class="headerlink" title="页面缓存与缓冲区缓存的区别"></a>页面缓存与缓冲区缓存的区别</h3><ul>
+<li>页面缓存：用于缓存文件系统的数据页。</li>
+<li>缓冲区缓存：通常与块设备相关，缓存的是块设备层的数据（如磁盘块）。</li>
+</ul>
+<p>操作系统中的实现：在Linux中，页面缓存由内核管理，所有文件系统的文件操作都会通过页面缓存机制进行优化。</p>
+<h2 id="页面缓存是由内核提供的而不是文件系统"><a href="#页面缓存是由内核提供的而不是文件系统" class="headerlink" title="页面缓存是由内核提供的而不是文件系统"></a>页面缓存是由内核提供的而不是文件系统</h2><p>页面缓存（Page Cache）是由操作系统内核提供的，而不是由文件系统直接提供的功能。虽然页面缓存用于优化文件系统的读写操作，但它是操作系统内存管理的一部分，独立于具体的文件系统。</p>
+<h3 id="内核负责管理页面缓存"><a href="#内核负责管理页面缓存" class="headerlink" title="内核负责管理页面缓存"></a>内核负责管理页面缓存</h3><p>页面缓存是在内核层面实现的，内核为所有文件系统提供统一的缓存机制。当应用程序读取或写入文件时，数据会通过内核的页面缓存进行缓存。</p>
+<h3 id="文件系统使用内核的缓存机制"><a href="#文件系统使用内核的缓存机制" class="headerlink" title="文件系统使用内核的缓存机制"></a>文件系统使用内核的缓存机制</h3><p>文件系统不会自己管理缓存，而是依赖操作系统的内核来管理缓存。不同的文件系统在使用内核提供的页面缓存时，表现出一致的行为，无论是ext4、NTFS还是其他文件系统，它们都依赖内核的缓存机制。</p>
+<h3 id="页面缓存独立于具体的文件系统"><a href="#页面缓存独立于具体的文件系统" class="headerlink" title="页面缓存独立于具体的文件系统"></a>页面缓存独立于具体的文件系统</h3><p>页面缓存为所有文件系统提供了一个通用的接口。文件系统负责组织数据的布局和存取规则，但实际的缓存逻辑（如数据是否缓存、何时从缓存中读取、何时写回磁盘）是由操作系统内核负责的。</p>
+<h3 id="统一的内存管理"><a href="#统一的内存管理" class="headerlink" title="统一的内存管理"></a>统一的内存管理</h3><p>页面缓存与虚拟内存管理密切相关，内核会将一部分内存用于页面缓存，以提高文件操作的效率。当系统内存不足时，内核会自动调整缓存大小或释放缓存中的数据来确保系统的稳定运行。</p>
+<h2 id="怎么查看-page-cache"><a href="#怎么查看-page-cache" class="headerlink" title="怎么查看 page cache"></a>怎么查看 page cache</h2><p>在Linux系统中，可以通过多种方式查看和管理页面缓存（page cache）的使用情况。以下是常用的几种方法：</p>
+<h3 id="查看页面缓存的统计信息"><a href="#查看页面缓存的统计信息" class="headerlink" title="查看页面缓存的统计信息"></a>查看页面缓存的统计信息</h3><h4 id="free"><a href="#free" class="headerlink" title="free"></a>free</h4><p>通过 free 命令可以查看系统页面缓存的大小。<code>free -h</code></p>
+<p>buff/cache：表示内核用于缓冲区缓存和页面缓存的内存大小。</p>
+<h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a>vmstat</h4><p><code>vmstat -s</code></p>
+<h4 id="cat-x2F-proc-x2F-meminfo"><a href="#cat-x2F-proc-x2F-meminfo" class="headerlink" title="cat /proc/meminfo"></a>cat /proc/meminfo</h4><p>cat /proc/meminfo | grep -i -e “cached” -e “Buffers”</p>
+<p>Buffers：表示块设备（如硬盘）使用的缓冲区缓存。<br>Cached：表示文件系统使用的页面缓存。</p>
+<h2 id="清理页面缓存"><a href="#清理页面缓存" class="headerlink" title="清理页面缓存"></a>清理页面缓存</h2><p>有时可能希望手动清理页面缓存，特别是在进行性能测试时。可以通过以下命令来清除页面缓存（需要root权限）：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo sync       # 确保所有数据写入磁盘</span><br><span class="line">sudo echo 1 &gt; /proc/sys/vm/drop_caches   # 清理页面缓存</span><br><span class="line">sudo echo 2 &gt; /proc/sys/vm/drop_caches   # 清理 dentries 和 inodes 缓存</span><br><span class="line">sudo echo 3 &gt; /proc/sys/vm/drop_caches   # 清理所有缓存</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="页面缓存和缓冲区缓存的区别"><a href="#页面缓存和缓冲区缓存的区别" class="headerlink" title="页面缓存和缓冲区缓存的区别"></a>页面缓存和缓冲区缓存的区别</h2><p>页面缓存（Page Cache）和缓冲区缓存（Buffer Cache）是操作系统内存管理中的两种不同的缓存机制，虽然它们有相似之处，都旨在提高读写操作的效率，但它们处理的数据类型和应用场景有所不同。以下是两者的主要区别：</p>
+<h3 id="缓存对象"><a href="#缓存对象" class="headerlink" title="缓存对象"></a>缓存对象</h3><ul>
+<li>页面缓存（Page Cache）：主要用于文件系统中的文件数据，它缓存的是文件内容，即应用程序读取和写入的文件数据，每当应用程序访问文件时，文件内容会被加载到页面缓存中，以便后续访问可以直接从内存中读取，减少磁盘 I/O 操作。</li>
+<li>缓冲区缓存（Buffer Cache）：主要用于块设备的数据，例如硬盘块（block devices）。它缓存的是文件系统元数据（如目录、超级块等）和磁盘块本身。这部分缓存主要与设备的物理层数据交互，是块设备操作的缓存层。</li>
+</ul>
+<h3 id="缓存的层次"><a href="#缓存的层次" class="headerlink" title="缓存的层次"></a>缓存的层次</h3><ul>
+<li>页面缓存：作用于文件系统层。当文件被读取或写入时，操作系统将文件数据放在页面缓存中，因此页面缓存用于逻辑文件的缓存。</li>
+<li>缓冲区缓存：作用于块设备层，是操作系统在与块设备交互时使用的缓存。它保存设备的块数据，主要是物理块层次上的信息。</li>
+</ul>
+<h3 id="缓存的数据类型-1"><a href="#缓存的数据类型-1" class="headerlink" title="缓存的数据类型"></a>缓存的数据类型</h3><ul>
+<li>页面缓存：缓存文件内容，专门处理文件的用户数据。例如，当你打开一个文本文件或图像文件时，文件内容会首先进入页面缓存。</li>
+<li>缓冲区缓存：缓存文件系统的元数据和磁盘块的数据。例如，文件系统结构的元信息、磁盘块的内容（如目录项和索引节点）等。</li>
+</ul>
+<h3 id="管理方式"><a href="#管理方式" class="headerlink" title="管理方式"></a>管理方式</h3><ul>
+<li>页面缓存：由操作系统内核通过虚拟内存管理，通常通过文件系统接口来管理。当应用程序请求读写文件时，操作系统首先查找页面缓存，查看是否已经缓存了该文件的数据。</li>
+<li>缓冲区缓存：与块设备驱动相关，由操作系统块设备管理器控制。当操作系统执行块设备级别的读写操作时，缓冲区缓存起作用。</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li>页面缓存：主要用于提高文件操作的效率，特别是当多个程序频繁访问相同文件时。它使得文件系统读写操作更快，因为文件内容可以在缓存中重用。</li>
+<li>缓冲区缓存：主要用于提高磁盘块的读写效率，特别是在文件系统的元数据操作时，缓冲区缓存用于减少磁盘I/O操作。例如，在写入文件时，缓冲区缓存可以缓存文件系统的目录结构、索引节点等数据。</li>
+</ul>
+<h3 id="数据一致性"><a href="#数据一致性" class="headerlink" title="数据一致性"></a>数据一致性</h3><ul>
+<li>页面缓存：文件系统层的缓存，因此它的数据一致性通常由文件系统的同步机制控制。脏页（修改后尚未写入磁盘的页面）会在适当时刻写入磁盘。</li>
+<li>缓冲区缓存：与块设备交互，因此数据一致性与设备的同步机制相关。缓冲区缓存的数据通常会通过 sync 命令或内核后台进程定期同步到磁盘。<br>sync 命令能同时同步这两个内存。</li>
+</ul>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>在Linux中：页面缓存负责缓存文件的内容，而缓冲区缓存负责缓存磁盘块和文件系统元数据。可以通过 /proc/meminfo 中的 Buffers 和 Cached 字段来分别查看缓冲区缓存和页面缓存的大小。</p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>页面缓存：缓存的是文件系统中的文件内容，应用于逻辑文件操作层。</li>
+<li>缓冲区缓存：缓存的是块设备的数据和文件系统的元数据，应用于块设备操作层。</li>
+</ul>
+<p>这两种缓存机制共同作用于操作系统的存储管理，提升文件系统和块设备的性能。</p>
+<h2 id="buff-x2F-cache"><a href="#buff-x2F-cache" class="headerlink" title="buff/cache"></a>buff/cache</h2><p>buff/cache buff=缓冲区缓存 page=页面缓存。</p>
+<p>buff/cache 字段在 free -h 命令输出中显示的是两个不同的缓存机制的总和，即缓冲区缓存（Buffer Cache）和页面缓存（Page Cache）。它们分别执行不同的功能，但在 free 命令中被合并显示为一个值，因为它们都是操作系统用于加速数据访问的缓存。</p>
+<h3 id="具体组成"><a href="#具体组成" class="headerlink" title="具体组成"></a>具体组成</h3><h4 id="Buffer-Cache（缓冲区缓存）"><a href="#Buffer-Cache（缓冲区缓存）" class="headerlink" title="Buffer Cache（缓冲区缓存）"></a>Buffer Cache（缓冲区缓存）</h4><ul>
+<li>作用：主要用于缓存与块设备（如磁盘）交互时的元数据和块数据。</li>
+<li>缓存内容：包括文件系统元数据（目录、超级块、inode）和块设备数据。它帮助减少对物理磁盘的访问，提升磁盘性能。</li>
+<li>位置：位于内存中，由操作系统管理，用来处理与磁盘块交互的操作。</li>
+</ul>
+<h4 id="Page-Cache（页面缓存）"><a href="#Page-Cache（页面缓存）" class="headerlink" title="Page Cache（页面缓存）"></a>Page Cache（页面缓存）</h4><ul>
+<li>作用：用于缓存文件系统中文件的实际内容（用户数据）。当系统读取或写入文件时，页面缓存会保存这些文件的数据，避免频繁的磁盘I/O操作。</li>
+<li>缓存内容：文件内容，包括读取的文件数据和准备写入的文件数据。它帮助减少对文件系统的磁盘访问，提升文件操作的性能。</li>
+<li>位置：也位于内存中，并由操作系统内核通过虚拟内存机制管理。</li>
+</ul>
+<ol>
+<li><p>为什么它们合并为一个字段（buff/cache）显示？<br>在 free 命令的输出中，Buffer Cache 和 Page Cache 都是系统为了优化磁盘访问和文件操作而在内存中占用的一部分。这两者的区别对用户程序来说并不直接影响内存使用的表现，因为它们都可以在需要时释放给应用程序使用。所以，free 命令将它们合并为 buff/cache 一项，表示系统中可以作为缓存使用的内存量。</p>
+</li>
+<li><p>如何查看 Buffer Cache 和 Page Cache 的单独使用情况？<br>虽然 free 命令将它们合并显示，但可以通过其他方式分别查看缓冲区缓存和页面缓存的使用情况：<br>使用 cat /proc/meminfo：Buffers：表示缓冲区缓存的大小。Cached：表示页面缓存的大小。</p>
+</li>
+</ol>
+<h2 id="缓冲区缓存和页面缓存一般哪个大"><a href="#缓冲区缓存和页面缓存一般哪个大" class="headerlink" title="缓冲区缓存和页面缓存一般哪个大"></a>缓冲区缓存和页面缓存一般哪个大</h2><p>页面缓存（Page Cache）通常比缓冲区缓存（Buffer Cache）大。这是因为它们缓存的数据类型和使用场景不同：</p>
+<ol>
+<li>页面缓存（Page Cache）：</li>
+</ol>
+<ul>
+<li>缓存内容：文件系统中的实际文件内容（用户数据）。</li>
+<li>用途：页面缓存用于加速文件读取和写入操作，特别是当应用程序频繁访问文件时，它可以显著减少磁盘I/O负载。</li>
+<li>大小：由于页面缓存主要缓存的是文件内容，现代操作系统会尽量将未使用的内存分配给页面缓存，以提高文件操作的性能。尤其是在文件访问频繁的系统上，页面缓存可能占用很大的内存空间。</li>
+</ul>
+<ol start="2">
+<li>缓冲区缓存（Buffer Cache）：</li>
+</ol>
+<ul>
+<li>缓存内容：主要缓存文件系统的元数据和与块设备相关的物理数据，如文件系统的目录结构、索引节点、超级块等。</li>
+<li>用途：缓冲区缓存加速块设备的访问和文件系统元数据的管理，但由于这些元数据和块信息相对较少，缓冲区缓存的占用通常较小。</li>
+<li>大小：缓冲区缓存一般不会像页面缓存那样占用大量内存，因为它只需缓存文件系统的结构和设备相关的少量数据。</li>
+</ul>
+<h3 id="为什么页面缓存通常更大"><a href="#为什么页面缓存通常更大" class="headerlink" title="为什么页面缓存通常更大"></a>为什么页面缓存通常更大</h3><p>文件内容往往比文件系统的元数据或块设备数据大得多，因此页面缓存需要更多的内存空间来缓存文件的数据。<br>页面缓存的大小可以动态增长，当内存有空闲时，系统会尽量用更多的内存来缓存文件内容，以提升读写性能。<br>缓冲区缓存仅涉及文件系统的元数据和少量的块信息，数据量相对较小。</p>
+<h3 id="如何查看两者的大小"><a href="#如何查看两者的大小" class="headerlink" title="如何查看两者的大小"></a>如何查看两者的大小</h3><p>可以通过 /proc/meminfo 文件查看：Buffers：显示缓冲区缓存的大小。Cached：显示页面缓存的大小。<br>典型情况下，Cached（页面缓存）的值会比<strong>Buffers</strong>（缓冲区缓存）的值大很多。</p>
+<p>总结：页面缓存一般比缓冲区缓存大得多，因为页面缓存用于缓存大量的文件数据，而缓冲区缓存主要用于缓存较少的元数据和块设备数据。</p>
+<h2 id="在-linux-中-page-cache-大小是固定的吗"><a href="#在-linux-中-page-cache-大小是固定的吗" class="headerlink" title="在 linux 中 page cache 大小是固定的吗"></a>在 linux 中 page cache 大小是固定的吗</h2><p>在 Linux 中，页面缓存（Page Cache）的大小不是固定的，而是动态调整的。操作系统会根据内存的使用情况和系统需求，自动分配和释放页面缓存的大小，以优化性能。</p>
+<h3 id="页面缓存的动态调整机制"><a href="#页面缓存的动态调整机制" class="headerlink" title="页面缓存的动态调整机制"></a>页面缓存的动态调整机制</h3><p>页面缓存的大小取决于系统的内存可用性和文件访问的频率。Linux 会尽可能将空闲内存用于页面缓存，以提高文件读取和写入的性能，但当应用程序需要更多内存时，系统会自动减少页面缓存的大小，释放内存供应用程序使用。</p>
+<p>具体来说：</p>
+<ul>
+<li>内存充足时：操作系统会尽量使用空闲内存来缓存更多的文件数据，增加页面缓存的大小。这样可以加速文件系统的性能，减少磁盘I/O。</li>
+<li>内存不足时：当应用程序需要更多的内存，而可用的空闲内存不足时，Linux 会回收页面缓存中的部分数据，以释放内存供应用程序使用。这是因为页面缓存的数据可以随时从磁盘重新加载，所以在内存紧张时优先被回收。</li>
+</ul>
+<h3 id="页面缓存的回收策略"><a href="#页面缓存的回收策略" class="headerlink" title="页面缓存的回收策略"></a>页面缓存的回收策略</h3><p>Linux 内核会定期检查内存的使用情况，并通过内存管理器的 LRU（Least Recently Used） 算法逐步回收较少使用的页面缓存。脏页（已修改但尚未写回磁盘的数据）会被写回磁盘，而干净的页可以直接丢弃，以腾出空间给其他进程。</p>
+<h3 id="如何查看和管理页面缓存的使用情况"><a href="#如何查看和管理页面缓存的使用情况" class="headerlink" title="如何查看和管理页面缓存的使用情况"></a>如何查看和管理页面缓存的使用情况</h3><p>查看页面缓存大小： 通过 /proc/meminfo 文件可以查看系统中页面缓存的大小：<br>cat /proc/meminfo | grep Cached<br>Cached:         1024000 kB</p>
+<p>清除页面缓存： 如果你想手动清理页面缓存，可以使用以下命令（需要 root 权限）：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sync # 将所有脏页同步到磁盘。</span><br><span class="line">echo 1 &gt; /proc/sys/vm/drop_caches # 清除页面缓存。</span><br></pre></td></tr></tbody></table></figure>
+<p>需要注意，清除页面缓存会导致系统性能下降，因为下一次访问文件时，需要从磁盘重新加载数据。</p>
+<h3 id="页面缓存的大小受哪些因素影响？"><a href="#页面缓存的大小受哪些因素影响？" class="headerlink" title="页面缓存的大小受哪些因素影响？"></a>页面缓存的大小受哪些因素影响？</h3><ul>
+<li>系统的总内存：内存越多，操作系统可以使用的页面缓存越多。</li>
+<li>文件系统的活动：如果系统中频繁进行文件读写操作，页面缓存会增加，缓存更多的文件数据。</li>
+<li>应用程序的内存需求：当应用程序需要更多的内存时，系统会自动减少页面缓存的大小，腾出内存供应用程序使用。</li>
+</ul>
+<p>总结：在 Linux 中，页面缓存的大小是动态的，根据系统的内存状况和文件系统的活动自动调整。</p>
+<p>页面缓存可以占用系统中大量的空闲内存，但当内存需求增加时，系统会自动回收缓存以满足应用程序的内存需求。</p>
+<h2 id="可以申请一个不被回收的固定大小的-page-cache-吗"><a href="#可以申请一个不被回收的固定大小的-page-cache-吗" class="headerlink" title="可以申请一个不被回收的固定大小的 page cache 吗"></a>可以申请一个不被回收的固定大小的 page cache 吗</h2><p>在 Linux 中，无法直接声明一个固定的页面缓存（Page Cache）大小，并且页面缓存的管理由操作系统内核自动进行，它会根据系统的内存需求动态调整缓存的大小。因此，操作系统通常不会允许应用程序强制锁定特定大小的页面缓存，并阻止它被回收或释放。</p>
+<p>原因：</p>
+<ul>
+<li>页面缓存是全局的：页面缓存是由内核统一管理的共享资源，它是针对整个系统的，而不是为单个应用程序独立分配。操作系统会根据整体内存状况和应用需求来动态分配和回收页面缓存。</li>
+<li>内存回收机制：当系统内存紧张时，Linux 内核会通过回收页面缓存来腾出内存以供应用程序使用。这是 Linux 内存管理的基本策略，因此即使有空闲内存，内核也可能回收页面缓存。</li>
+<li>公平性和资源管理：内核的内存管理策略确保系统中的各个应用程序能够公平地使用系统资源，锁定特定的页面缓存大小会影响整个系统的内存管理，可能会导致其他应用程序无法获取足够的内存。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/08/24/how-linux-work-04/" rel="prev" title="how linux work 04">
+      <i class="fa fa-chevron-left"></i> how linux work 04
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#page-cache-and-disk-cache"><span class="nav-number">1.</span> <span class="nav-text">page cache and disk cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Page-Cache%EF%BC%88%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%EF%BC%89%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">Page Cache（页面缓存）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Disk-Cache%EF%BC%88%E7%A3%81%E7%9B%98%E7%BC%93%E5%AD%98%EF%BC%89%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">Disk Cache（磁盘缓存）：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">主要区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%B1%82%E9%9D%A2"><span class="nav-number">1.3.1.</span> <span class="nav-text">管理层面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.2.</span> <span class="nav-text">缓存的数据类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.3.3.</span> <span class="nav-text">位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E4%BD%9C%E7%94%A8%E7%9A%84%E5%B1%82%E6%AC%A1"><span class="nav-number">1.3.4.</span> <span class="nav-text">缓存作用的层次</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E7%B3%BB"><span class="nav-number">1.4.</span> <span class="nav-text">联系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#disk-cache-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.6.</span> <span class="nav-text">disk cache 是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E7%BC%93%E5%AD%98%E4%B8%80%E8%88%AC%E5%88%86%E4%B8%BA%E4%B8%A4%E7%A7%8D"><span class="nav-number">1.7.</span> <span class="nav-text">磁盘缓存一般分为两种</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">如何保证一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.</span> <span class="nav-text">写入策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">文件系统的同步机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-Journaling-Filesystem"><span class="nav-number">2.3.</span> <span class="nav-text">日志文件系统 Journaling Filesystem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E6%98%93%E5%A4%B1%E6%80%A7%E7%BC%93%E5%AD%98"><span class="nav-number">2.4.</span> <span class="nav-text">非易失性缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UPS-%E4%B8%8D%E9%97%B4%E6%96%AD%E7%94%B5%E6%BA%90"><span class="nav-number">2.5.</span> <span class="nav-text">UPS 不间断电源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">2.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#page-cache"><span class="nav-number">3.</span> <span class="nav-text">page cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%9A%84%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">页面缓存的关键点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">页面缓存的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E4%B8%8E%E7%BC%93%E5%86%B2%E5%8C%BA%E7%BC%93%E5%AD%98%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.3.</span> <span class="nav-text">页面缓存与缓冲区缓存的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E6%98%AF%E7%94%B1%E5%86%85%E6%A0%B8%E6%8F%90%E4%BE%9B%E7%9A%84%E8%80%8C%E4%B8%8D%E6%98%AF%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.</span> <span class="nav-text">页面缓存是由内核提供的而不是文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E8%B4%9F%E8%B4%A3%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98"><span class="nav-number">4.1.</span> <span class="nav-text">内核负责管理页面缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%BD%BF%E7%94%A8%E5%86%85%E6%A0%B8%E7%9A%84%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text">文件系统使用内核的缓存机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%8B%AC%E7%AB%8B%E4%BA%8E%E5%85%B7%E4%BD%93%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.3.</span> <span class="nav-text">页面缓存独立于具体的文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">4.4.</span> <span class="nav-text">统一的内存管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B-page-cache"><span class="nav-number">5.</span> <span class="nav-text">怎么查看 page cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%9A%84%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF"><span class="nav-number">5.1.</span> <span class="nav-text">查看页面缓存的统计信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#free"><span class="nav-number">5.1.1.</span> <span class="nav-text">free</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vmstat"><span class="nav-number">5.1.2.</span> <span class="nav-text">vmstat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cat-x2F-proc-x2F-meminfo"><span class="nav-number">5.1.3.</span> <span class="nav-text">cat &#x2F;proc&#x2F;meminfo</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E7%90%86%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98"><span class="nav-number">6.</span> <span class="nav-text">清理页面缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA%E7%BC%93%E5%AD%98%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">7.</span> <span class="nav-text">页面缓存和缓冲区缓存的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%AF%B9%E8%B1%A1"><span class="nav-number">7.1.</span> <span class="nav-text">缓存对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%9A%84%E5%B1%82%E6%AC%A1"><span class="nav-number">7.2.</span> <span class="nav-text">缓存的层次</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-1"><span class="nav-number">7.3.</span> <span class="nav-text">缓存的数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E6%96%B9%E5%BC%8F"><span class="nav-number">7.4.</span> <span class="nav-text">管理方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">7.5.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">7.6.</span> <span class="nav-text">数据一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">7.7.</span> <span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">7.8.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buff-x2F-cache"><span class="nav-number">8.</span> <span class="nav-text">buff&#x2F;cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E7%BB%84%E6%88%90"><span class="nav-number">8.1.</span> <span class="nav-text">具体组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Buffer-Cache%EF%BC%88%E7%BC%93%E5%86%B2%E5%8C%BA%E7%BC%93%E5%AD%98%EF%BC%89"><span class="nav-number">8.1.1.</span> <span class="nav-text">Buffer Cache（缓冲区缓存）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Page-Cache%EF%BC%88%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%EF%BC%89"><span class="nav-number">8.1.2.</span> <span class="nav-text">Page Cache（页面缓存）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E7%BC%93%E5%AD%98%E5%92%8C%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E4%B8%80%E8%88%AC%E5%93%AA%E4%B8%AA%E5%A4%A7"><span class="nav-number">9.</span> <span class="nav-text">缓冲区缓存和页面缓存一般哪个大</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E9%80%9A%E5%B8%B8%E6%9B%B4%E5%A4%A7"><span class="nav-number">9.1.</span> <span class="nav-text">为什么页面缓存通常更大</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E4%B8%A4%E8%80%85%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-number">9.2.</span> <span class="nav-text">如何查看两者的大小</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8-linux-%E4%B8%AD-page-cache-%E5%A4%A7%E5%B0%8F%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84%E5%90%97"><span class="nav-number">10.</span> <span class="nav-text">在 linux 中 page cache 大小是固定的吗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%9A%84%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E6%9C%BA%E5%88%B6"><span class="nav-number">10.1.</span> <span class="nav-text">页面缓存的动态调整机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%9A%84%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5"><span class="nav-number">10.2.</span> <span class="nav-text">页面缓存的回收策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E5%92%8C%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%9A%84%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="nav-number">10.3.</span> <span class="nav-text">如何查看和管理页面缓存的使用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%BC%93%E5%AD%98%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%8F%97%E5%93%AA%E4%BA%9B%E5%9B%A0%E7%B4%A0%E5%BD%B1%E5%93%8D%EF%BC%9F"><span class="nav-number">10.4.</span> <span class="nav-text">页面缓存的大小受哪些因素影响？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E7%94%B3%E8%AF%B7%E4%B8%80%E4%B8%AA%E4%B8%8D%E8%A2%AB%E5%9B%9E%E6%94%B6%E7%9A%84%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84-page-cache-%E5%90%97"><span class="nav-number">11.</span> <span class="nav-text">可以申请一个不被回收的固定大小的 page cache 吗</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">228k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">3:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
