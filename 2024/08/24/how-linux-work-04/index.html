@@ -29,6 +29,10 @@
 <meta property="og:description" content="how linux work 04 - Disks and filesystems">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/disk.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%98.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%982.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%983.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%984.png">
 <meta property="article:published_time" content="2024-08-24T05:42:04.000Z">
 <meta property="article:modified_time" content="2024-08-24T05:42:04.000Z">
 <meta property="article:author" content="朱佳东">
@@ -228,14 +232,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>917</span>
+              <span>20k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>18 mins.</span>
             </span>
             <div class="post-description">how linux work 04 - Disks and filesystems</div>
 
@@ -249,7 +253,8 @@
 
       
         <h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p><img src="/blog/2024/08/24/how-linux-work-04/disk.png" alt="disk"></p>
-<p>分区是整个磁盘的细分。在 Linux 上，它们在整个块设备后面用数字表示，因此它们的名称类似于 /dev/sda1 和 /dev/sdb3。内核将每个分区呈现为块设备，就像整个磁盘一样。分区是在磁盘的一个小区域上定义的，称为分区表（也称为磁盘标签）。是否要分区根据实际情况定，最好系统一个分区，方便后续的升级。</p>
+<p>分区是整个磁盘的细分。在 Linux 上，它们在整个块设备后面用数字表示，因此它们的名称类似于 /dev/sda1 和 /dev/sdb3。内核将每个分区呈现为块设备，就像整个磁盘一样。分区是在磁盘的一个小区域上定义的，称为分区表（也称为磁盘标签）。是否要分区根据实际情况定，最好把系统放到一个单独的分区上，方便后续的升级。</p>
+<p>如图所示，要想读取某个文件中的数据，we need to use the appropriate partition location from the partition table and then search the filesystem database on that partition for the desired file data。即先分区在找到那个分区上的文件系统。</p>
 <h2 id="Partitioning-Disk-Devices"><a href="#Partitioning-Disk-Devices" class="headerlink" title="Partitioning Disk Devices"></a>Partitioning Disk Devices</h2><p>有很多类型的分区表，关于分区表并没有什么特殊地方，它仅仅是一些数据描述了磁盘上的 blocks 是如何划分的。</p>
 <p>传统的表可以追溯到 PC 时代，是在主引导记录 Master Boot Record (MBR) 中找到的表，它有很多限制。大多数较新的系统都使用全局唯一标识符分区表 Globally Unique Identifier Partition Table（GPT）。</p>
 <p>下面是一些 Linux 分区工具：</p>
@@ -264,7 +269,351 @@
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vda: 85.9GB</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: msdos  # MBR</span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start   End     Size    Type     File system  Flags</span><br><span class="line"> 1      1049kB  85.9GB  85.9GB  primary  ext4         boot</span><br><span class="line">                                主分区</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="MBR-分区表"><a href="#MBR-分区表" class="headerlink" title="MBR 分区表"></a>MBR 分区表</h3><p>MBR 分区表，包括 priamry、extended 和 logical 分区，主分区就是普通的磁盘上的分区。MBR 只支持 4 个主分区，如果想要更多的分区，就要把其中的一个主分区设计为扩展分区，在扩展分区内划分逻辑分区。</p>
-
+<h3 id="修改分区表-Modifying-Partition-Tables"><a href="#修改分区表-Modifying-Partition-Tables" class="headerlink" title="修改分区表 Modifying Partition Tables"></a>修改分区表 Modifying Partition Tables</h3><p>查看分区表很简单而且对系统来说是无害的操作，修改分区表也相对容易但是存在一些风险：</p>
+<ul>
+<li>更改分区表使得恢复删除或重新定义的分区上的任何数据变得非常困难，因为这样做可能会擦除这些分区上文件系统的位置。如果要分区的磁盘包含关键数据，请确保有备份</li>
+<li>确保目标磁盘上没有正在使用的分区，这是一个担忧点，因为大多数 Linux 发行版会自动挂载侦测到的文件系统</li>
+</ul>
+<p>准备好后，选择分区工具，一般有 <code>parted</code> 和 <code>fdisk</code> 两个工具，前者会实时更新，后者会在退出程序时实施分区。</p>
+<p>这些不同之处是理解两个工具是如何和内核交互的关键，两个都是在用户空间修改分区的，不需要内核提供支持来重新分区表，因为用户空间能读写所有的块设备。</p>
+<p>不过，在某些时候，内核必须读取分区表，以便将分区呈现为块设备，以便可以使用它们。<code>fdisk</code>使用一个相对简单的方式，在修改分区表后，<code>fdisk</code>发起一个 sys call 来告诉内核要重新读取某个磁盘上的分区表，然后内核会输出一些 debugging 信息，可以使用 journalctl -k 查看。 </p>
+<p>而 <code>parted</code> 工具并不使用这个整个磁盘级别的 sys call，相反，当单个分区修改了它向内核发送信号，内核在处理完分区修改后，并不会产生调试信息，有以下几种方法能查看分区的修改操作：</p>
+<ul>
+<li>使用 <code>udevadm</code>观察内核事件的改变</li>
+<li>检查 <code>/proc/partitions</code> 文件，查看所有分区信息</li>
+<li>检查 <code>/sys/block/device/</code> 或者 <code>/dev</code></li>
+</ul>
+<h3 id="分区表和磁盘的关系"><a href="#分区表和磁盘的关系" class="headerlink" title="分区表和磁盘的关系"></a>分区表和磁盘的关系</h3><ul>
+<li>一个物理磁盘会有一个分区表，它描述磁盘上的所有分区情况，一对一</li>
+<li>但是，分区表可以管理多个分区，因此这是一对多的关系</li>
+</ul>
+<h3 id="强制重新加载分区表"><a href="#强制重新加载分区表" class="headerlink" title="强制重新加载分区表"></a>强制重新加载分区表</h3><p>如何想非常确定修改的分区表得到应用，可以使用 <code>blockdev</code> 来发起一个 old-style sys call （就像 fdisk 使用的 sys call），比如要强制内核 reload 在 <code>/dev/sdf</code> 上的分区表，可以用 <code>blockdev --rereadpt /dev/sdf</code>。</p>
+<h3 id="创建一个分区表"><a href="#创建一个分区表" class="headerlink" title="创建一个分区表"></a>创建一个分区表</h3><p><a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/ecs/user-guide/initialize-a-data-disk-whose-size-does-not-exceed-2-tib-on-a-linux-instance?spm=a2c4g.11186623.0.0.63362befRUTQWd#c4eeb981adsw3">fdisk创建分区表</a><br>创建分区表后，就要在分区上放置文件系统了。</p>
+<h3 id="磁盘结构"><a href="#磁盘结构" class="headerlink" title="磁盘结构"></a>磁盘结构</h3><p><img src="/blog/%E7%A3%81%E7%9B%98.png" alt="磁盘"></p>
+<p><img src="/blog/%E7%A3%81%E7%9B%982.png" alt="磁盘2"></p>
+<ul>
+<li>Cylinder 柱面</li>
+<li>Spindle 主轴</li>
+<li>Head 磁头</li>
+<li>Arm 机械壁</li>
+<li>Platter 盘片</li>
+<li>tracks 磁道</li>
+</ul>
+<p>硬盘中一般会有多个盘片组成，每个盘片包含两个面，每个盘面都对应地有一个读/写磁头。受到硬盘整体体积和生产成本的限制，盘片数量都受到限制，一般都在5片以内。盘片的编号自下向上从0开始，如最下边的盘片有0面和1面，再上一个盘片就编号为2面和3面。</p>
+<p>下图显示的是一个盘面，盘面中一圈圈灰色同心圆为一条条磁道，从圆心向外画直线，可以将磁道划分为若干个弧段，每个磁道上一个弧段被称之为一个扇区（绿色部分）。扇区是磁盘的最小组成单元，通常是 512 字节。（由于不断提高磁盘的大小，部分厂商设定每个扇区的大小是4096字节）<br><img src="/blog/%E7%A3%81%E7%9B%983.png" alt="磁盘3"></p>
+<p><img src="/blog/%E7%A3%81%E7%9B%984.png" alt="磁盘4"><br>硬盘通常由重叠的一组盘片构成，每个盘面都被划分为数目相等的磁道，并从外缘的“0”开始编号，具有相同编号的磁道形成一个圆柱，称之为磁盘的柱面。<strong>磁盘的柱面数与一个盘面上的磁道数是相等的</strong>。由于每个盘面都有自己的磁头，因此，<strong>盘面数等于总的磁头数</strong>。</p>
+<p><strong>存储容量 ＝ 磁头数 × 磁道(柱面)数 × 每道扇区数 × 每扇区字节数</strong></p>
+<h3 id="块-x2F-簇"><a href="#块-x2F-簇" class="headerlink" title="块/簇"></a>块/簇</h3><p>磁盘块/簇（虚拟出来的）。块是操作系统中最小的逻辑存储单位。操作系统与磁盘打交道的最小单位是磁盘块。</p>
+<p>通俗的来讲，在 Windows 下如 NTFS 等文件系统中叫做簇；在 Linux 下如 Ext4 等文件系统中叫做块（block）。每个簇或者块可以包括2、4、8、16、32、64…2的n次方个扇区。</p>
+<h3 id="为什么要有磁盘块"><a href="#为什么要有磁盘块" class="headerlink" title="为什么要有磁盘块"></a>为什么要有磁盘块</h3><p>读取方便，由于扇区的数量比较小、数目众多在寻址时比较困难，所以操作系统就将相邻的扇区组合在一起，形成一个块，在对块进行整体的操作。</p>
+<p>分离对底层的依赖，操作系统忽略对底层物理存储结构的设计，通过虚拟出来的磁盘块的概念，在系统中认为块是最小的单位。</p>
+<h3 id="page"><a href="#page" class="headerlink" title="page"></a>page</h3><p>操作系统经常与内存和硬盘这两种存储设备进行通信，类似于“块”的概念，都需要一种虚拟的基本单位。所以，与内存操作，是虚拟一个页的概念来作为最小单位。与硬盘打交道，就是以块为最小单位。</p>
+<h3 id="扇区、块-x2F-簇、page的关系"><a href="#扇区、块-x2F-簇、page的关系" class="headerlink" title="扇区、块/簇、page的关系"></a>扇区、块/簇、page的关系</h3><ol>
+<li>扇区：硬盘的最小读写单元</li>
+<li>块/簇：是操作系统针对硬盘读写的最小单元</li>
+<li>page：是内存与操作系统之间操作的最小单元</li>
+</ol>
+<h3 id="CHS-cylinder-head-sector"><a href="#CHS-cylinder-head-sector" class="headerlink" title="CHS cylinder-head-sector"></a>CHS cylinder-head-sector</h3><p>CHS（Cylinder-Head-Sector）是一种用于描述磁盘地址的方式，它代表磁盘的物理几何结构。CHS 模型通过柱面（Cylinder）、磁头（Head）和扇区（Sector）的组合来确定磁盘上存储数据的具体位置。在早期计算机中，磁盘地址使用 CHS 来寻址。</p>
+<h3 id="CHS-的工作方式"><a href="#CHS-的工作方式" class="headerlink" title="CHS 的工作方式"></a>CHS 的工作方式</h3><p>CHS 将磁盘的物理空间分为若干个柱面，每个柱面上有多个磁头，每个磁头下有多个扇区。因此，一个 CHS 地址可以唯一标识磁盘上的一个物理数据块。</p>
+<h3 id="CHS-的限制"><a href="#CHS-的限制" class="headerlink" title="CHS 的限制"></a>CHS 的限制</h3><p>磁盘容量的限制：由于 CHS 寻址方式使用的是较小的数字范围来表示柱面、磁头和扇区的数量，传统的 CHS 寻址方式存在容量限制。例如，早期的 BIOS 仅支持 1024 个柱面、255 个磁头、63 个扇区的寻址限制，总容量大约是 8.4 GB。</p>
+<p>取代：随着磁盘容量的增大，CHS 已不再适用于现代磁盘，现在普遍使用的是 LBA（Logical Block Addressing，逻辑块地址）来替代 CHS。LBA 通过一个线性的编号来表示磁盘上的数据块，无需考虑磁盘的物理结构。</p>
+<p>总结来说，CHS 是一种旧式的磁盘寻址方式，适用于较小容量的磁盘，但由于其局限性，已被更灵活的 LBA 所取代。</p>
+<p>分区分好后就需要安装文件系统了。</p>
+<h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><p>之前提过，文件系统其实就是某种形式的数据结构，它以结构的方式把块设备转换成用户能理解的目录、文件层次结构。</p>
+<p>曾经，所有文件系统都驻留在专门用于数据存储的磁盘和其他物理介质上。然而，文件系统的树状目录结构和 I/O 接口非常通用，因此文件系统现在执行各种任务，例如在 <code>/sys</code> 和 <code>/proc</code> 中看到的系统接口，这些是基于内存的。文件系统从传统上是在内核中实现的，但是也有在用户空间的文件系统，The File System in User Space FUSE。</p>
+<p>虚拟文件系统（VFS）抽象层完成了文件系统的实现。就像 SCSI 子系统标准化不同设备类型和内核控制命令之间的通信一样，VFS 确保所有文件系统实现都支持标准接口，以便用户空间应用程序以相同的方式访问文件和目录。 VFS 支持使 Linux 能够支持数量异常庞大的文件系统。</p>
+<h3 id="文件系统是独立于内核的吗"><a href="#文件系统是独立于内核的吗" class="headerlink" title="文件系统是独立于内核的吗?"></a>文件系统是独立于内核的吗?</h3><p>文件系统通常并不是完全独立于内核的。事实上，文件系统与内核紧密耦合，因为它需要通过内核提供的接口来管理和访问存储设备上的数据。然而，文件系统和内核确实有一定程度的分离，以便能够支持多种文件系统类型。</p>
+<h4 id="内核与文件系统的关系"><a href="#内核与文件系统的关系" class="headerlink" title="内核与文件系统的关系"></a>内核与文件系统的关系</h4><ul>
+<li>内核空间与用户空间：文件系统通常位于内核空间，这意味着它们运行在高权限的内核模式下，而不是在低权限的用户模式下。内核提供对硬件设备的直接访问，文件系统通过内核的API与底层存储设备（如硬盘、SSD）交互。</li>
+<li>文件系统驱动：内核中包含文件系统驱动（如ext4、NTFS、FAT等），这些驱动定义了文件系统如何组织、存储和检索数据。当应用程序在用户空间发出文件操作请求时，内核通过这些驱动将请求转发给文件系统，以执行相应的操作。</li>
+<li>虚拟文件系统 (VFS)：VFS 是内核的一部分，它为不同类型的文件系统提供了一个抽象层。VFS 允许应用程序以统一的方式访问不同的文件系统，而无需关心底层实现的差异。VFS 将应用程序的请求映射到实际的文件系统驱动上，从而进行具体的操作。</li>
+</ul>
+<h4 id="文件系统与内核的分离程度："><a href="#文件系统与内核的分离程度：" class="headerlink" title="文件系统与内核的分离程度："></a>文件系统与内核的分离程度：</h4><p>虽然文件系统依赖于内核提供的服务和接口，但不同的文件系统可以在相同的内核上运行。这意味着，内核能够通过不同的文件系统驱动来支持多种文件系统格式，而不需要修改应用程序或重构内核本身。这种设计提高了文件系统的灵活性和可扩展性。</p>
+<p>因此，虽然文件系统与内核密切相关，但它们通过 VFS 和文件系统驱动等机制实现了一定程度的分离，允许内核支持多种不同的文件系统。</p>
+<h3 id="文件系统的数据在哪里？"><a href="#文件系统的数据在哪里？" class="headerlink" title="文件系统的数据在哪里？"></a>文件系统的数据在哪里？</h3><p>文件系统的数据主要存储在计算机的物理存储设备上，如硬盘驱动器 (HDD)、固态硬盘 (SSD)、光盘、闪存等。文件系统的任务是管理这些数据，并提供一个结构化的方式来存取它们。具体来说，文件系统的数据包括以下几个部分： </p>
+<ul>
+<li>用户数据：这是文件系统中用户实际存储的文件内容，如文档、图片、视频、数据库文件等。用户数据被存储在存储设备的数据块中。 </li>
+<li>元数据：元数据是描述文件和目录的结构和属性的信息。例如：<ul>
+<li>文件名：文件系统中的每个文件和目录都有一个唯一的名称。</li>
+<li>文件大小：文件的实际大小，以字节为单位。</li>
+<li>文件权限：定义谁可以读取、写入或执行该文件。</li>
+<li>时间戳：文件的创建、修改和访问时间。</li>
+<li>文件指针：指向存储用户数据的数据块。</li>
+</ul>
+</li>
+</ul>
+<h3 id="对于一个分区的磁盘，每个分区都有一个文件系统吗"><a href="#对于一个分区的磁盘，每个分区都有一个文件系统吗" class="headerlink" title="对于一个分区的磁盘，每个分区都有一个文件系统吗"></a>对于一个分区的磁盘，每个分区都有一个文件系统吗</h3><p>是的，对于一个磁盘上的每个分区，通常都会有一个独立的文件系统。每个分区可以被格式化为不同的文件系统类型，并且这些文件系统独立管理分区中的数据。</p>
+<h4 id="磁盘分区"><a href="#磁盘分区" class="headerlink" title="磁盘分区"></a>磁盘分区</h4><p>磁盘分区是将物理磁盘划分为多个独立的区域，每个区域称为一个分区。分区使得一个磁盘可以被多个操作系统或文件系统共享。</p>
+<p>常见的分区类型有主分区、扩展分区和逻辑分区。</p>
+<h4 id="文件系统的作用"><a href="#文件系统的作用" class="headerlink" title="文件系统的作用"></a>文件系统的作用</h4><p>每个分区通常会被格式化为一个特定的文件系统，如 <code>ext4</code>、<code>NTFS</code>、<code>FAT32</code>、<code>HFS+</code> 等。文件系统负责管理分区中的数据，包括文件和目录的组织、存储和检索。</p>
+<h4 id="独立性"><a href="#独立性" class="headerlink" title="独立性"></a>独立性</h4><p>磁盘上的每个分区都可以拥有独立的文件系统。这意味着即使在同一个物理磁盘上，不同的分区可以使用不同的文件系统。例如，一个分区可以使用 <code>ext4</code> 文件系统（常用于Linux），而另一个分区可以使用 <code>NTFS</code> 文件系统（常用于Windows）。</p>
+<h4 id="多操作系统支持"><a href="#多操作系统支持" class="headerlink" title="多操作系统支持"></a>多操作系统支持</h4><p>这种分区与文件系统的独立性允许一个磁盘同时支持多个操作系统。例如，一个磁盘可以有一个分区用于 Linux（ext4文件系统），另一个分区用于Windows（NTFS文件系统），它们可以共存而互不影响。</p>
+<p>对于一个分区的磁盘，通常每个分区都有自己的文件系统，负责管理该分区内的数据。这种设计提高了灵活性，使得同一磁盘可以使用多种文件系统类型。</p>
+<h4 id="到底要不要对磁盘进行分区"><a href="#到底要不要对磁盘进行分区" class="headerlink" title="到底要不要对磁盘进行分区"></a>到底要不要对磁盘进行分区</h4><p>是否要对磁盘进行分区取决于具体需求和使用场景。分区有其优点，但在某些情况下也可能不必要或带来复杂性。</p>
+<p>以下是对磁盘进行分区的优缺点，以及在不同情况下的建议。</p>
+<h5 id="分区的优点"><a href="#分区的优点" class="headerlink" title="分区的优点"></a>分区的优点</h5><ul>
+<li>多操作系统支持：如果需要在同一台计算机上安装多个操作系统，分区是必要的。每个操作系统可以安装在单独的分区上，互不干扰。</li>
+<li>数据隔离：分区可以用于将系统文件和用户数据分开存储。这样，即使系统崩溃或需要重装，用户数据仍然保存在其他分区中，减少数据丢失的风险。</li>
+<li>提高管理效率：将不同类型的数据放在不同的分区上（如系统、数据、备份等），可以帮助更好地管理和组织数据。例如，可以将系统分区设置得较小以便于备份和恢复，而将数据分区设置得较大以存储大量文件。</li>
+<li>性能优化：在某些情况下，不同分区可以使用不同的文件系统或设置不同的参数，从而优化性能。例如，日志文件可以存放在一个分区，用户数据存放在另一个分区，以减少碎片化和提高访问速度。</li>
+</ul>
+<h5 id="分区的缺点"><a href="#分区的缺点" class="headerlink" title="分区的缺点"></a>分区的缺点</h5><ul>
+<li>灵活性降低：一旦分区的大小确定，调整可能会很复杂。如果某个分区空间不足，而另一个分区还有大量空闲空间，重新分配这些空间可能需要专门的工具和时间。</li>
+<li>潜在的浪费：不合理的分区规划可能导致某些分区空间用不完，而其他分区空间不足，导致存储空间的浪费。</li>
+<li>管理复杂性：多个分区意味着需要管理更多的文件系统和挂载点，增加了维护的复杂性。对于不熟悉分区管理的用户，这可能是一个挑战。</li>
+</ul>
+<h4 id="什么时候应该分区："><a href="#什么时候应该分区：" class="headerlink" title="什么时候应该分区："></a>什么时候应该分区：</h4><ul>
+<li>安装多个操作系统：需要在同一台计算机上运行不同的操作系统。</li>
+<li>数据隔离需求：希望将系统和数据分开，以便于管理和保护数据。</li>
+<li>特定性能需求：需要为不同用途优化性能，例如为数据库、日志文件、或者虚拟内存单独分区。</li>
+<li>备份需求：希望简化备份和恢复过程，例如只备份系统分区。</li>
+</ul>
+<h4 id="什么时候不必分区："><a href="#什么时候不必分区：" class="headerlink" title="什么时候不必分区："></a>什么时候不必分区：</h4><ul>
+<li>单一操作系统：如果只使用一个操作系统，并且没有特殊的数据隔离需求，单一分区通常是更简单的选择。</li>
+<li>灵活性优先：希望系统能够自由分配磁盘空间，不想被固定的分区大小限制。</li>
+<li>易用性：希望避免管理多个分区的复杂性。</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>对磁盘进行分区有其优点，尤其是在需要多操作系统支持、数据隔离或性能优化的情况下。但如果你的需求相对简单，且希望保持系统的灵活性和易用性，那么不进行分区或仅进行简单的分区可能是更好的选择。</p>
+<p>一个磁盘上的分区表只有一个，分区会有多个，文件系统也会有多个。</p>
+<h3 id="文件系统在每个分区内吗"><a href="#文件系统在每个分区内吗" class="headerlink" title="文件系统在每个分区内吗"></a>文件系统在每个分区内吗</h3><p>是的，文件系统通常是在每个分区内存在并运行的。每个分区可以被格式化为不同类型的文件系统，文件系统负责管理该分区中的数据，如文件、目录、权限、时间戳等。</p>
+<h4 id="分区和文件系统的关系"><a href="#分区和文件系统的关系" class="headerlink" title="分区和文件系统的关系"></a>分区和文件系统的关系</h4><p>一个物理磁盘可以被划分为多个分区。每个分区是一个独立的存储区域，并且可以被格式化为一个文件系统类型，如ext4、NTFS、FAT32等。</p>
+<p>文件系统是分区的逻辑结构，它决定了如何在分区内存储和管理数据。</p>
+<h4 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h4><p>当格式化一个分区时，实际上是在该分区上创建一个新的文件系统。这会清空分区中的所有数据，并在其中建立文件系统的元数据结构，以便存储文件和目录。</p>
+<h4 id="挂载点"><a href="#挂载点" class="headerlink" title="挂载点"></a>挂载点</h4><p>操作系统通过挂载文件系统来访问分区内的数据。挂载点是文件系统在操作系统中的入口，通常是一个目录（例如 <code>/mnt/data</code> 或 <code>C:\</code>），分区内的数据通过该目录进行访问。</p>
+<h4 id="独立性-1"><a href="#独立性-1" class="headerlink" title="独立性"></a>独立性</h4><p>每个分区的文件系统是独立的，可以使用不同的文件系统类型。例如，磁盘的一个分区可以使用ext4文件系统（通常用于Linux），另一个分区可以使用NTFS文件系统（通常用于Windows）。它们之间互不影响。</p>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p>文件系统是存在于每个分区内的，负责管理该分区中的数据。每个分区通常都有自己的文件系统，这些文件系统可以是同一种类型，也可以是不同类型，具体取决于系统的配置和使用需求。</p>
+<h3 id="分区表在哪里"><a href="#分区表在哪里" class="headerlink" title="分区表在哪里"></a>分区表在哪里</h3><p>分区表（Partition Table）是存储设备（如硬盘或SSD）上用于描述分区信息的一个数据结构。它通常位于磁盘的开头部分，用于记录每个分区的起始位置、大小和类型等关键信息。</p>
+<h4 id="具体位置"><a href="#具体位置" class="headerlink" title="具体位置"></a>具体位置</h4><p>主引导记录（MBR）位置：对于使用传统MBR（Master Boot Record）分区表的磁盘，分区表位于磁盘的第一个扇区，即LBA 0（逻辑块地址0）。</p>
+<p>结构：MBR的大小是 512 字节，其中前 446 字节通常用于存储引导程序代码，接下来的64字节用于存储分区表，最后的2字节是标志符。</p>
+<p>分区限制：MBR分区表最多支持4个主分区。如果需要更多分区，可以创建扩展分区，并在其中包含逻辑分区。</p>
+<p>GUID分区表（GPT）：对于使用GPT（GUID Partition Table）分区表的磁盘，分区表的主要副本位于磁盘的第一个扇区之后，通常是第一个扇区到第33个扇区之间。同时，GPT在磁盘的末尾也保存了一份备份分区表，用于冗余和恢复。</p>
+<p>结构：GPT使用全球唯一标识符（GUID）来标识分区，支持更大的分区数量和容量。GPT的首个扇区称为保护MBR（Protective MBR），用于兼容传统系统，但实际分区信息存储在后续的扇区中。</p>
+<p>分区优势：GPT可以支持多达128个分区（甚至更多，取决于操作系统和工具），且每个分区的大小限制远高于MBR。</p>
+<h4 id="分区表的作用"><a href="#分区表的作用" class="headerlink" title="分区表的作用"></a>分区表的作用</h4><ul>
+<li>描述分区信息：分区表详细记录了每个分区的起始和结束位置、类型标识符（例如文件系统类型）等信息，使操作系统能够识别并访问磁盘上的各个分区。</li>
+<li>加载引导程序：对于MBR分区表，MBR还包含用于加载操作系统引导程序的代码。当计算机启动时，BIOS/UEFI首先读取MBR中的代码，并根据分区表信息加载操作系统。</li>
+</ul>
+<h4 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h4><p>分区表位于磁盘的开头部分，对于MBR分区表，通常在第一个扇区（LBA 0），而对于GPT分区表，主要表位于磁盘的前几个扇区，并且在磁盘末尾保留了备份。分区表是管理磁盘分区的关键数据结构，使操作系统能够识别并管理磁盘上的分区。</p>
+<h3 id="文件系统一般多大"><a href="#文件系统一般多大" class="headerlink" title="文件系统一般多大"></a>文件系统一般多大</h3><p>想问文件系统所占元数据的大小，但回答的不是。</p>
+<p>文件系统的大小通常与其所在的磁盘分区的大小相同。文件系统占据整个分区的空间，大小由你在创建分区时指定。因此，文件系统的大小可以变化很大，从几个MB到TB不等，取决于分区的大小和磁盘的容量。</p>
+<h4 id="影响文件系统大小的因素"><a href="#影响文件系统大小的因素" class="headerlink" title="影响文件系统大小的因素"></a>影响文件系统大小的因素</h4><ul>
+<li>分区大小：文件系统的大小由分区大小决定。创建分区时，指定了分区的大小，而文件系统会占用整个分区空间。因此，如果分区是 100 GB，那么文件系统也将是 100 GB。</li>
+<li>文件系统类型：不同的文件系统类型可能在存储相同数据时需要不同的开销。一些文件系统在管理元数据（如文件名、权限、时间戳等）时会使用更多的空间。这种开销通常是很小的，但对于非常大的分区和大量的文件，可能会有影响。</li>
+<li>一些文件系统类型可能支持特定的压缩或去重功能，从而影响数据的实际存储大小。</li>
+<li>磁盘块大小：文件系统将分区空间划分为较小的块（通常是4 KB、8 KB等）。较大的块大小可能导致空间浪费，特别是在大量小文件的情况下，因为每个文件至少会占用一个块的大小，即使它比块小很多。</li>
+<li>元数据和日志空间：一些文件系统（如ext4、XFS、ZFS等）会为日志文件、元数据存储和其他系统功能保留一定的空间。这些区域的大小也会影响可用的用户数据空间，但一般来说，这部分开销在整个文件系统中占的比例较小。</li>
+</ul>
+<h4 id="文件系统的实际大小与可用空间"><a href="#文件系统的实际大小与可用空间" class="headerlink" title="文件系统的实际大小与可用空间"></a>文件系统的实际大小与可用空间</h4><ul>
+<li>可用空间：文件系统的总大小与可用空间是不同的。总大小是文件系统的分区大小，而可用空间是用户可用来存储文件的空间。可用空间一般小于总大小，因为一部分空间被用来存储文件系统的元数据、日志文件等系统数据。</li>
+</ul>
+<h4 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h4><p>文件系统的大小通常等于其所在分区的大小，可能是从几个MB到TB不等。</p>
+<p>实际可用空间会略小于分区大小，因为文件系统会为元数据、日志和其他系统功能保留一部分空间。</p>
+<p>选择合适的分区大小和文件系统类型，确保它们适应存储需求和性能要求。</p>
+<h3 id="文件系统的元数据一般多大"><a href="#文件系统的元数据一般多大" class="headerlink" title="文件系统的元数据一般多大"></a>文件系统的元数据一般多大</h3><p>文件系统的元数据大小是由文件系统类型、所存储文件的数量和分区大小等多种因素决定的。元数据通常占用文件系统的一部分空间，用于存储文件的属性信息，如文件名、权限、时间戳、文件大小、数据块位置等。尽管元数据对于整个文件系统来说可能只占用很小的一部分，但它对文件系统的性能和功能有很大影响。</p>
+<h4 id="元数据的组成和大小"><a href="#元数据的组成和大小" class="headerlink" title="元数据的组成和大小"></a>元数据的组成和大小</h4><h5 id="索引节点-inode"><a href="#索引节点-inode" class="headerlink" title="索引节点 (inode)"></a>索引节点 (inode)</h5><ul>
+<li>作用：索引节点是大多数文件系统（如ext4、XFS等）用于存储单个文件元数据的结构。每个文件和目录都有一个 inode，里面包含了文件的基本信息（不包括文件名）。</li>
+<li>大小：每个 inode 的大小通常是固定的，例如，ext4文件系统的inode大小通常为128字节到512字节不等。每个文件或目录都占用一个inode。</li>
+</ul>
+<h5 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h5><ul>
+<li>作用：目录结构是文件系统用于管理文件名及其与inode的关联关系的元数据部分。</li>
+<li>大小：目录结构的大小取决于文件系统类型和目录中包含的文件数量。例如，对于ext4，目录项通常占用数十字节。</li>
+</ul>
+<h5 id="超级块-Superblock"><a href="#超级块-Superblock" class="headerlink" title="超级块 (Superblock)"></a>超级块 (Superblock)</h5><ul>
+<li>作用：超级块包含文件系统的全局信息，如文件系统的大小、块大小、空闲块数量、inode数量等。它是文件系统启动和管理的关键部分。</li>
+<li>大小：超级块通常很小，一般只有几个KB。</li>
+</ul>
+<h5 id="块位图和inode位图"><a href="#块位图和inode位图" class="headerlink" title="块位图和inode位图"></a>块位图和inode位图</h5><ul>
+<li>作用：这些位图用于跟踪哪些数据块和inode是空闲的，哪些是已使用的。</li>
+<li>大小：位图的大小取决于文件系统的大小和块的数量。通常，占用空间较小，但在非常大的文件系统中可能会占用几MB。</li>
+</ul>
+<h5 id="日志文件-Journal"><a href="#日志文件-Journal" class="headerlink" title="日志文件 (Journal)"></a>日志文件 (Journal)</h5><ul>
+<li>作用：用于日志记录以支持文件系统的事务处理（如ext3、ext4、XFS等的日志文件系统）。它在系统崩溃时帮助恢复数据一致性。</li>
+<li>大小：日志文件通常占用几MB到几GB的空间，取决于文件系统的配置。</li>
+</ul>
+<h5 id="总体元数据占用空间"><a href="#总体元数据占用空间" class="headerlink" title="总体元数据占用空间"></a>总体元数据占用空间</h5><p>百分比估算：元数据通常占用文件系统总空间的1-5%。例如，ext4文件系统在默认配置下，通常保留5%左右的空间用于inode和其他元数据，这在普通用途下已经足够容纳大量文件。</p>
+<p>绝对大小：在一个1 TB的分区上，元数据可能占用数GB的空间，但实际大小会随文件系统的类型、配置和分区的使用情况而变化。</p>
+<h5 id="影响元数据大小的因素"><a href="#影响元数据大小的因素" class="headerlink" title="影响元数据大小的因素"></a>影响元数据大小的因素</h5><ul>
+<li>文件数量：文件系统上文件和目录的数量直接影响元数据的总大小。更多的文件需要更多的inode和目录结构。</li>
+<li>块大小：较小的块大小会导致需要更多的元数据来跟踪文件数据，但也可能减少空间浪费。</li>
+<li>日志功能：使用日志文件系统时，日志文件的大小配置会影响元数据的总大小。</li>
+</ul>
+<h4 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h4><p>文件系统的元数据通常只占文件系统总空间的一小部分，一般在1-5%左右，具体大小取决于文件系统类型、文件数量、块大小等因素。实际的元数据大小可以从几MB到数GB不等，尤其是在大型文件系统中。</p>
+<h3 id="分区表和文件系统是不同的东西吗"><a href="#分区表和文件系统是不同的东西吗" class="headerlink" title="分区表和文件系统是不同的东西吗"></a>分区表和文件系统是不同的东西吗</h3><p>是的，分区表和文件系统是不同的东西，它们在磁盘存储管理中扮演着不同的角色。</p>
+<h4 id="分区表-Partition-Table"><a href="#分区表-Partition-Table" class="headerlink" title="分区表 (Partition Table)"></a>分区表 (Partition Table)</h4><ul>
+<li>作用: 分区表是一种数据结构，位于磁盘的开头，用于描述磁盘上各个分区的布局和信息。它包含每个分区的起始位置、大小、类型等信息。</li>
+<li>位置: 分区表通常位于磁盘的第一个扇区。对于使用MBR（Master Boot Record）的磁盘，分区表位于第一个扇区的特定位置。对于使用GPT（GUID Partition Table）的磁盘，分区表分布在磁盘的开头和末尾部分。</li>
+<li>内容: 分区表主要记录磁盘上每个分区的详细信息，如起始位置、结束位置、分区类型（例如，主分区、扩展分区、逻辑分区），以及该分区是否可引导等信息。</li>
+<li>作用: 分区表的主要功能是告知操作系统磁盘上有哪些分区，以及这些分区的物理位置，以便系统能够正确访问和管理这些分区。</li>
+</ul>
+<h4 id="文件系统-File-System"><a href="#文件系统-File-System" class="headerlink" title="文件系统 (File System)"></a>文件系统 (File System)</h4><ul>
+<li>作用: 文件系统是在一个分区内用来组织、存储和管理文件及数据的一种结构。文件系统决定了如何在磁盘上存储数据、如何访问文件和目录、如何管理文件权限和元数据等。</li>
+<li>位置: 文件系统位于磁盘分区内部。当将一个分区格式化为某种文件系统类型（如ext4、NTFS、FAT32等）时，文件系统会占据该分区的全部空间。</li>
+<li>内容: 文件系统包含多个组成部分，包括数据块、索引节点（inode）、目录结构、超级块等，用于存储文件内容及其相关的元数据。</li>
+<li>作用: 文件系统的主要功能是管理分区中的数据，使用户和应用程序能够方便地存储、访问和组织文件和目录。</li>
+</ul>
+<h3 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h3><p>分区表是描述磁盘上分区布局的信息表，用于记录每个分区的位置和大小。</p>
+<p>文件系统是位于某个分区内的结构，用于管理该分区中的文件和数据。</p>
+<p>分区表和文件系统是磁盘管理中的两个不同层次，分区表位于磁盘的全局层次，定义了磁盘的分区布局；而文件系统位于分区内，管理该分区中的数据。</p>
+<h3 id="内核负责加载文件系统吗"><a href="#内核负责加载文件系统吗" class="headerlink" title="内核负责加载文件系统吗"></a>内核负责加载文件系统吗</h3><p>是的，内核负责加载文件系统。具体来说，操作系统的内核负责识别和挂载文件系统，使得存储设备上的数据可以被操作系统和应用程序访问。</p>
+<h4 id="文件系统加载的过程"><a href="#文件系统加载的过程" class="headerlink" title="文件系统加载的过程"></a>文件系统加载的过程</h4><ul>
+<li>设备识别: 当系统启动或插入一个新的存储设备（如硬盘、USB设备）时，内核会识别出该设备并读取其分区表。通过分区表，内核能够了解设备上存在的分区及其位置。</li>
+<li>识别文件系统类型: 内核根据分区表信息识别每个分区上使用的文件系统类型。例如，分区可能使用ext4、NTFS、FAT32等文件系统。内核通过读取分区上的超级块等元数据来确定文件系统类型。</li>
+<li>加载文件系统驱动程序: 内核加载相应的文件系统驱动程序（也称为文件系统模块），该驱动程序负责与特定类型的文件系统进行交互。例如，加载ext4文件系统时，内核会使用ext4驱动程序。</li>
+<li>挂载文件系统: 在加载了文件系统驱动程序之后，内核将文件系统挂载到系统的目录树中。挂载点是一个目录，所有挂载的文件系统的内容都会显示在该目录下。挂载操作可以是手动执行的（通过mount命令）或者自动执行的（如在启动时根据/etc/fstab文件进行自动挂载）。</li>
+<li>挂载后，用户和应用程序可以通过挂载点访问文件系统上的文件和目录。</li>
+</ul>
+<h4 id="文件系统管理"><a href="#文件系统管理" class="headerlink" title="文件系统管理"></a>文件系统管理</h4><p>一旦文件系统被挂载，内核继续管理文件系统中的文件操作，包括文件的创建、读取、写入、删除等。这些操作通过系统调用（如open、read、write等）与内核进行交互，由内核处理并最终与文件系统驱动程序通信。</p>
+<h4 id="内核与文件系统的关系-1"><a href="#内核与文件系统的关系-1" class="headerlink" title="内核与文件系统的关系"></a>内核与文件系统的关系</h4><ul>
+<li>文件系统驱动：内核中包含多个文件系统驱动程序，每个驱动程序负责处理特定类型的文件系统。当内核识别出某个文件系统类型时，它会加载对应的驱动程序来进行处理。</li>
+<li>虚拟文件系统 (VFS)：内核还包含一个虚拟文件系统层（VFS），这是一个抽象层，它提供了一种通用接口，使得不同类型的文件系统可以以一致的方式被操作系统管理和访问。</li>
+<li>挂载管理：内核管理文件系统的挂载点，并确保挂载点的唯一性和正确性，防止同一目录下挂载多个文件系统导致的冲突。</li>
+</ul>
+<h4 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a>总结</h4><p>内核确实负责加载文件系统，它识别设备上的文件系统类型，加载相应的驱动程序，并将文件系统挂载到操作系统的目录树中，使其可以被操作系统和用户访问和管理。</p>
+<h3 id="当应用程序执行一个系统调用创建一个文件，是内核负责维护文件系统的内容，还是文件系统驱动程序负责"><a href="#当应用程序执行一个系统调用创建一个文件，是内核负责维护文件系统的内容，还是文件系统驱动程序负责" class="headerlink" title="当应用程序执行一个系统调用创建一个文件，是内核负责维护文件系统的内容，还是文件系统驱动程序负责"></a>当应用程序执行一个系统调用创建一个文件，是内核负责维护文件系统的内容，还是文件系统驱动程序负责</h3><p>当应用程序执行一个系统调用（例如open、write、create等）来创建一个文件时，整个过程是由操作系统的内核来管理的，其中包括与文件系统驱动程序的交互。</p>
+<ol>
+<li><p>系统调用处理: 当应用程序发起一个系统调用来创建文件时，这个请求首先被发送到内核。内核通过系统调用接口（系统调用表）接收到请求，并根据请求类型将其路由到适当的内核模块。</p>
+</li>
+<li><p>虚拟文件系统 (VFS) 层: 内核中的虚拟文件系统（VFS）层是一个抽象层，它为不同的文件系统提供了统一的接口。VFS负责处理与文件系统相关的所有操作请求，并将这些请求转换为与具体文件系统类型相关的操作。VFS管理文件系统的挂载点、目录结构、文件描述符等，并将文件操作映射到正确的文件系统驱动程序。</p>
+</li>
+<li><p>文件系统驱动程序: 文件系统驱动程序是内核的一部分，它实现了与特定文件系统类型（如ext4、NTFS、XFS等）相关的所有底层操作。文件系统驱动程序负责处理VFS层传递下来的请求。在文件创建过程中，驱动程序会执行以下操作：在文件系统的元数据中分配一个新的索引节点（inode）来表示新文件。更新目录结构，将新文件的名称和inode关联起来。分配数据块，用于存储文件的内容，并将这些块与文件的inode关联。更新文件系统的元数据，如超级块和位图，以反映新文件的创建。</p>
+</li>
+<li><p>硬件与存储设备: 最后，文件系统驱动程序与内核的存储子系统交互，将文件系统的变化写入实际的存储设备（如硬盘、SSD）。存储子系统负责将这些请求转换为具体的磁盘操作，如读写数据块。</p>
+</li>
+<li><p>责任划分总结：内核的责任: 处理系统调用请求，管理系统资源。通过VFS层为不同类型的文件系统提供统一接口。协调不同文件系统驱动程序的工作。</p>
+</li>
+<li><p>文件系统驱动程序的责任: 实现具体的文件系统操作逻辑，如文件创建、删除、读取、写入等。管理与文件系统相关的元数据和数据块。因此，当应用程序执行系统调用创建文件时，内核负责总体的协调和管理工作，包括接收系统调用、通过VFS层处理请求；文件系统驱动程序则负责具体的文件系统操作，包括分配inode、更新目录结构和写入数据等。这两者共同协作，确保文件系统的内容被正确维护。</p>
+</li>
+</ol>
+<h3 id="存储子系统一般是什么"><a href="#存储子系统一般是什么" class="headerlink" title="存储子系统一般是什么"></a>存储子系统一般是什么</h3><p>存储子系统是操作系统中负责管理和协调存储设备（如硬盘、固态硬盘、光盘、网络存储等）与操作系统之间的交互的组件。它在操作系统和硬件之间起到桥梁作用，确保数据能够高效、安全地存储和访问。</p>
+<h4 id="存储子系统的主要组成部分"><a href="#存储子系统的主要组成部分" class="headerlink" title="存储子系统的主要组成部分"></a>存储子系统的主要组成部分</h4><ul>
+<li>存储设备驱动程序: 存储设备驱动程序负责与具体的物理存储设备通信。这些驱动程序了解设备的硬件特性，并通过相应的接口（如SATA、NVMe、SCSI等）进行数据传输和管理。驱动程序将文件系统请求转换为设备特定的读写操作。例如，将文件系统层的块操作转换为磁盘的扇区读写命令。</li>
+<li>I/O 调度器 (I/O Scheduler): I/O调度器是存储子系统中的一个重要组件，它决定了存储设备上I/O操作的执行顺序。调度器的任务是优化I/O操作的顺序，以提高磁盘性能、减少延迟和提高系统吞吐量。常见的调度算法有完全公平队列 (CFQ)、Deadline、Noop等。不同的调度算法在不同的工作负载下表现不同。</li>
+<li>缓存与缓冲管理: 操作系统通常会使用内存中的缓存（如页面缓存）来加速存储设备的访问。缓存保存最近访问的数据块或即将写入的数据块，从而减少对慢速存储设备的直接访问频率。缓冲管理确保数据在从内存到存储设备之间传输时，能够得到有效的处理，例如通过合并多个写操作或延迟写入来提高效率。</li>
+<li>存储虚拟化层: 存储虚拟化是存储子系统中的一个高级功能，用于将多个物理存储设备抽象为一个或多个逻辑存储设备。RAID（独立磁盘冗余阵列）是存储虚拟化的一个常见例子，提供了数据冗余和性能增强。逻辑卷管理器 (LVM) 也是存储虚拟化的一种形式，允许管理员灵活地管理物理存储设备上的卷。</li>
+<li>文件系统接口: 存储子系统为文件系统提供底层支持。文件系统依赖存储子系统来执行物理设备上的读写操作、数据块分配、设备管理等功能。通过存储子系统，文件系统可以在底层设备之间进行无缝的数据操作，而不必关心具体的硬件细节。</li>
+<li>多路径I/O (Multipath I/O): 多路径I/O技术允许一个存储设备通过多个物理路径连接到系统。这样，当某条路径发生故障时，I/O操作可以通过备用路径继续进行，提高了系统的可靠性和可用性。</li>
+<li>卷管理器: 卷管理器（如LVM）提供了在多个物理磁盘上创建和管理逻辑卷的功能。这使得管理员可以动态调整存储容量，进行快照、复制等操作，而不必直接操作物理磁盘。</li>
+</ul>
+<h4 id="存储子系统的作用"><a href="#存储子系统的作用" class="headerlink" title="存储子系统的作用"></a>存储子系统的作用</h4><ul>
+<li>数据传输管理: 它管理数据在内存和存储设备之间的传输，确保数据正确写入磁盘或从磁盘读取。</li>
+<li>性能优化: 通过缓存、I/O调度等机制，存储子系统优化了存储设备的访问速度，提高了整体系统性能。</li>
+<li>设备抽象: 存储子系统将底层复杂的存储硬件抽象为简单的接口，供文件系统和应用程序使用。</li>
+<li>可靠性与冗余: 存储子系统通过多路径I/O、RAID、快照等技术，提供了数据冗余和故障恢复能力，提高了系统的可靠性。</li>
+</ul>
+<h4 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a>总结</h4><p>存储子系统是操作系统中用于管理和优化存储设备的关键组件。它包括了驱动程序、I/O调度器、缓存、存储虚拟化、卷管理器等模块，确保存储设备的高效、安全使用，并为文件系统和应用程序提供统一的接口来访问底层存储资源。</p>
+<h3 id="文件系统类型"><a href="#文件系统类型" class="headerlink" title="文件系统类型"></a>文件系统类型</h3><p>Linux 文件系统支持包括针对 Linux 原生设计优化的文件系统，外部文件系统，比如 Windows 的 FAT 系列，universal filesystems 比如 ISO 9660。</p>
+<ul>
+<li>The Fourth Extended filesystem ext4</li>
+<li>Btrfs B-tree filesystem</li>
+<li>FAT filesystems（msdos、vfat、exfat）</li>
+<li>XFS</li>
+<li>HFS+ apple standard used on most Mac</li>
+<li>ISO 9660 CD-ROM standard</li>
+</ul>
+<h3 id="怎么查看文件系统类型"><a href="#怎么查看文件系统类型" class="headerlink" title="怎么查看文件系统类型"></a>怎么查看文件系统类型</h3><ul>
+<li><code>df -T</code></li>
+<li><code>lsblk -f</code></li>
+<li><code>blkid</code></li>
+<li><code>/etc/fstab</code></li>
+<li><code>mount | grep "^/dev"</code></li>
+</ul>
+<h3 id="创建文件系统"><a href="#创建文件系统" class="headerlink" title="创建文件系统"></a>创建文件系统</h3><p>对一个新的块设备，在分区完成后，就要创建一个文件系统，可以使用 <code>mkfs</code>，可以创建许多类型的文件系统。</p>
+<p><code>mkfs -t ext4 /dev/sdf2</code>。<code>mkfs</code> 工具自动决定一个设备上的 blocks 数量并且设置许多合理的默认值，除非非常熟悉这些参数，否则不要轻易修改。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>文件系统创建是一项只有在添加新磁盘或对旧磁盘重新分区后才应执行的任务。应该为每个没有预先存在的数据（或包含要删除的数据）的新分区创建一次文件系统。在现有文件系统之上创建新的文件系统将有效地销毁旧数据。</p>
+<p>mkfs 是一个前端工具，<code>ls -l /sbin/mkfs*</code>。会根据参数自动调用后端的工具。</p>
+<h3 id="挂载文件系统"><a href="#挂载文件系统" class="headerlink" title="挂载文件系统"></a>挂载文件系统</h3><p>要挂载一个文件系统，必须知道以下几点：</p>
+<ul>
+<li>文件系统的块设备、位置和标志符，某些特殊目的的文件系统没有位置，比如 proc 和 sysfs。</li>
+<li>文件系统的类型</li>
+<li>挂载点，挂载点通常是一个目录，可以在任意目录下，不必在 <code>/</code> 目录下。</li>
+</ul>
+<p>对于挂载文件系统的通用术语是 <code>mount a device/分区设备 on a mount point</code>。可以使用 <code>mount</code> 查看当前挂载情况。</p>
+<p><code>mount</code> 输出的每一行都对应当前挂载的一个文件系统：</p>
+<ul>
+<li>设备，注意某些并不是真实的设备（如 proc），这里用 proc 代表设备名称，其实这些特殊的文件系统并不要具体的设备</li>
+<li>on</li>
+<li>mount point</li>
+<li>type</li>
+<li>filesystem type</li>
+<li>mount options</li>
+</ul>
+<p>取消挂载：<code>unmount mountpoint</code>。</p>
+<p><strong>注意：几乎所有 Linux 系统都包含一个临时挂载点 <code>/mnt</code>，通常用于测试。在进行试验时可以随意使用它，但如果打算挂载文件系统以供扩展使用，请找到或创建另一个位置。</strong></p>
+<h3 id="Filesystem-UUID"><a href="#Filesystem-UUID" class="headerlink" title="Filesystem UUID"></a>Filesystem UUID</h3><p>上面挂载文件系统是使用设备名称的，然后设备名称是会变的，设备名称取决于内核发现它们的顺序，要解决这个问题，可以使用设备的 UUID 来识别和挂载文件系统。文件系统创建工具在创建文件系统的时候会自动设置一个 UUID。要查看设备和对应的 UUID 可以使用 <code>blkid</code>。</p>
+<p>使用 UUID 挂载文件系统 <code>mount UUID=b600fe63-d2e9-461c-a5cd-d3b373a5e1d2 /home/extra</code>。</p>
+<p>通常，一般不会像这样通过 UUID 手动挂载文件系统，因为我们通常知道该设备，并且通过名称挂载设备比通过其疯狂的 UUID 挂载要容易得多。尽管如此，了解 UUID 仍然很重要。一方面，它们是在启动时自动在 <code>/etc/fstab</code> 中挂载非 LVM 文件系统的首选方式。此外，许多发行版在插入可移动介质时使用 UUID 作为安装点。</p>
+<p>文件系统的 UUID 是可以改的。</p>
+<h4 id="为什么说是挂载文件系统而不是挂载块设备呢"><a href="#为什么说是挂载文件系统而不是挂载块设备呢" class="headerlink" title="为什么说是挂载文件系统而不是挂载块设备呢"></a>为什么说是挂载文件系统而不是挂载块设备呢</h4><p>在 Linux 系统中，之所以说挂载文件系统而不是挂载块设备，是因为块设备（如硬盘分区）只是存储数据的物理设备，而文件系统则是管理这些数据的逻辑结构。挂载的过程是将文件系统关联到操作系统的目录树中，以便用户和应用程序可以通过文件路径访问存储在块设备上的数据。</p>
+<p>以下是具体原因：</p>
+<ol>
+<li>块设备是物理存储，文件系统是数据的逻辑管理方式<br>块设备（如 /dev/sda1）是底层的物理存储设备，它只是存储原始数据块，不能直接用于存取文件数据。<br>文件系统（如 ext4、xfs、btrfs 等）是用于组织和管理这些数据的逻辑结构，它提供了一种抽象层，让操作系统可以理解和管理数据，并通过文件和目录的形式呈现出来。</li>
+<li>挂载是将文件系统映射到目录树中<br>挂载的实际操作是将某个设备上的文件系统关联到操作系统的目录树中的一个目录（挂载点），使得操作系统能够通过该目录来访问文件和目录。<br>你不能直接将一个块设备挂载到目录树上，因为块设备本身没有组织数据的逻辑，需要文件系统的帮助来解释这些数据块。</li>
+<li>文件系统提供文件访问接口<br>文件系统提供了具体的文件读写、权限管理、目录结构等操作。这些是用户和应用程序所需的功能。挂载文件系统后，用户可以通过路径访问、管理文件，而不需要关心块设备的底层结构。<br>如果没有文件系统，即使你可以访问块设备上的原始数据，它也只是无序的数据块，无法方便地读取或管理。</li>
+<li>块设备可以有多个分区和文件系统<br>一个块设备可以有多个分区，每个分区可能使用不同的文件系统。每次挂载时，你实际上是选择挂载某个分区中的文件系统，而不是整个块设备。通过挂载特定的文件系统，操作系统可以正确解析其中的数据。<br>例如，设备 /dev/sda 可能有多个分区 /dev/sda1, /dev/sda2，每个分区可能有不同的文件系统（例如 /dev/sda1 是 ext4，/dev/sda2 是 xfs），挂载时分别挂载这些文件系统。</li>
+<li>未格式化的块设备不能挂载<br>如果一个块设备未被格式化（即没有文件系统），它是不能被挂载的，因为挂载的对象是文件系统。未格式化的块设备只是一系列原始的数据块，操作系统无法理解或访问其中的数据。</li>
+</ol>
+<p>总结：挂载文件系统而不是块设备的核心原因是：块设备只是存储数据的物理设备，而文件系统负责组织和管理这些数据。挂载的过程实际上是将设备上的文件系统关联到操作系统的目录结构中，从而使用户能够通过文件和目录的方式访问存储在块设备上的数据。</p>
+<h4 id="文件系统需要挂载那块设备是什么时候被识别的呢"><a href="#文件系统需要挂载那块设备是什么时候被识别的呢" class="headerlink" title="文件系统需要挂载那块设备是什么时候被识别的呢"></a>文件系统需要挂载那块设备是什么时候被识别的呢</h4><p>块设备通常在以下情况下被系统识别：</p>
+<ol>
+<li>系统启动时<br>当计算机启动时，内核会扫描所有连接到系统的硬件设备，包括硬盘、SSD、USB 驱动器等块设备。系统会自动识别这些设备并为它们分配对应的设备文件（如 /dev/sda、/dev/sdb 等）。</li>
+<li>设备插入时<br>如果在系统运行时插入一个新的块设备（例如插入 USB 驱动器、外接硬盘），内核会通过 udev 设备管理守护进程自动检测设备的插入，并创建相应的设备文件。</li>
+<li>加载驱动程序时<br>如果系统中的某些块设备需要特定的驱动程序，只有当该驱动程序被加载后，内核才会识别出该设备。例如，某些 RAID 控制器或外部存储设备在加载相应驱动后才被系统识别。</li>
+<li>热插拔支持<br>对于支持热插拔（Hot Plug）的设备，例如 USB 设备或部分 SATA 硬盘，内核能够在设备插入时立即检测并识别。<br>一旦块设备被系统识别后，它们会以 /dev 目录中的设备文件形式出现，允许用户和应用程序通过文件系统访问这些设备。</li>
+</ol>
+<h3 id="Disk-Buffering-Caching-and-Filesystems"><a href="#Disk-Buffering-Caching-and-Filesystems" class="headerlink" title="Disk Buffering Caching and Filesystems"></a>Disk Buffering Caching and Filesystems</h3><p>就像需要其他 Unix 变种一样，<code>Linux buffers writes to the disk</code>，Linux 把写磁盘的操作缓存起来，并不立即写磁盘。This means the kernel usually doesn’t immediately write changes to filesystems when processes request changes。相反，它把这些 changes 存在 RAM 中直到内核决定了一个好的时间来真正把这些数据写到磁盘上，这个 buffering system 对用户来说是透明的并且获得了巨大的性能提示。</p>
+<p>当 unmount 一个文件系统时，内核自动 <code>synchronizes with disk</code>，writing the changes in its buffer to the disk，也可以手动执行同步，<code>sync</code>命令默认同步系统上所有的磁盘。</p>
+<p>In addition, the kernel uses RAM to cache blocks as they’re read from a disk. Therefore, if one or more processes repeatedly access a file, the kernel doesn’t have to go to the disk again and again—it can simply read from the cache and save time and resources。</p>
+<h3 id="Filesystem-Mount-Options"><a href="#Filesystem-Mount-Options" class="headerlink" title="Filesystem Mount Options"></a>Filesystem Mount Options</h3><p><code>mount</code> 选项太多了，这里介绍几个有用的。选项大致分为两类：general and filesystem-specific。general 选项适用于所有文件系统，filesystem-specific 选项适用于特定的文件系统。要激活文件系统选项，使用 <code>-o</code> 开关，后跟该选项。例如，<code>-o remount,rw</code> 重新挂载已在读写模式下以只读方式挂载的文件系统。</p>
+<h4 id="Short-General-Options"><a href="#Short-General-Options" class="headerlink" title="Short General Options"></a>Short General Options</h4><p>通用选项通常是短的语法，最重要的几个：</p>
+<ul>
+<li><code>-r</code> 以只读方式挂载文件系统，这个选项有许多用途，从 write protection 到 bootstrapping，想使用只读设备时（CD-ROM）不需要指定，系统会自动帮助设置</li>
+<li><code>-n</code> The -n option ensures that mount does not try to update the system runtime mount database, /etc/mtab. By default, the mount operation fails when it cannot write to this file, so this option is important at boot time because the root partition (including the system mount database) is read-only at first. You’ll also find this option handy when trying to fix a system problem in single-user mode, because the system mount database may not be available at the time.</li>
+<li><code>-t</code> 指定文件系统类型</li>
+</ul>
+<h4 id="Long-Options"><a href="#Long-Options" class="headerlink" title="Long Options"></a>Long Options</h4><p>要使用长选项，在 -o 后面跟用逗号分割的若干选项。<code>mount -t vfat /dev/sde1 /dos -o ro,uid=1000</code></p>
+<p>常使用的长选项：</p>
+<ul>
+<li>exec、noexec 允许或禁止在文件系统上执行程序</li>
+<li>suid、nosuid 允许或禁止 setuid 程序</li>
+<li>ro 以只读方式挂载文件系统</li>
+<li>rw 以读写模式挂载文件系统</li>
+</ul>
+<h3 id="Remounting-a-Filesystem"><a href="#Remounting-a-Filesystem" class="headerlink" title="Remounting a Filesystem"></a>Remounting a Filesystem</h3><p>有时需要修改已经挂载的文件系统的选项参数，此时需要重新挂载文件系统。</p>
+<h3 id="The-x2F-etc-x2F-fstab-Filesystem-Table"><a href="#The-x2F-etc-x2F-fstab-Filesystem-Table" class="headerlink" title="The /etc/fstab Filesystem Table"></a>The /etc/fstab Filesystem Table</h3><p>要在系统引导时自动挂载文件系统并从枯燥的手动挂载中解放出来，Linux 在 /etc/fstab 中维护了自动挂载的文件系统的信息。</p>
+<p>每一行对应一个文件系统，可以分为六个字段：</p>
+<ul>
+<li>The device or UUID </li>
+<li>The mount point</li>
+<li>The filesystem type</li>
+<li>Options long options separated by commas</li>
+<li>Backup information for use by the dump（过时的命令） commad 一般都设置为 0</li>
+<li>The filesystem integrity test order fsck 检查文件系统的顺序</li>
+</ul>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UUID=70ccd6e7-6ae6-44f6-812c-51aab8036d29 / ext4 errors=remount-ro 0 1</span><br><span class="line">UUID=592dcfd1-58da-4769-9ea8-5f412a896980 none swap sw 0 0</span><br><span class="line">/dev/sr0 /cdrom iso9660  ro,user,nosuid,noauto 0 0</span><br></pre></td></tr></tbody></table></figure>
+<p>上面的例子引入了一些新的选项 <code>errors、noauto、user</code>，这些选项不适用于 <code>/etc/fstab</code> 之外，此外经常看到 <code>defaults</code> 选项，这些选项的定义是：</p>
+<ul>
+<li>defaults 设置了 mount 的默认值，比如：read-write mode、enable device files、executables 等，使用 defaults 可以让 <code>/etc/fstab</code> 更优雅</li>
+<li>errors 特定于 ext2/3/4 文件系统的选项，在系统挂载出现问题时设置内核的行为，默认是 <code>errors=continue</code>，这意味着内核应该返回一个错误并且继续运行。要让内核以只读模式重新尝试挂载可以使用 <code>errors=remount-ro</code>，<code>errors=panic</code> 设置告诉内核当挂载出现问题时执行 halt。</li>
+<li>noauto 这个选项告诉 <code>mount -a</code> 命令忽略这个文件系统</li>
+<li>user 此选项允许非特权用户在特定条目上运行挂载，这对于允许对可移动媒体进行某些类型的访问非常方便。由于用户可以将 setuid-root 文件放在另一个系统的可移动介质上，因此此选项还会设置 nosuid、noexec 和 nodev（以禁止特殊设备文件）。记住，对于可移动媒体和其他一般情况，此选项现在的用途有限，因为大多数系统使用 ubus 以及其他机制来自动安装插入的媒体。但是，当想要授予对安装特定目录的控制权时，此选项在特殊情况下很有用。</li>
+</ul>
+<h3 id="x2F-etc-x2F-fstab-的替代品"><a href="#x2F-etc-x2F-fstab-的替代品" class="headerlink" title="/etc/fstab 的替代品"></a>/etc/fstab 的替代品</h3><p>虽然 <code>/etc/fstab</code> 文件已经成了传统的表现文件系统和它的挂载点的方式，但是也有其他两个的选择。</p>
+<ul>
+<li><code>/etc/fstab.d</code> 该目录包含若干文件，一个文件代表一个文件系统</li>
+<li>第二个选择就是配置 systemd units 文件，这个文件一般是从 <code>/etc/fstab</code> 生成的</li>
+</ul>
+<h3 id="文件系统的容量"><a href="#文件系统的容量" class="headerlink" title="文件系统的容量"></a>文件系统的容量</h3><p>要查看当前挂载的文件系统的容量和使用情况可以使用 <code>df</code> 命令。其输出如下：</p>
+<ul>
+<li>Filesystem The filesystem device</li>
+<li>1k-blocks The total capacity of the filesystem in blocks of 1024 bytes</li>
+<li>Used The number of occupied blocks</li>
+<li>Available The number of free blocks</li>
+<li>Use% The percentage of blocks in use</li>
+<li>Mounted on The mount point</li>
+</ul>
+<p>从 df 输出上可以看到，已使用的和可用的加起来并不等于总容量，并且百分比也相差 5%，在这两种情况下，总容量的 5% 下落不明。事实上，空间就在那里，但它隐藏在保留块中。当文件系统开始填满时，只有超级用户才能使用文件系统的保留块。此功能可以防止系统服务器在磁盘空间不足时立即出现故障。</p>
+<h4 id="注意-1"><a href="#注意-1" class="headerlink" title="注意"></a>注意</h4><p>POSIX 标准定义一个块的大小是 512 字节，然而这个数字很难读，所以默认情况下 df 和 du 命令在大多数的 Linux 发行版中都使用 1024-bytes blocks，如果实在想要用 512-bytes 显示，可以配置环境变量 <code>export POSIXLY_CORRECT=1</code>，这里会用 <code>512B-blocks</code> 显示，<code>df -k</code>会用 <code>1K-blocks</code> 显示，<code>-m</code> 选项以 1MB-blocks 显示。</p>
+<h3 id="Checking-and-Repairing-Filesystems"><a href="#Checking-and-Repairing-Filesystems" class="headerlink" title="Checking and Repairing Filesystems"></a>Checking and Repairing Filesystems</h3>
     </div>
 
     
@@ -348,7 +697,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Partitioning-Disk-Devices"><span class="nav-number">2.</span> <span class="nav-text">Partitioning Disk Devices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%80%E4%B8%AA%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">2.1.</span> <span class="nav-text">查看一个分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MBR-%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">2.2.</span> <span class="nav-text">MBR 分区表</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Partitioning-Disk-Devices"><span class="nav-number">2.</span> <span class="nav-text">Partitioning Disk Devices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%80%E4%B8%AA%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">2.1.</span> <span class="nav-text">查看一个分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MBR-%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">2.2.</span> <span class="nav-text">MBR 分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%88%86%E5%8C%BA%E8%A1%A8-Modifying-Partition-Tables"><span class="nav-number">2.3.</span> <span class="nav-text">修改分区表 Modifying Partition Tables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8%E5%92%8C%E7%A3%81%E7%9B%98%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.4.</span> <span class="nav-text">分区表和磁盘的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%88%B6%E9%87%8D%E6%96%B0%E5%8A%A0%E8%BD%BD%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">2.5.</span> <span class="nav-text">强制重新加载分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">2.6.</span> <span class="nav-text">创建一个分区表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E7%BB%93%E6%9E%84"><span class="nav-number">2.7.</span> <span class="nav-text">磁盘结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%97-x2F-%E7%B0%87"><span class="nav-number">2.8.</span> <span class="nav-text">块&#x2F;簇</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%A3%81%E7%9B%98%E5%9D%97"><span class="nav-number">2.9.</span> <span class="nav-text">为什么要有磁盘块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#page"><span class="nav-number">2.10.</span> <span class="nav-text">page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%87%E5%8C%BA%E3%80%81%E5%9D%97-x2F-%E7%B0%87%E3%80%81page%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.11.</span> <span class="nav-text">扇区、块&#x2F;簇、page的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CHS-cylinder-head-sector"><span class="nav-number">2.12.</span> <span class="nav-text">CHS cylinder-head-sector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CHS-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="nav-number">2.13.</span> <span class="nav-text">CHS 的工作方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CHS-%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">2.14.</span> <span class="nav-text">CHS 的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%98%AF%E7%8B%AC%E7%AB%8B%E4%BA%8E%E5%86%85%E6%A0%B8%E7%9A%84%E5%90%97"><span class="nav-number">3.1.</span> <span class="nav-text">文件系统是独立于内核的吗?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.1.1.</span> <span class="nav-text">内核与文件系统的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%8E%E5%86%85%E6%A0%B8%E7%9A%84%E5%88%86%E7%A6%BB%E7%A8%8B%E5%BA%A6%EF%BC%9A"><span class="nav-number">3.1.2.</span> <span class="nav-text">文件系统与内核的分离程度：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%95%B0%E6%8D%AE%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">文件系统的数据在哪里？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E4%B8%80%E4%B8%AA%E5%88%86%E5%8C%BA%E7%9A%84%E7%A3%81%E7%9B%98%EF%BC%8C%E6%AF%8F%E4%B8%AA%E5%88%86%E5%8C%BA%E9%83%BD%E6%9C%89%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%90%97"><span class="nav-number">3.3.</span> <span class="nav-text">对于一个分区的磁盘，每个分区都有一个文件系统吗</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA"><span class="nav-number">3.3.1.</span> <span class="nav-text">磁盘分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">3.3.2.</span> <span class="nav-text">文件系统的作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8B%AC%E7%AB%8B%E6%80%A7"><span class="nav-number">3.3.3.</span> <span class="nav-text">独立性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%94%AF%E6%8C%81"><span class="nav-number">3.3.4.</span> <span class="nav-text">多操作系统支持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%B0%E5%BA%95%E8%A6%81%E4%B8%8D%E8%A6%81%E5%AF%B9%E7%A3%81%E7%9B%98%E8%BF%9B%E8%A1%8C%E5%88%86%E5%8C%BA"><span class="nav-number">3.3.5.</span> <span class="nav-text">到底要不要对磁盘进行分区</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">3.3.5.1.</span> <span class="nav-text">分区的优点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">3.3.5.2.</span> <span class="nav-text">分区的缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E5%88%86%E5%8C%BA%EF%BC%9A"><span class="nav-number">3.3.6.</span> <span class="nav-text">什么时候应该分区：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E5%BF%85%E5%88%86%E5%8C%BA%EF%BC%9A"><span class="nav-number">3.3.7.</span> <span class="nav-text">什么时候不必分区：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.8.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%9C%A8%E6%AF%8F%E4%B8%AA%E5%88%86%E5%8C%BA%E5%86%85%E5%90%97"><span class="nav-number">3.4.</span> <span class="nav-text">文件系统在每个分区内吗</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.4.1.</span> <span class="nav-text">分区和文件系统的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="nav-number">3.4.2.</span> <span class="nav-text">格式化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E7%82%B9"><span class="nav-number">3.4.3.</span> <span class="nav-text">挂载点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8B%AC%E7%AB%8B%E6%80%A7-1"><span class="nav-number">3.4.4.</span> <span class="nav-text">独立性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">3.4.5.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="nav-number">3.5.</span> <span class="nav-text">分区表在哪里</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E4%BD%8D%E7%BD%AE"><span class="nav-number">3.5.1.</span> <span class="nav-text">具体位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">3.5.2.</span> <span class="nav-text">分区表的作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">3.5.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%80%E8%88%AC%E5%A4%9A%E5%A4%A7"><span class="nav-number">3.6.</span> <span class="nav-text">文件系统一般多大</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%B1%E5%93%8D%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="nav-number">3.6.1.</span> <span class="nav-text">影响文件系统大小的因素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%9E%E9%99%85%E5%A4%A7%E5%B0%8F%E4%B8%8E%E5%8F%AF%E7%94%A8%E7%A9%BA%E9%97%B4"><span class="nav-number">3.6.2.</span> <span class="nav-text">文件系统的实际大小与可用空间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-3"><span class="nav-number">3.6.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%83%E6%95%B0%E6%8D%AE%E4%B8%80%E8%88%AC%E5%A4%9A%E5%A4%A7"><span class="nav-number">3.7.</span> <span class="nav-text">文件系统的元数据一般多大</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%BB%84%E6%88%90%E5%92%8C%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.7.1.</span> <span class="nav-text">元数据的组成和大小</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9-inode"><span class="nav-number">3.7.1.1.</span> <span class="nav-text">索引节点 (inode)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">3.7.1.2.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B6%85%E7%BA%A7%E5%9D%97-Superblock"><span class="nav-number">3.7.1.3.</span> <span class="nav-text">超级块 (Superblock)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9D%97%E4%BD%8D%E5%9B%BE%E5%92%8Cinode%E4%BD%8D%E5%9B%BE"><span class="nav-number">3.7.1.4.</span> <span class="nav-text">块位图和inode位图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6-Journal"><span class="nav-number">3.7.1.5.</span> <span class="nav-text">日志文件 (Journal)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E5%85%83%E6%95%B0%E6%8D%AE%E5%8D%A0%E7%94%A8%E7%A9%BA%E9%97%B4"><span class="nav-number">3.7.1.6.</span> <span class="nav-text">总体元数据占用空间</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BD%B1%E5%93%8D%E5%85%83%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="nav-number">3.7.1.7.</span> <span class="nav-text">影响元数据大小的因素</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-4"><span class="nav-number">3.7.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%98%AF%E4%B8%8D%E5%90%8C%E7%9A%84%E4%B8%9C%E8%A5%BF%E5%90%97"><span class="nav-number">3.8.</span> <span class="nav-text">分区表和文件系统是不同的东西吗</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8-Partition-Table"><span class="nav-number">3.8.1.</span> <span class="nav-text">分区表 (Partition Table)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-File-System"><span class="nav-number">3.8.2.</span> <span class="nav-text">文件系统 (File System)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-5"><span class="nav-number">3.9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E8%B4%9F%E8%B4%A3%E5%8A%A0%E8%BD%BD%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%90%97"><span class="nav-number">3.10.</span> <span class="nav-text">内核负责加载文件系统吗</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">3.10.1.</span> <span class="nav-text">文件系统加载的过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86"><span class="nav-number">3.10.2.</span> <span class="nav-text">文件系统管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%B3%E7%B3%BB-1"><span class="nav-number">3.10.3.</span> <span class="nav-text">内核与文件系统的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-6"><span class="nav-number">3.10.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E4%B8%80%E4%B8%AA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6%EF%BC%8C%E6%98%AF%E5%86%85%E6%A0%B8%E8%B4%9F%E8%B4%A3%E7%BB%B4%E6%8A%A4%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%8C%E8%BF%98%E6%98%AF%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F%E8%B4%9F%E8%B4%A3"><span class="nav-number">3.11.</span> <span class="nav-text">当应用程序执行一个系统调用创建一个文件，是内核负责维护文件系统的内容，还是文件系统驱动程序负责</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%B8%80%E8%88%AC%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.12.</span> <span class="nav-text">存储子系统一般是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%BB%E8%A6%81%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="nav-number">3.12.1.</span> <span class="nav-text">存储子系统的主要组成部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">3.12.2.</span> <span class="nav-text">存储子系统的作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-7"><span class="nav-number">3.12.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.13.</span> <span class="nav-text">文件系统类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.14.</span> <span class="nav-text">怎么查看文件系统类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.15.</span> <span class="nav-text">创建文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">3.16.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.17.</span> <span class="nav-text">挂载文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Filesystem-UUID"><span class="nav-number">3.18.</span> <span class="nav-text">Filesystem UUID</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%B4%E6%98%AF%E6%8C%82%E8%BD%BD%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E8%80%8C%E4%B8%8D%E6%98%AF%E6%8C%82%E8%BD%BD%E5%9D%97%E8%AE%BE%E5%A4%87%E5%91%A2"><span class="nav-number">3.18.1.</span> <span class="nav-text">为什么说是挂载文件系统而不是挂载块设备呢</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E9%9C%80%E8%A6%81%E6%8C%82%E8%BD%BD%E9%82%A3%E5%9D%97%E8%AE%BE%E5%A4%87%E6%98%AF%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A2%AB%E8%AF%86%E5%88%AB%E7%9A%84%E5%91%A2"><span class="nav-number">3.18.2.</span> <span class="nav-text">文件系统需要挂载那块设备是什么时候被识别的呢</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Disk-Buffering-Caching-and-Filesystems"><span class="nav-number">3.19.</span> <span class="nav-text">Disk Buffering Caching and Filesystems</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Filesystem-Mount-Options"><span class="nav-number">3.20.</span> <span class="nav-text">Filesystem Mount Options</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Short-General-Options"><span class="nav-number">3.20.1.</span> <span class="nav-text">Short General Options</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Long-Options"><span class="nav-number">3.20.2.</span> <span class="nav-text">Long Options</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remounting-a-Filesystem"><span class="nav-number">3.21.</span> <span class="nav-text">Remounting a Filesystem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-x2F-etc-x2F-fstab-Filesystem-Table"><span class="nav-number">3.22.</span> <span class="nav-text">The &#x2F;etc&#x2F;fstab Filesystem Table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x2F-etc-x2F-fstab-%E7%9A%84%E6%9B%BF%E4%BB%A3%E5%93%81"><span class="nav-number">3.23.</span> <span class="nav-text">&#x2F;etc&#x2F;fstab 的替代品</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%B9%E9%87%8F"><span class="nav-number">3.24.</span> <span class="nav-text">文件系统的容量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F-1"><span class="nav-number">3.24.1.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checking-and-Repairing-Filesystems"><span class="nav-number">3.25.</span> <span class="nav-text">Checking and Repairing Filesystems</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -422,13 +771,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">228k</span>
+    <span title="Symbols count total">247k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:28</span>
+    <span title="Reading time total">3:45</span>
 </div>
 
         
