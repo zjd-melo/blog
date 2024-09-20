@@ -249,7 +249,7 @@
 
       
         <blockquote>
-<p>现代操作系统非常复杂，最有效的方式来理解一个操作系统是如何工作的方式就是 <code>abstract</code>，通过忽略一些细节来了解全局。</p>
+<p>现代操作系统非常复杂，最有效的理解一个操作系统是如何工作的方式就是 <code>abstract</code>，通过忽略一些细节来了解全局。</p>
 </blockquote>
 <p>软件开发人员在构建操作系统及其应用程序时使用抽象作为工具。计算机软件中的抽象细分有很多术语，包括子系统 subsystem、模块 module 和包 packages，这里使用术语组件 component，因为它很简单。在构建软件组件时，开发人员通常不会过多考虑其他组件的内部结构，但他们确实关心可以使用哪些其他组件以及如何使用它们。</p>
 <h2 id="levels-and-layers-of-abstraction-in-a-linux-system"><a href="#levels-and-layers-of-abstraction-in-a-linux-system" class="headerlink" title="levels and layers of abstraction in a linux system"></a>levels and layers of abstraction in a linux system</h2><p>使用抽象把计算机系统分成若干组件更易于理解，但是如果没有组织结构的话，这些组件也不会正常工作。</p>
@@ -278,9 +278,9 @@
 <ol>
 <li>CPU interrupts the current process based on an internal timer，switches into kernel mode，and hands control back to the kernel</li>
 <li>Kernel records the current state of the CPU and memory，which will be resuming the process that was just interrupted</li>
-<li>The kernel perfors any tasks that might have come up during the preceding time slice（such as collecting data from input and output，or I/O operation）</li>
+<li>The kernel performs any tasks that might have come up during the preceding time slice（such as collecting data from input and output，or I/O operation）</li>
 <li>The kernel now is ready to let another process run, the kernel anayzes the list of processes that are ready to run and chooses one</li>
-<li>The kernel preares the memory for this new process, and then prepare the CPU </li>
+<li>The kernel prepares the memory for this new process, and then prepare the CPU </li>
 <li>The kernel tells the CPU how long the time slice for the new process will last</li>
 <li>The kernel switches the CPU into user mode and hands control of the CPU to the process</li>
 </ol>
