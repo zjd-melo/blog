@@ -7,7 +7,7 @@ tags: [linux]
 description: how linux work 01 - summary
 ---
 
-> 现代操作系统非常复杂，最有效的方式来理解一个操作系统是如何工作的方式就是 `abstract`，通过忽略一些细节来了解全局。
+> 现代操作系统非常复杂，最有效的理解一个操作系统是如何工作的方式就是 `abstract`，通过忽略一些细节来了解全局。
 
 软件开发人员在构建操作系统及其应用程序时使用抽象作为工具。计算机软件中的抽象细分有很多术语，包括子系统 subsystem、模块 module 和包 packages，这里使用术语组件 component，因为它很简单。在构建软件组件时，开发人员通常不会过多考虑其他组件的内部结构，但他们确实关心可以使用哪些其他组件以及如何使用它们。
 
@@ -57,9 +57,9 @@ Linux 有三层抽象：
 内核负责上下文切换。为了理解它是如何工作的，让我们考虑一个进程在用户模式下运行但其时间片已到的情况：
 1. CPU interrupts the current process based on an internal timer，switches into kernel mode，and hands control back to the kernel
 2. Kernel records the current state of the CPU and memory，which will be resuming the process that was just interrupted
-3. The kernel perfors any tasks that might have come up during the preceding time slice（such as collecting data from input and output，or I/O operation）
+3. The kernel performs any tasks that might have come up during the preceding time slice（such as collecting data from input and output，or I/O operation）
 4. The kernel now is ready to let another process run, the kernel anayzes the list of processes that are ready to run and chooses one
-5. The kernel preares the memory for this new process, and then prepare the CPU 
+5. The kernel prepares the memory for this new process, and then prepare the CPU 
 6. The kernel tells the CPU how long the time slice for the new process will last
 7. The kernel switches the CPU into user mode and hands control of the CPU to the process
 
