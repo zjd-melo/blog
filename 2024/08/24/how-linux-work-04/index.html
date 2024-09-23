@@ -29,10 +29,10 @@
 <meta property="og:description" content="how linux work 04 - Disks and filesystems">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/disk.png">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%98.png">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%982.png">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%983.png">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/%E7%A3%81%E7%9B%984.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%98.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%982.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%983.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%984.png">
 <meta property="article:published_time" content="2024-08-24T05:42:04.000Z">
 <meta property="article:modified_time" content="2024-08-24T05:42:04.000Z">
 <meta property="article:author" content="朱佳东">
@@ -145,7 +145,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">71</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">74</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -289,8 +289,8 @@
 </ul>
 <h3 id="强制重新加载分区表"><a href="#强制重新加载分区表" class="headerlink" title="强制重新加载分区表"></a>强制重新加载分区表</h3><p>如何想非常确定修改的分区表得到应用，可以使用 <code>blockdev</code> 来发起一个 old-style sys call （就像 fdisk 使用的 sys call），比如要强制内核 reload 在 <code>/dev/sdf</code> 上的分区表，可以用 <code>blockdev --rereadpt /dev/sdf</code>。</p>
 <h3 id="创建一个分区表"><a href="#创建一个分区表" class="headerlink" title="创建一个分区表"></a>创建一个分区表</h3><p><a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/ecs/user-guide/initialize-a-data-disk-whose-size-does-not-exceed-2-tib-on-a-linux-instance?spm=a2c4g.11186623.0.0.63362befRUTQWd#c4eeb981adsw3">fdisk创建分区表</a><br>创建分区表后，就要在分区上放置文件系统了。</p>
-<h3 id="磁盘结构"><a href="#磁盘结构" class="headerlink" title="磁盘结构"></a>磁盘结构</h3><p><img src="/blog/%E7%A3%81%E7%9B%98.png" alt="磁盘"></p>
-<p><img src="/blog/%E7%A3%81%E7%9B%982.png" alt="磁盘2"></p>
+<h3 id="磁盘结构"><a href="#磁盘结构" class="headerlink" title="磁盘结构"></a>磁盘结构</h3><p><img src="/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%98.png" alt="磁盘"></p>
+<p><img src="/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%982.png" alt="磁盘2"></p>
 <ul>
 <li>Cylinder 柱面</li>
 <li>Spindle 主轴</li>
@@ -300,8 +300,8 @@
 <li>tracks 磁道</li>
 </ul>
 <p>硬盘中一般会有多个盘片组成，每个盘片包含两个面，每个盘面都对应地有一个读/写磁头。受到硬盘整体体积和生产成本的限制，盘片数量都受到限制，一般都在5片以内。盘片的编号自下向上从0开始，如最下边的盘片有0面和1面，再上一个盘片就编号为2面和3面。</p>
-<p>下图显示的是一个盘面，盘面中一圈圈灰色同心圆为一条条磁道，从圆心向外画直线，可以将磁道划分为若干个弧段，每个磁道上一个弧段被称之为一个扇区（绿色部分）。扇区是磁盘的最小组成单元，通常是 512 字节。（由于不断提高磁盘的大小，部分厂商设定每个扇区的大小是4096字节）<br><img src="/blog/%E7%A3%81%E7%9B%983.png" alt="磁盘3"></p>
-<p><img src="/blog/%E7%A3%81%E7%9B%984.png" alt="磁盘4"><br>硬盘通常由重叠的一组盘片构成，每个盘面都被划分为数目相等的磁道，并从外缘的“0”开始编号，具有相同编号的磁道形成一个圆柱，称之为磁盘的柱面。<strong>磁盘的柱面数与一个盘面上的磁道数是相等的</strong>。由于每个盘面都有自己的磁头，因此，<strong>盘面数等于总的磁头数</strong>。</p>
+<p>下图显示的是一个盘面，盘面中一圈圈灰色同心圆为一条条磁道，从圆心向外画直线，可以将磁道划分为若干个弧段，每个磁道上一个弧段被称之为一个扇区（绿色部分）。扇区是磁盘的最小组成单元，通常是 512 字节。（由于不断提高磁盘的大小，部分厂商设定每个扇区的大小是4096字节）<br><img src="/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%983.png" alt="磁盘3"></p>
+<p><img src="/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%984.png" alt="磁盘4"><br>硬盘通常由重叠的一组盘片构成，每个盘面都被划分为数目相等的磁道，并从外缘的“0”开始编号，具有相同编号的磁道形成一个圆柱，称之为磁盘的柱面。<strong>磁盘的柱面数与一个盘面上的磁道数是相等的</strong>。由于每个盘面都有自己的磁头，因此，<strong>盘面数等于总的磁头数</strong>。</p>
 <p><strong>存储容量 ＝ 磁头数 × 磁道(柱面)数 × 每道扇区数 × 每扇区字节数</strong></p>
 <h3 id="块-x2F-簇"><a href="#块-x2F-簇" class="headerlink" title="块/簇"></a>块/簇</h3><p>磁盘块/簇（虚拟出来的）。块是操作系统中最小的逻辑存储单位。操作系统与磁盘打交道的最小单位是磁盘块。</p>
 <p>通俗的来讲，在 Windows 下如 NTFS 等文件系统中叫做簇；在 Linux 下如 Ext4 等文件系统中叫做块（block）。每个簇或者块可以包括2、4、8、16、32、64…2的n次方个扇区。</p>
@@ -713,7 +713,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -771,13 +771,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">247k</span>
+    <span title="Symbols count total">255k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:45</span>
+    <span title="Reading time total">3:52</span>
 </div>
 
         
