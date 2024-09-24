@@ -530,3 +530,90 @@ UUID=592dcfd1-58da-4769-9ea8-5f412a896980 none swap sw 0 0
 POSIX 标准定义一个块的大小是 512 字节，然而这个数字很难读，所以默认情况下 df 和 du 命令在大多数的 Linux 发行版中都使用 1024-bytes blocks，如果实在想要用 512-bytes 显示，可以配置环境变量 `export POSIXLY_CORRECT=1`，这里会用 `512B-blocks` 显示，`df -k`会用 `1K-blocks` 显示，`-m` 选项以 1MB-blocks 显示。
 
 ### Checking and Repairing Filesystems
+Unix 文件系统提供的优化是通过复杂的数据库机制实现的。为了使文件系统无缝工作，内核必须相信已安装的文件系统没有错误，并且硬件可靠地存储数据。如果存在错误，可能会导致数据丢失和系统崩溃。
+
+除了硬件上问题之外，文件系统的问题通常是由用户粗鲁的关闭系统导致的，在这种情况下，内存中先前的文件系统缓存可能与磁盘上的数据不匹配，并且当碰巧粗鲁的关闭计算机时，系统也可能正在更改文件系统。尽管许多文件系统支持日志机制，使文件系统损坏的情况大大减少，但应该始终正确关闭系统。
+
+无论使用什么文件系统，仍然需要时不时地检查文件系统，以确保一切都正常。
+
+检查文件系统的工具是 `fsck`，就像 `mkfs` 一样，`fsck` 也有针对不同文件系统的很多版本，通常会自己判断文件系统类型，并正确的调用对应的文件系统检查工具。
+
+细节：略。
+
+### 特殊用途的文件系统
+并非所有文件系统都代表物理介质上的存储。大多数版本的 Unix 都有充当系统接口的文件系统。也就是说，文件系统不仅可以作为在设备上存储数据的手段，还可以表示系统信息，例如进程 ID 和内核诊断信息。
+
+特殊的文件系统：
+
+- proc mounted on /proc proc 是 process 的缩写，这个目录下的每个数字目录代表一个系统上正在运行的进程，数字目录底下的文件代表了进程的若干信息。Linux proc 文件系统在 `/proc/cpuinfo` 等文件中包含大量附加内核和硬件信息。请记住，内核设计指南建议将与进程无关的信息从 `/proc` 移出并移入 `/sys`，因此 `/proc` 中的系统信息可能不是最新的接口。
+- sysfs mounted on /sys
+- tmpfs mounted on /run or other locations 有了 tmpfs 后，可以使用物理内存和 swap space 作为临时存储，You can mount tmpfs where you like, using the `size` and `nr_blocks` long options to control the maximum size。但是，请小心不要不断地将东西放入 `tmpfs` 位置，因为系统最终会耗尽内存，程序将开始崩溃。
+- overlay A filesystem that merges directories into a composite. 容器一般使用 overlay 文件系统。
+
+## Swap Space
+并不是磁盘上每个分区都有一个文件系统。还可以用磁盘空间来增加机器上的 RAM。如果实际内存不足，Linux 虚拟内存系统可以自动将内存片段移入磁盘存储或从磁盘存储移出。这称为交换，因为空闲程序片段被交换到磁盘，以换取驻留在磁盘上的活动片段。用于存储内存页的磁盘区域称为交换空间（或简称交换）。
+
+### 使用磁盘分区作为交互空间
+1. 确保磁盘分区是空的。
+2. 运行 `mkswap dev`，dev 是分区的名称。这个命令会在分区上打上一个 `swap signature`，标记分区为一个 swap space。
+3. 执行 `swapon dev`，注册交互空间到内核上。
+
+创建完交换分区后，可以在 `/etc/fstab` 中添加项目，以便系统启动时自动使用交换分区。`/dev/sda5 none swap sw 0 0`，Swap signature 也有 UUIDS。记住许多系统现在都使用 UUID 而不是设备名称。
+
+### 使用文件作为交换空间
+如果不想重新分区磁盘以创建交换分区，则可以使用常规文件作为交换空间。
+
+Use these commands to create an empty file, initialize it as swap, and add it to the swap pool：
+
+```shell
+dd if=/dev/zero of=swap_file bs=1024k count=num_mb
+mkswap swap_file
+swapon swap_file
+```
+这里的 swap_file 就是建行文件的名称。
+
+如果想从内核的 active pool 中移除交换分区可以使用 `swapoff` 命令。系统必须有足够的可用剩余内存（实际内存和交换内存组合）来容纳要删除的交换池（swap pool）部分中的任何活动页面。
+
+### 需要多少交换空间
+曾经，Unix 传统观点认为，应该始终保留至少两倍于实际内存的交换空间。如今，不仅可用的巨大磁盘和内存容量使问题变得模糊，而且我们使用系统的方式也使问题变得模糊。一方面，磁盘空间非常充足，因此很容易分配两倍以上的内存大小。另一方面，可能永远不会使用你的交换空间，因为有很多的真实内存。
+
+双倍实际内存”规则源自多个用户登录到一台计算机的时代。不过，并非所有用户都处于活动状态，因此当活动用户需要更多内存时，能够方便地交换不活动用户的内存。
+
+对于单用户机器来说，同样的情况可能仍然适用。如果正在运行许多进程，通常可以交换部分不活动进程，甚至交换活动进程的不活动部分。然而，如果因为许多活动进程想要同时使用内存而频繁访问交换空间，那么将遭受严重的性能问题，因为磁盘 I/O（甚至 SSD 的 I/O）速度太慢，无法跟上其余进程的速度。唯一的解决方案是购买更多内存、终止某些进程或抱怨。
+
+有时，Linux 内核可能会选择交换进程以支持更多的磁盘缓存。为了防止这种行为，一些管理员将某些系统配置为根本没有交换空间。例如，高性能服务器永远不应该占用交换空间，并且应该尽可能避免磁盘访问。
+
+在通用机器上不配置交换空间是危险的。如果一台机器完全耗尽了实际内存和交换空间，Linux 内核会调用内存不足 (OOM) killer 来终止进程以释放一些内存。显然不希望桌面应用程序发生这种情况。另一方面，高性能服务器包括复杂的监控、冗余和负载平衡系统，以确保它们永远不会到达危险区域。
+
+## LVM 
+略
+
+## 向前看：磁盘和用户空间
+In disk-related components on a Unix system, the boundaries between user space and the kernel can be difficult to characterize. As you’ve seen, the kernel handles raw block I/O from the devices, and user-space tools can use the block I/O through device files. However, user space typically uses the block I/O only for initializing operations, such as partitioning, filesystem creation, and swap space creation. In normal use, user space uses only the filesystem support that the kernel provides on top of the block I/O. Similarly, the kernel also handles most of the tedious details when dealing with swap space in the virtual memory system.
+
+## 传统文件系统的内部
+传统的 Unix 文件系统有两个主要的组件：a pool of data blocks where you can store data and a database system that manages the data pool。数据块和管理数据块的数据结构。
+
+数据库以索引节点数据结构（inodes）为中心。一个 inode 是一组描述一个特定文件的数据，包括文件的类型、权限和（或许是最重要的部分）文件数据存在哪个data pool 中。
+
+Inodes 由 inodes table 中列出的数字来标识。
+
+Filenames and directories are also implemented as inodes.
+
+A directory inode contains a list of filenames and links corresponding to other inodes。
+
+
+![fs](fs.png)
+![inodes](inodes.png)
+
+怎么理解？对于任何 ext2/3/4 文件系统，inode number 从 2 开始，也就是 root inode，不要和 system root filesystem 搞混淆，从 inode 为 2 的节点可以看出它是一个目录，并能找到它关联的 data pool，从中可以看到 root directory 的内容，dir_1 inode=12 和 dir_2 inode=7633。
+
+当查找一个文件时，时内核负责还是文件系统负责找？内核负责管理文件系统，并把用户请求通过 VFS 层转发给文件系统，文件系统负责找。
+
+### Inode details and the link count
+`ls -i` 查看 inode 号。2 号 inode 的 link count 是 4，其中一个是 superblock 的引用，一个是 `.`，还有两个是两个子目录中的 `..`。
+
+### Block Allocation
+在给一个新文件分配 data pool blocks 时，文件系统怎么知道哪些块被使用了，哪些没有被使用呢？其中一个最基本的方式就是使用额外的管理数据结构：a block bitmap。在这种模式下，文件系统保留了一系列的字节，这些字节中的每一个位代表 data pool 中的一个 block。
+
+### Filesystems in User Space
