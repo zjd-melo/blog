@@ -33,8 +33,8 @@
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%982.png">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%983.png">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/%E7%A3%81%E7%9B%984.png">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/fs.png">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/inodes.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/fs.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/08/24/how-linux-work-04/inodes.png">
 <meta property="article:published_time" content="2024-08-24T05:42:04.000Z">
 <meta property="article:modified_time" content="2024-08-24T05:42:04.000Z">
 <meta property="article:author" content="朱佳东">
@@ -652,7 +652,7 @@
 <p>Inodes 由 inodes table 中列出的数字来标识。</p>
 <p>Filenames and directories are also implemented as inodes.</p>
 <p>A directory inode contains a list of filenames and links corresponding to other inodes。</p>
-<p><img src="/blog/fs.png" alt="fs"><br><img src="/blog/inodes.png" alt="inodes"></p>
+<p><img src="/blog/2024/08/24/how-linux-work-04/fs.png" alt="fs"><br><img src="/blog/2024/08/24/how-linux-work-04/inodes.png" alt="inodes"></p>
 <p>怎么理解？对于任何 ext2/3/4 文件系统，inode number 从 2 开始，也就是 root inode，不要和 system root filesystem 搞混淆，从 inode 为 2 的节点可以看出它是一个目录，并能找到它关联的 data pool，从中可以看到 root directory 的内容，dir_1 inode=12 和 dir_2 inode=7633。</p>
 <p>当查找一个文件时，时内核负责还是文件系统负责找？内核负责管理文件系统，并把用户请求通过 VFS 层转发给文件系统，文件系统负责找。</p>
 <h3 id="Inode-details-and-the-link-count"><a href="#Inode-details-and-the-link-count" class="headerlink" title="Inode details and the link count"></a>Inode details and the link count</h3><p><code>ls -i</code> 查看 inode 号。2 号 inode 的 link count 是 4，其中一个是 superblock 的引用，一个是 <code>.</code>，还有两个是两个子目录中的 <code>..</code>。</p>
