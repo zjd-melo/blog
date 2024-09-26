@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="关于 Python 打包相关概念">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python Packaging概述">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="关于 Python 打包相关概念">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/py_pkg_tools_and_libs.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/py_pkg_applications.png">
+<meta property="article:published_time" content="2024-09-21T11:17:22.000Z">
+<meta property="article:modified_time" content="2024-09-21T11:17:22.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/py_pkg_tools_and_libs.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>Python Packaging概述 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">75</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python Packaging概述
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-09-21 19:17:22" itemprop="dateCreated datePublished" datetime="2024-09-21T19:17:22+08:00">2024-09-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+            <div class="post-description">关于 Python 打包相关概念</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Python-Packaging-Overview"><a href="#Python-Packaging-Overview" class="headerlink" title="Python Packaging Overview"></a>Python Packaging Overview</h2><p>作为一种通用编程语言，Python 被设计用于多种用途。你可以构建网站、工业机器人或游戏供你的朋友玩等等，所有这些都使用相同的核心技术。</p>
+<p>Python 的灵活性是为什么每个 Python 项目的第一步都必须考虑项目的受众以及项目运行的相应环境。在编写代码之前考虑打包似乎很奇怪，但这个过程确实可以避免将来的麻烦。</p>
+<h2 id="想想部署"><a href="#想想部署" class="headerlink" title="想想部署"></a>想想部署</h2><p>Packages 的存在就是为了被安装或者被部署，所以在打包任何东西之前，需要了解以下和部署相关问题的一些答案：</p>
+<ul>
+<li>谁是你的软件的使用者？你的软件是否会由其他进行软件开发的开发人员、数据中心的操作人员或不太精通软件的团队安装？</li>
+<li>你的软件是要在服务器、台式机、移动客户端（手机、平板电脑等）上运行，还是嵌入专用设备中？</li>
+<li>你的软件是单独安装还是大批量部署？</li>
+</ul>
+<p>打包最重要的是目标环境和部署体验。上述问题有很多答案，每种情况都有自己的解决方案。有了这些信息，以下概述将指导你找到最适合你的项目的封装技术。</p>
+<h2 id="打包-Python-的库和工具"><a href="#打包-Python-的库和工具" class="headerlink" title="打包 Python 的库和工具"></a>打包 Python 的库和工具</h2><p>你可能听说过 <code>PyPI</code>、<code>setup.py</code> 和 <code>wheel</code> 文件，这些只是 Python 生态系统提供的一些工具，用于向开发人员分发 Python 代码。 </p>
+<p>下面三个打包方法适应于技术开发人员在开发环境中使用的库和工具。</p>
+<h3 id="Python-modules"><a href="#Python-modules" class="headerlink" title="Python modules"></a>Python modules</h3><p>Python 文件只要只依赖于标准库，就可以重新分发和重用。还需要确保它是为正确的 Python 版本编写的，并且仅依赖于标准库。</p>
+<p>这非常适用在具有兼容 Python 版本的人之间共享简单的脚本和代码片段（比如通过电子邮件、StackOverflow或 GitHub gists）。某些完整的 Python 库使用这种方式打包比如 <code>bottle.py</code> 和 <code>boltons</code>。</p>
+<p>但是，这种模式无法扩展到包含多个文件、需要额外库或需要特定版本的 Python 的项目。</p>
+<h3 id="Python-source-distributions"><a href="#Python-source-distributions" class="headerlink" title="Python source distributions"></a>Python source distributions</h3><p>如果代码包含了多个 Python 文件，通常把他们组织在一个目录结构中，任何包含 Python 文件的目录都会成为一个导入包（import package）。</p>
+<p>由于包由多个文件组成，因此它们更难分发。大多数协议支持一次仅传输一个文件。更容易出现不完整的传输，并且更难保证目的地的代码完整性。</p>
+<p>只要你的代码只包含纯 Python 文件而不包含其他东西，并且知道部署环境和你的开发环境 Python 版本兼容，那么就可以使用 Python 原生的打包工具来创建一个源码分发包（source Distribution Package）简称 sdist。</p>
+<p>Python 的 sdists 是包含一个或多个包或模块的压缩归档文件（.tar.gz）。<a target="_blank" rel="noopener" href="https://packaging.python.org/en/latest/specifications/source-distribution-format/#source-distribution-format">源码分发格式</a>。</p>
+<h3 id="Python-binary-distributions"><a href="#Python-binary-distributions" class="headerlink" title="Python binary distributions"></a>Python binary distributions</h3><p>Python 的大部分实用功能来自于它与软件生态系统集成的能力，特别是用 C、C++、Fortran、Rust 和其他语言编写的库。</p>
+<p>并非所有开发人员都拥有合适的工具或经验来构建用这些编译语言编写的组件，因此 Python 创建了 <code>Wheel</code>，这是一种包格式，旨在发布带有编译工件（产物）的库。事实上，Python 的包安装程序 <code>pip</code> 总是更喜欢 <code>Wheel</code>，因为安装它总是更快，所以即使是纯 Python 包也能更好地使用 <code>Wheel</code>。</p>
+<p>当二进制发行版与源发行版相匹配时（同时发布二进制包和源码包），它们是最好的。即使不为每个操作系统上传 <code>wheels</code>，通过上传 <code>sdist</code>，仍然可以让其他平台的用户为自己从源码构建。默认情况下需要同时发布 <code>wheel</code> 和 <code>sdist</code>。Python 和 PyPI 可以轻松地将wheel 和sdists 一起上传。</p>
+<p><img src="/blog/py_pkg_tools_and_libs.png" alt="py_pkg_tools_and_libs"></p>
+<h2 id="打包-python-应用"><a href="#打包-python-应用" class="headerlink" title="打包 python 应用"></a>打包 python 应用</h2><p>到目前为止，只讨论了 Python 的原生分发工具。根据介绍，可以正确地推断这些内置方法仅针对具有 Python 的环境以及知道如何安装 Python 包的受众。</p>
+<p>由于操作系统、配置和人员多种多样，这种假设只有在针对开发人员受众时才是安全的。</p>
+<p>Python 的原生打包 native packaging 主要是为了在开发人员之间分发可重用代码（称为库）而构建的，可以使用 <code>setuptools entry_points</code> 等技术，在 Python 的库打包之上搭载工具或供开发人员使用的基本应用程序（CLI）。</p>
+<p>Libraries are building blocks, not complete applications. 对于分发应用程序来说，存在着一个全新的技术世界。</p>
+<p>下面的几个方式是根据这些应用程序打包选项对目标环境的依赖关系来组织的，可以为项目选择正确的方式。</p>
+<h3 id="Depending-on-a-framework"><a href="#Depending-on-a-framework" class="headerlink" title="Depending on a framework"></a>Depending on a framework</h3><p>某些类型的 Python 应用程序（例如网站后端和其他网络服务）非常常见，因此它们具有支持其开发和打包的框架。其他类型的应用程序，例如动态 Web 前端和移动客户端，都足够复杂，以至于框架不仅仅是为了方便。</p>
+<p>所有这些情况下，从框架的打包和部署故事开始向后工作是有意义的，依赖于框架，需要遵循框架的打包指南以获得最简单、最可靠的生产体验。</p>
+<h4 id="Service-platforms"><a href="#Service-platforms" class="headerlink" title="Service platforms"></a>Service platforms</h4><p>如果在开发平台即服务（PaaS），则需要遵循它们的打包要求，按它们的方式来。</p>
+<h4 id="Web-browsers-and-mobile-applications"><a href="#Web-browsers-and-mobile-applications" class="headerlink" title="Web browsers and mobile applications"></a>Web browsers and mobile applications</h4><p>Python 的稳步进步正在引领它进入新的领域。如今，可以使用 Python 编写移动应用程序或 Web 应用程序前端。虽然 Python 语言很熟悉，但打包和部署实践是全新的。</p>
+<p>比如需要了解：<code>Kivy</code>、<code>Beeware</code>、<code>Brython</code>、<code>Flexx</code>。</p>
+<h3 id="Depending-on-a-pre-installed-Python"><a href="#Depending-on-a-pre-installed-Python" class="headerlink" title="Depending on a pre-installed Python"></a>Depending on a pre-installed Python</h3><p>选择任意一台计算机，依赖这个计算机的上下文环境，很有可能已经安装了 Python。多年来，Python 已默认包含在大多数 Linux 和 Mac 操作系统中，可以合理地依赖数据中心或开发人员和数据科学家的个人计算机上预先存在的 Python。</p>
+<p>Technologies which support this model:</p>
+<ul>
+<li>PEX Python Executable</li>
+<li>zipapp </li>
+<li>shiv</li>
+</ul>
+<p>这些方法中，依赖于目标系统预安装的 Python 环境，这会让打包后的产物很小，如果较少对目标系统的依赖会增加包的大小。</p>
+<h3 id="Depending-on-a-separate-software-distribution-ecosystem"><a href="#Depending-on-a-separate-software-distribution-ecosystem" class="headerlink" title="Depending on a separate software distribution ecosystem"></a>Depending on a separate software distribution ecosystem</h3><p>依赖于单独的软件分发生态系统。长期以来，包括 Mac 和 Windows 在内的许多操作系统都缺乏内置的包管理。直到最近，这些操作系统才获得了所谓的”app stores”，但即使是那些专注于消费者应用程序的操作系统，也为开发人员提供的服务很少。</p>
+<p>开发人员长期以来一直在寻求补救措施，并在这场斗争中出现了自己的包管理解决方案，例如 Homebrew。对于 Python 开发人员来说，最相关的替代方案是名为 Anaconda 的包生态系统。</p>
+<p>Anaconda 围绕 Python 构建，在学术、分析和其他面向数据的环境中越来越常见，甚至进入了面向服务器的环境。</p>
+<p>Anaconda 生态系统构建和发布说明：</p>
+<ul>
+<li>Building libraries and applications with conda</li>
+<li>Transitioning a native Python package to Anaconda</li>
+</ul>
+<h3 id="Bringing-your-own-Python-executable"><a href="#Bringing-your-own-Python-executable" class="headerlink" title="Bringing your own Python executable"></a>Bringing your own Python executable</h3><p>包中自带 python 解释器。<br>我们知道，计算是由执行程序的能力来定义的。每个操作系统本身都支持它们可以本机执行的一种或多种格式的程序。</p>
+<p>有许多技巧和技术可以将 Python 程序转换为其中一种格式，其中大多数涉及将 Python 解释器和任何其他依赖项嵌入到单个可执行文件中。</p>
+<p>这种称为冻结的方法提供了广泛的兼容性和无缝的用户体验，但通常需要多种技术和大量的工作。</p>
+<p>A selection of Python freezers:</p>
+<ul>
+<li>pyinstaller Cross-platform</li>
+<li>cx_Freeze Cross-platform</li>
+<li>constructor For command-line installers</li>
+<li>py2exe windows only</li>
+<li>osnap windows and mac</li>
+<li>pynsist windows only</li>
+</ul>
+<h3 id="Bringing-your-own-userspace"><a href="#Bringing-your-own-userspace" class="headerlink" title="Bringing your own userspace"></a>Bringing your own userspace</h3><p>越来越多的操作系统（包括 Linux、Mac OS 和 Windows）可以设置为运行打包为轻量级映像的应用程序，使用通常称为操作系统级虚拟化或容器化的相对现代的技术。</p>
+<p>这些技术大多与 Python 无关，因为它们打包整个操作系统文件系统，而不仅仅是 Python 或 Python 包。</p>
+<p>Linux 服务器的采用最为广泛，这是该技术的发源地，并且以下技术最有效：</p>
+<ul>
+<li>AppImage</li>
+<li>Docker</li>
+<li>Flatpak</li>
+<li>Snapcraft</li>
+</ul>
+<h3 id="Bringing-your-own-kernel"><a href="#Bringing-your-own-kernel" class="headerlink" title="Bringing your own kernel"></a>Bringing your own kernel</h3><p>大多数操作系统支持某种形式的经典虚拟化，运行打包为包含其自己的完整操作系统的映像的应用程序。运行这些虚拟机或 VM 是一种成熟的方法，在数据中心环境中广泛使用。 这些技术主要保留用于数据中心的大规模部署，尽管某些复杂的应用程序可以从这种封装中受益。这些技术与 Python 无关，包括：</p>
+<ul>
+<li>Vagrant</li>
+<li>VHD，AMI</li>
+<li>OpenStack A cloud management system in Python, with extensive VM support</li>
+</ul>
+<h3 id="Bringing-your-own-hardware"><a href="#Bringing-your-own-hardware" class="headerlink" title="Bringing your own hardware"></a>Bringing your own hardware</h3><p>交付软件的最全面的方法是将其交付已安装在某些硬件上的软件。这样，软件的用户只需要有电就行。</p>
+<p>虽然上述虚拟机主要是为精通技术的人保留的，但可以发现从最先进的数据中心到最小的孩子的每个人都在使用硬件设备。</p>
+<p>将代码嵌入到 Adafruit、MicroPython 或更强大的运行 Python 的硬件上，然后将其发送到数据中心或用户的家中。它们即插即用。</p>
+<p><img src="/blog/py_pkg_applications.png" alt="py_pkg_applications"></p>
+<h2 id="其他打包方式"><a href="#其他打包方式" class="headerlink" title="其他打包方式"></a>其他打包方式</h2><h3 id="Operating-system-packages"><a href="#Operating-system-packages" class="headerlink" title="Operating system packages"></a>Operating system packages</h3><p>许多操作系统有自己包管理器，比如 deb（for Debian, Ubuntu, etc） or RPM，可以把代码用这种方式打包，并使用这些方式安装。</p>
+<h3 id="virtualenv"><a href="#virtualenv" class="headerlink" title="virtualenv"></a>virtualenv</h3><p>Virtualenvs 一直是多代 Python 开发人员不可或缺的工具，但随着它们被更高级别的工具包裹，它正在慢慢淡出人们的视野。特别是在打包方面，virtualenvs 在 dh-virtualenv 工具和 osnap 中用作原语，这两者都以独立的方式包装 virtualenvs。</p>
+<h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><p>梯度越低，更新包的组件就越困难。一切都更加紧密地结合在一起。比如内核出现严重的安全漏洞，我们怎么保证自己软件的安全更新，如果自己的镜像有问题呢。这就回到了使用动态链接库和静态库的争论上了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Python 打包因坎坷不平而闻名。这种印象主要是 Python 多功能性的副产品。一旦了解了每个打包解决方案之间的自然界限，就会开始意识到，Python 程序员为使用最平衡、最灵活的语言之一而付出的代价很小。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/09/17/page-cache-%E5%92%8C-disk-cache/" rel="prev" title="page cache 和 disk cache">
+      <i class="fa fa-chevron-left"></i> page cache 和 disk cache
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2024/09/21/%E6%89%93%E5%8C%85%E6%B5%81%E7%A8%8B/" rel="next" title="打包流程">
+      打包流程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-Packaging-Overview"><span class="nav-number">1.</span> <span class="nav-text">Python Packaging Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%83%B3%E6%83%B3%E9%83%A8%E7%BD%B2"><span class="nav-number">2.</span> <span class="nav-text">想想部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85-Python-%E7%9A%84%E5%BA%93%E5%92%8C%E5%B7%A5%E5%85%B7"><span class="nav-number">3.</span> <span class="nav-text">打包 Python 的库和工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-modules"><span class="nav-number">3.1.</span> <span class="nav-text">Python modules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-source-distributions"><span class="nav-number">3.2.</span> <span class="nav-text">Python source distributions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-binary-distributions"><span class="nav-number">3.3.</span> <span class="nav-text">Python binary distributions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85-python-%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">打包 python 应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Depending-on-a-framework"><span class="nav-number">4.1.</span> <span class="nav-text">Depending on a framework</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Service-platforms"><span class="nav-number">4.1.1.</span> <span class="nav-text">Service platforms</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Web-browsers-and-mobile-applications"><span class="nav-number">4.1.2.</span> <span class="nav-text">Web browsers and mobile applications</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Depending-on-a-pre-installed-Python"><span class="nav-number">4.2.</span> <span class="nav-text">Depending on a pre-installed Python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Depending-on-a-separate-software-distribution-ecosystem"><span class="nav-number">4.3.</span> <span class="nav-text">Depending on a separate software distribution ecosystem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bringing-your-own-Python-executable"><span class="nav-number">4.4.</span> <span class="nav-text">Bringing your own Python executable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bringing-your-own-userspace"><span class="nav-number">4.5.</span> <span class="nav-text">Bringing your own userspace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bringing-your-own-kernel"><span class="nav-number">4.6.</span> <span class="nav-text">Bringing your own kernel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bringing-your-own-hardware"><span class="nav-number">4.7.</span> <span class="nav-text">Bringing your own hardware</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%89%93%E5%8C%85%E6%96%B9%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">其他打包方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Operating-system-packages"><span class="nav-number">5.1.</span> <span class="nav-text">Operating system packages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#virtualenv"><span class="nav-number">5.2.</span> <span class="nav-text">virtualenv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Security"><span class="nav-number">5.3.</span> <span class="nav-text">Security</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">263k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">3:59</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
