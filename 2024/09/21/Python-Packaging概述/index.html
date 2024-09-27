@@ -28,14 +28,14 @@
 <meta property="og:site_name" content="Dying Memory">
 <meta property="og:description" content="关于 Python 打包相关概念">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/py_pkg_tools_and_libs.png">
-<meta property="og:image" content="https://zjd-melo.github.io/blog/py_pkg_applications.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/py_pkg_tools_and_libs.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/py_pkg_applications.png">
 <meta property="article:published_time" content="2024-09-21T11:17:22.000Z">
 <meta property="article:modified_time" content="2024-09-21T11:17:22.000Z">
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zjd-melo.github.io/blog/py_pkg_tools_and_libs.png">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/py_pkg_tools_and_libs.png">
 
 <link rel="canonical" href="https://zjd-melo.github.io/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/">
 
@@ -270,7 +270,7 @@
 <h3 id="Python-binary-distributions"><a href="#Python-binary-distributions" class="headerlink" title="Python binary distributions"></a>Python binary distributions</h3><p>Python 的大部分实用功能来自于它与软件生态系统集成的能力，特别是用 C、C++、Fortran、Rust 和其他语言编写的库。</p>
 <p>并非所有开发人员都拥有合适的工具或经验来构建用这些编译语言编写的组件，因此 Python 创建了 <code>Wheel</code>，这是一种包格式，旨在发布带有编译工件（产物）的库。事实上，Python 的包安装程序 <code>pip</code> 总是更喜欢 <code>Wheel</code>，因为安装它总是更快，所以即使是纯 Python 包也能更好地使用 <code>Wheel</code>。</p>
 <p>当二进制发行版与源发行版相匹配时（同时发布二进制包和源码包），它们是最好的。即使不为每个操作系统上传 <code>wheels</code>，通过上传 <code>sdist</code>，仍然可以让其他平台的用户为自己从源码构建。默认情况下需要同时发布 <code>wheel</code> 和 <code>sdist</code>。Python 和 PyPI 可以轻松地将wheel 和sdists 一起上传。</p>
-<p><img src="/blog/py_pkg_tools_and_libs.png" alt="py_pkg_tools_and_libs"></p>
+<p><img src="/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/py_pkg_tools_and_libs.png" alt="py_pkg_tools_and_libs"></p>
 <h2 id="打包-python-应用"><a href="#打包-python-应用" class="headerlink" title="打包 python 应用"></a>打包 python 应用</h2><p>到目前为止，只讨论了 Python 的原生分发工具。根据介绍，可以正确地推断这些内置方法仅针对具有 Python 的环境以及知道如何安装 Python 包的受众。</p>
 <p>由于操作系统、配置和人员多种多样，这种假设只有在针对开发人员受众时才是安全的。</p>
 <p>Python 的原生打包 native packaging 主要是为了在开发人员之间分发可重用代码（称为库）而构建的，可以使用 <code>setuptools entry_points</code> 等技术，在 Python 的库打包之上搭载工具或供开发人员使用的基本应用程序（CLI）。</p>
@@ -327,7 +327,7 @@
 <h3 id="Bringing-your-own-hardware"><a href="#Bringing-your-own-hardware" class="headerlink" title="Bringing your own hardware"></a>Bringing your own hardware</h3><p>交付软件的最全面的方法是将其交付已安装在某些硬件上的软件。这样，软件的用户只需要有电就行。</p>
 <p>虽然上述虚拟机主要是为精通技术的人保留的，但可以发现从最先进的数据中心到最小的孩子的每个人都在使用硬件设备。</p>
 <p>将代码嵌入到 Adafruit、MicroPython 或更强大的运行 Python 的硬件上，然后将其发送到数据中心或用户的家中。它们即插即用。</p>
-<p><img src="/blog/py_pkg_applications.png" alt="py_pkg_applications"></p>
+<p><img src="/blog/2024/09/21/Python-Packaging%E6%A6%82%E8%BF%B0/py_pkg_applications.png" alt="py_pkg_applications"></p>
 <h2 id="其他打包方式"><a href="#其他打包方式" class="headerlink" title="其他打包方式"></a>其他打包方式</h2><h3 id="Operating-system-packages"><a href="#Operating-system-packages" class="headerlink" title="Operating system packages"></a>Operating system packages</h3><p>许多操作系统有自己包管理器，比如 deb（for Debian, Ubuntu, etc） or RPM，可以把代码用这种方式打包，并使用这些方式安装。</p>
 <h3 id="virtualenv"><a href="#virtualenv" class="headerlink" title="virtualenv"></a>virtualenv</h3><p>Virtualenvs 一直是多代 Python 开发人员不可或缺的工具，但随着它们被更高级别的工具包裹，它正在慢慢淡出人们的视野。特别是在打包方面，virtualenvs 在 dh-virtualenv 工具和 osnap 中用作原语，这两者都以独立的方式包装 virtualenvs。</p>
 <h3 id="Security"><a href="#Security" class="headerlink" title="Security"></a>Security</h3><p>梯度越低，更新包的组件就越困难。一切都更加紧密地结合在一起。比如内核出现严重的安全漏洞，我们怎么保证自己软件的安全更新，如果自己的镜像有问题呢。这就回到了使用动态链接库和静态库的争论上了。</p>
