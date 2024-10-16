@@ -276,7 +276,7 @@
 <li>Page Cache：高层次缓存，位于操作系统的文件系统层。</li>
 <li>Disk Cache：底层缓存，位于硬件的物理磁盘控制器层。</li>
 </ul>
-<h3 id="联系"><a href="#联系" class="headerlink" title="联系"></a>联系</h3><p>尽管这两种缓存处于不同的层次，但它们有时会协同工作。例如：<br>当系统从磁盘读取文件时，数据会首先经过Disk Cache（如果磁盘控制器缓存了数据），再进入Page Cache。下次访问同一数据时，可以直接从Page Cache中读取。<br>当写入数据时，Disk Cache 和 Page Cache 也可能都临时存储数据，从而加速写操作。</p>
+<h3 id="联系"><a href="#联系" class="headerlink" title="联系"></a>联系</h3><p>尽管这两种缓存处于不同的层次，但它们有时会协同工作。例如：<br>当系统从磁盘读取文件时，数据会首先经过 Disk Cache（如果磁盘控制器缓存了数据），再进入 Page Cache。下次访问同一数据时，可以直接从Page Cache中读取。<br>当写入数据时，Disk Cache 和 Page Cache 也可能都临时存储数据，从而加速写操作。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Disk cache 和 page cache 并不是完全相同的东西，它们作用在不同的层面。Disk cache 是硬件级的缓存，由磁盘控制器管理，作用于磁盘块级别；而 page cache 是操作系统内核管理的缓存，作用于文件系统的内容。在现代系统中，这两种缓存通常协同工作，共同提高读写性能。</p>
 <h3 id="disk-cache-是什么"><a href="#disk-cache-是什么" class="headerlink" title="disk cache 是什么"></a>disk cache 是什么</h3><p>磁盘缓存（disk cache）是计算机系统中的一块高速存储区域，用于加速数据的读取和写入操作。它通常通过在内存（RAM）中存储最近从磁盘读取的数据，减少对磁盘的频繁访问，从而提高系统性能。</p>
 <p>磁盘缓存的工作原理包括以下几方面：</p>
