@@ -92,4 +92,40 @@ Unix 中的群组提供了一种在某些用户之间共享文件的方法。这
 Linux distributions often create a new group for each new user added, with the same name as the user.
 
 ## User Access Topics
+### User IDs and User Switching
+我们讨论了 sudo 和 su 等 setuid 程序如何允许你临时更改用户，并介绍了登录等控制用户访问的系统组件。也许你想知道这些部分是如何工作的，以及内核在用户切换中扮演什么角色。
 
+当你临时切换到另一个用户时，实际上所做的只是更改你的用户 ID。有两种方法可以做到这一点，内核会处理这两种方法。第一种方法是使用 setuid 可执行文件。第二种方法是通过 `setuid()` 系列系统调用。该系统调用有几种不同的版本，以适应与进程相关的各种用户 ID。
+
+内核对进程能做什么、不能做什么有基本规定，但这里有三个涵盖 setuid 可执行文件和 setuid() 的基本规则：
+- 只要具有足够的文件权限，进程就可以运行 setuid 可执行文件。
+- 以 root（用户 ID 0）身份运行的进程可以使用 setuid() 成为任何其他用户。
+- 不以 root 身份运行的进程在使用 setuid() 时受到严格限制；大多数情况下，它不能使用 setuid()。
+
+由于这些规则，如果你想将用户 ID 从普通用户切换到另一个用户，你通常需要结合使用多种方法。例如，sudo 可执行文件是 setuid root，一旦运行，它就可以调用 setuid() 成为另一个用户。
+
+从本质上讲，用户切换与 password 或 usernames 无关。这些是用户空间概念。
+
+### Process Ownership, Effective UID, Real UID, Saved UID
+到目前为止讨论的 user IDS 是很简单的，实际上每个进程不只一个 user IDs。
+- Effective user id （Effective UID or EUID）定义了进程的访问权限（最重要的，文件权限）
+- Real user ID （real UID，or ruid）indicates who initiated a process
+
+通常情况下这些 IDs 是相同的，但是当你运行一个 setuid 程序时，Linux sets the euid to the program’s owner during execution，但是会把原来的 user ID 存在 ruid 中。
+
+将 euid 视为参与者，将 ruid 视为所有者。ruid 定义可以与正在运行的进程交互的用户——最重要的是，哪个用户可以终止并向进程发送信号。例如，如果用户 A 启动一个以用户 B 身份运行的新进程（基于 setuid 权限），则用户 A 仍然拥有该进程并可以终止它。
+
+我们已经看到大多数进程具有相同的 euid 和 ruid。因此，ps 和其他系统诊断程序的默认输出仅显示 euid。
+
+`ps -eo pid,euser,ruser,comm`，可以复制一个 sleep 程序，并设置 setuid 来观察。
+
+除了 EUID 和 RUID 之外还有 saved user ID，一个进程可以在运行时把 EUID 切换为 RUID 和 saved user ID，Linux 还有 fsuid，file system user ID 很少使用。
+
+### Typical Steuid Program Behavior
+ruid 的想法可能与你之前的经验相矛盾。为什么你不必经常处理其他用户 ID？例如，在使用 sudo 启动进程后，如果你想要终止它，你仍然使用 sudo；你不能以自己的普通用户身份终止它。在这种情况下，你的普通用户难道不应该是 ruid，为你提供正确的权限吗
+
+导致此行为的原因是 sudo 和许多其他 setuid 程序使用 setuid() 系统调用之一明确更改 euid 和 ruid。这些程序这样做是因为当所有用户 ID 不匹配时，经常会出现意想不到的副作用和访问问题。
+
+小心使用 setuid 程序。
+
+略
