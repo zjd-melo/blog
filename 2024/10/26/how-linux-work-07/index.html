@@ -229,14 +229,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.2k</span>
+              <span>5.7k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
+              <span>5 mins.</span>
             </span>
             <div class="post-description">how linux work 07 - 系统配置：日志、时间、批作业、用户</div>
 
@@ -301,7 +301,31 @@
 </ul>
 <p><img src="/blog/2024/10/26/how-linux-work-07/group.png" alt="group"></p>
 <p>Linux distributions often create a new group for each new user added, with the same name as the user.</p>
-<h2 id="User-Access-Topics"><a href="#User-Access-Topics" class="headerlink" title="User Access Topics"></a>User Access Topics</h2>
+<h2 id="User-Access-Topics"><a href="#User-Access-Topics" class="headerlink" title="User Access Topics"></a>User Access Topics</h2><h3 id="User-IDs-and-User-Switching"><a href="#User-IDs-and-User-Switching" class="headerlink" title="User IDs and User Switching"></a>User IDs and User Switching</h3><p>我们讨论了 sudo 和 su 等 setuid 程序如何允许你临时更改用户，并介绍了登录等控制用户访问的系统组件。也许你想知道这些部分是如何工作的，以及内核在用户切换中扮演什么角色。</p>
+<p>当你临时切换到另一个用户时，实际上所做的只是更改你的用户 ID。有两种方法可以做到这一点，内核会处理这两种方法。第一种方法是使用 setuid 可执行文件。第二种方法是通过 <code>setuid()</code> 系列系统调用。该系统调用有几种不同的版本，以适应与进程相关的各种用户 ID。</p>
+<p>内核对进程能做什么、不能做什么有基本规定，但这里有三个涵盖 setuid 可执行文件和 setuid() 的基本规则：</p>
+<ul>
+<li>只要具有足够的文件权限，进程就可以运行 setuid 可执行文件。</li>
+<li>以 root（用户 ID 0）身份运行的进程可以使用 setuid() 成为任何其他用户。</li>
+<li>不以 root 身份运行的进程在使用 setuid() 时受到严格限制；大多数情况下，它不能使用 setuid()。</li>
+</ul>
+<p>由于这些规则，如果你想将用户 ID 从普通用户切换到另一个用户，你通常需要结合使用多种方法。例如，sudo 可执行文件是 setuid root，一旦运行，它就可以调用 setuid() 成为另一个用户。</p>
+<p>从本质上讲，用户切换与 password 或 usernames 无关。这些是用户空间概念。</p>
+<h3 id="Process-Ownership-Effective-UID-Real-UID-Saved-UID"><a href="#Process-Ownership-Effective-UID-Real-UID-Saved-UID" class="headerlink" title="Process Ownership, Effective UID, Real UID, Saved UID"></a>Process Ownership, Effective UID, Real UID, Saved UID</h3><p>到目前为止讨论的 user IDS 是很简单的，实际上每个进程不只一个 user IDs。</p>
+<ul>
+<li>Effective user id （Effective UID or EUID）定义了进程的访问权限（最重要的，文件权限）</li>
+<li>Real user ID （real UID，or ruid）indicates who initiated a process</li>
+</ul>
+<p>通常情况下这些 IDs 是相同的，但是当你运行一个 setuid 程序时，Linux sets the euid to the program’s owner during execution，但是会把原来的 user ID 存在 ruid 中。</p>
+<p>将 euid 视为参与者，将 ruid 视为所有者。ruid 定义可以与正在运行的进程交互的用户——最重要的是，哪个用户可以终止并向进程发送信号。例如，如果用户 A 启动一个以用户 B 身份运行的新进程（基于 setuid 权限），则用户 A 仍然拥有该进程并可以终止它。</p>
+<p>我们已经看到大多数进程具有相同的 euid 和 ruid。因此，ps 和其他系统诊断程序的默认输出仅显示 euid。</p>
+<p><code>ps -eo pid,euser,ruser,comm</code>，可以复制一个 sleep 程序，并设置 setuid 来观察。</p>
+<p>除了 EUID 和 RUID 之外还有 saved user ID，一个进程可以在运行时把 EUID 切换为 RUID 和 saved user ID，Linux 还有 fsuid，file system user ID 很少使用。</p>
+<h3 id="Typical-Steuid-Program-Behavior"><a href="#Typical-Steuid-Program-Behavior" class="headerlink" title="Typical Steuid Program Behavior"></a>Typical Steuid Program Behavior</h3><p>ruid 的想法可能与你之前的经验相矛盾。为什么你不必经常处理其他用户 ID？例如，在使用 sudo 启动进程后，如果你想要终止它，你仍然使用 sudo；你不能以自己的普通用户身份终止它。在这种情况下，你的普通用户难道不应该是 ruid，为你提供正确的权限吗</p>
+<p>导致此行为的原因是 sudo 和许多其他 setuid 程序使用 setuid() 系统调用之一明确更改 euid 和 ruid。这些程序这样做是因为当所有用户 ID 不匹配时，经常会出现意想不到的副作用和访问问题。</p>
+<p>小心使用 setuid 程序。</p>
+<p>略</p>
+
     </div>
 
     
@@ -382,7 +406,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#System-Logging"><span class="nav-number">1.</span> <span class="nav-text">System Logging</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Logfile-Rotation"><span class="nav-number">1.1.</span> <span class="nav-text">Logfile Rotation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Syslog-%E5%92%8C-journald-%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.2.</span> <span class="nav-text">Syslog 和 journald 之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x2F-etc-%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">&#x2F;etc 的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#User-Management-Files"><span class="nav-number">2.1.</span> <span class="nav-text">User Management Files</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#The-x2F-etc-x2F-passwd-File"><span class="nav-number">2.1.1.</span> <span class="nav-text">The &#x2F;etc&#x2F;passwd File</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Special-Users"><span class="nav-number">2.1.2.</span> <span class="nav-text">Special Users</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%94%A8%E6%88%B7%E5%92%8C%E5%AF%86%E7%A0%81"><span class="nav-number">2.1.3.</span> <span class="nav-text">操作用户和密码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E4%BF%AE%E6%94%B9-x2F-etc-x2F-passwd-%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">使用超级用户修改 &#x2F;etc&#x2F;passwd 文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Working-with-Groups"><span class="nav-number">2.2.</span> <span class="nav-text">Working with Groups</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#User-Access-Topics"><span class="nav-number">3.</span> <span class="nav-text">User Access Topics</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#System-Logging"><span class="nav-number">1.</span> <span class="nav-text">System Logging</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Logfile-Rotation"><span class="nav-number">1.1.</span> <span class="nav-text">Logfile Rotation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Syslog-%E5%92%8C-journald-%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.2.</span> <span class="nav-text">Syslog 和 journald 之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x2F-etc-%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">&#x2F;etc 的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#User-Management-Files"><span class="nav-number">2.1.</span> <span class="nav-text">User Management Files</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#The-x2F-etc-x2F-passwd-File"><span class="nav-number">2.1.1.</span> <span class="nav-text">The &#x2F;etc&#x2F;passwd File</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Special-Users"><span class="nav-number">2.1.2.</span> <span class="nav-text">Special Users</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%94%A8%E6%88%B7%E5%92%8C%E5%AF%86%E7%A0%81"><span class="nav-number">2.1.3.</span> <span class="nav-text">操作用户和密码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E4%BF%AE%E6%94%B9-x2F-etc-x2F-passwd-%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">使用超级用户修改 &#x2F;etc&#x2F;passwd 文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Working-with-Groups"><span class="nav-number">2.2.</span> <span class="nav-text">Working with Groups</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#User-Access-Topics"><span class="nav-number">3.</span> <span class="nav-text">User Access Topics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#User-IDs-and-User-Switching"><span class="nav-number">3.1.</span> <span class="nav-text">User IDs and User Switching</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Process-Ownership-Effective-UID-Real-UID-Saved-UID"><span class="nav-number">3.2.</span> <span class="nav-text">Process Ownership, Effective UID, Real UID, Saved UID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Typical-Steuid-Program-Behavior"><span class="nav-number">3.3.</span> <span class="nav-text">Typical Steuid Program Behavior</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -456,13 +480,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">281k</span>
+    <span title="Symbols count total">282k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">4:15</span>
+    <span title="Reading time total">4:17</span>
 </div>
 
         
