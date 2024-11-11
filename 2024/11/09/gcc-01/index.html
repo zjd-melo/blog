@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="An Introduction to GCC 01">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gcc 01">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/11/09/gcc-01/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="An Introduction to GCC 01">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-09T04:27:42.000Z">
+<meta property="article:modified_time" content="2024-11-09T04:27:42.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="gcc">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/11/09/gcc-01/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>gcc 01 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">18</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">79</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/11/09/gcc-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          gcc 01
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-11-09 12:27:42" itemprop="dateCreated datePublished" datetime="2024-11-09T12:27:42+08:00">2024-11-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.7k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+            <div class="post-description">An Introduction to GCC 01</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="GCC-介绍"><a href="#GCC-介绍" class="headerlink" title="GCC 介绍"></a>GCC 介绍</h2><p>GCC = GNU Compiler Collection</p>
+<h3 id="Major-features-of-GCC"><a href="#Major-features-of-GCC" class="headerlink" title="Major features of GCC"></a>Major features of GCC</h3><ul>
+<li>GCC is a portable compiler</li>
+<li>GCC is not only a native compiler, 能够交叉编译任何程序</li>
+<li>GCC 有多语言的前端</li>
+<li>GCC 是模块化的</li>
+<li>GCC is free</li>
+</ul>
+<h2 id="Compiling-a-C-program"><a href="#Compiling-a-C-program" class="headerlink" title="Compiling a C program"></a>Compiling a C program</h2><p>Programs can be compiled from a single source file or from multiple source files and may be use system libraries and header files.</p>
+<p>Compilation refers to the process of converting a program from the textual source code, in a programming language such as C or C++, into machine code, the sequence of 0 and 1 used to control the central processing unit CPU of the computer. This machine code is then stored in a file known as an executable file, sometimes referred to as a binary file.</p>
+<h3 id="编译一个-C-程序"><a href="#编译一个-C-程序" class="headerlink" title="编译一个 C 程序"></a>编译一个 C 程序</h3><p><code>hello.c</code></p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world!\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall hello.c -o hello</span> </span><br></pre></td></tr></tbody></table></figure>
+
+<p>会把源码文件 <code>hello.c</code> 编译为机器码并存储到一个可执行文件 <code>hello</code> 中。使用 <code>-o</code> 指定输出的包含机器码的可执行文件名。这个选项一般在 gcc 命令的最后。如果不加 <code>-o</code> 选项，默认输出到 <code>a.out</code> 文件。如果当前目录下已经有了同名的文件，那么 gcc 会覆盖这个文件。</p>
+<p>选项 <code>-Wall</code> 打开所有最常用的编译器警告，建议始终使用此选项！除非启用了警告，否则 gcc 不会产生任何警告信息。编译器警告一定要打开。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./hello <span class="comment"># This loads the executable file into memory and causes the CPU to begin executing the instructions contained within it.</span></span></span><br><span class="line">hello world!</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="使用编译器警告找到程序中的错误"><a href="#使用编译器警告找到程序中的错误" class="headerlink" title="使用编译器警告找到程序中的错误"></a>使用编译器警告找到程序中的错误</h3><p>一个错误的程序 <code>bad.c</code>：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"2 * 2 = %f\n"</span>, <span class="number">4</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;    </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall bad.c -o bad</span></span><br><span class="line">bad.c: In function ‘main’:</span><br><span class="line">bad.c:5:23: warning: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘int’ [-Wformat=]</span><br><span class="line">      printf("2 * 2 = %f\n", 4);</span><br><span class="line">                      ~^     ~</span><br><span class="line">                      %d</span><br></pre></td></tr></tbody></table></figure>
+
+<p>编译器产生的信息通常是 <code>file:line-number:message</code> 的格式，编译器能够区分 error message 和 warning message，前者会中断编译，后者会提示可能的问题但是不会终止编译过程。</p>
+<p>如果不加 <code>-Wall</code> 选项，程序看上去是 <code>compile cleanly</code> 的，但是运行结果却是错误的。</p>
+<p>格式说明符 format specifier 不正确会导致输出损坏 corrupted，因为传递给函数 <code>printf</code> 的是整数而不是浮点数。整数和浮点数在内存中的存储格式不同，通常占用的字节数也不同，从而导致错误的结果。上面显示的实际输出可能会有所不同，具体取决于特定的平台和环境。</p>
+<p>一个简单的例子就能让程序产生错误，所以打开编译器警告是非常有必要的。</p>
+<h3 id="编译多个源代码文件"><a href="#编译多个源代码文件" class="headerlink" title="编译多个源代码文件"></a>编译多个源代码文件</h3><p>一个程序的源代码会包含多个文件，好处就是方便编辑和理解，同样修改某些地方只需要重新编译那个文件就行，而不需要全部重新编译。</p>
+<p>把 <code>hello.c</code> 文件分成三个源文件 <code>main.c</code>、<code>hello_fn.c</code> 和 <code>hello.h</code>。</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"hello.h"</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{</span><br><span class="line">    hello(<span class="string">"world"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// hello.h</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">hello</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *name)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//hello_fn.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"hello.h"</span> <span class="comment">// 函数声明</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">hello</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *name)</span></span><br><span class="line">{</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello, %s!\n"</span>, name);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>包含头文件 <code>""</code> 和 <code>&lt;&gt;</code> 的区别是，前者先搜索当前目录然后在搜索系统头文件目录，后者不会搜索当前目录。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall main.c hello_fn.c -o newhello</span></span><br></pre></td></tr></tbody></table></figure>
+<p>使用这个命令编译多个文件，注意头文件并没有出现在命令行中，源代码中的 <code>#include "hello.h"</code> 会指导编译器在合适的时候自动包含这个头文件。这样多个文件就被编译到单个可执行程序中了。</p>
+<h3 id="单独的编译文件"><a href="#单独的编译文件" class="headerlink" title="单独的编译文件"></a>单独的编译文件</h3><p>如果程序存储在单个文件中，则对单个函数的任何更改都需要重新编译整个程序以生成新的可执行文件。大型源文件的重新编译可能非常耗时。</p>
+<p>当程序存储在独立的源文件中时，源代码修改后，只需要重新编译发生变化的文件。在这种方法中，源文件被单独编译，然后链接 linked 在一起，这是一个两阶段的过程 two stage process。在第一阶段，编译一个文件而不创建可执行文件，编译结果称为目标文件 object file，使用 GCC 时 obj 文件扩展名为<code>.o</code>。</p>
+<p>在第二阶段，目标文件由一个称为链接器的单独程序合并在一起。链接器将所有目标文件组合在一起以创建单个可执行文件。</p>
+<p>目标文件包含机器代码，其中对其他文件中函数（或变量）的内存地址的任何引用均未定义。这样，源文件就可以在不直接引用彼此的情况下进行编译。链接器在生成可执行文件时会填充这些缺失的地址。</p>
+<p>An object file contains machine code where any references to the mem- ory addresses of functions (or variables) in other files are left undefined. This allows source files to be compiled without direct reference to each other. The linker fills in these missing addresses when it produces the executable.</p>
+<h4 id="从源文件创建目标文件"><a href="#从源文件创建目标文件" class="headerlink" title="从源文件创建目标文件"></a>从源文件创建目标文件</h4><p>gcc 命令选项 <code>-c</code> 就是用来把单个源文件生成目标文件的，比如 <code>gcc -Wall -c main.c</code> 这个命令使用 <code>main.c</code> 生成了目标文件 <code>main.o</code>，这个目标文件包含了 <code>main</code> 函数的机器码，并且包含一个对外部函数 <code>hello</code> 的引用，但是在这一阶段目标文件中对外部函数 <code>hello</code> 的引用的内存地址还未确定（undefined），之后会被 <code>**linker**</code> 填充。</p>
+<p>注意在生成目标文件时没必要使用 <code>-o</code> 指定目标文件的名称，当使用 <code>-c</code> 进行编译时，编译器会自动创建一个与源文件同名的目标文件，但用 <code>.o</code> 代替原始扩展名。</p>
+<p>不需要在命令行上放置头文件 <code>hello.h</code>，因为它会被 <code>main.c</code> 和 <code>hello_fn.c</code> 中的 <code>#include</code> 预处理指定自动包含。</p>
+<h4 id="从目标文件生成可执行文件"><a href="#从目标文件生成可执行文件" class="headerlink" title="从目标文件生成可执行文件"></a>从目标文件生成可执行文件</h4><p>创建可执行文件的最后一步是使用 <code>gcc</code> 将目标文件链接在一起并填充缺失的外部函数地址。</p>
+<p>要把目标文件链接在一起，使用 <code>gcc main.o hello_fn.o -o hello</code>。这是不需要使用 <code>-Wall</code> 警告选项的少数情况之一，因为各个源文件已经成功编译为目标代码了。一旦源文件被编译，链接就是一个明确的过程，它要么成功，要么失败（只有当存在无法解析的引用时才会失败）。</p>
+<p>为了执行链接步骤，<code>gcc</code> 使用链接器 <code>ld</code>，它是一个单独的程序。通过运行链接器，<code>gcc</code> 从目标文件创建一个可执行文件。</p>
+<h4 id="Link-order-of-object-files"><a href="#Link-order-of-object-files" class="headerlink" title="Link order of object files"></a>Link order of object files</h4><p>在类 Unix 系统上，编译器和链接器的传统行为是在命令行指定的目标文件中从左到右搜索外部函数。这意味着包含函数定义的目标文件应该出现在调用该函数的任何文件之后。</p>
+<p>在这种情况下，包含函数 <code>hello</code> 的文件 <code>hello_fn.o</code> 应该在 <code>main.o</code> 本身之后指定，因为 <code>main</code> 调用 <code>hello</code>：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc main.o hello_fn.o -o hello  <span class="comment"># correct</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cc hello_fn.o main.o -o hello   <span class="comment"># incorrect</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>大多数现代的编译器和链接器都会搜索所有目标文件，而不管顺序如何，但由于并非所有编译器都这样做，因此最好遵循从左到右对目标文件进行排序的惯例。</p>
+<p>如果遇到未定义引用的意外问题，并且所有必要的目标文件似乎都存在于命令行中，则值得记住这一点。</p>
+<h3 id="Recompiling-and-relinking"><a href="#Recompiling-and-relinking" class="headerlink" title="Recompiling and relinking"></a>Recompiling and relinking</h3><p>如果只修改一个文件，只要重新编译修改的文件就行。一般来说，链接比编译更快——在包含许多源文件的大型项目中，仅重新编译已修改的文件可以节省大量时间。在一个项目中只编译修改过的文件可以自动由 GNU Make 完成。</p>
+<h3 id="Linking-with-external-libraries"><a href="#Linking-with-external-libraries" class="headerlink" title="Linking with external libraries"></a>Linking with external libraries</h3><p>A library is a collection of precompiled <code>object files</code> which can be linked into programs. 库通常存储在扩展名为 <code>.a</code> 的特殊归档文件中，称为静态库。Libraries are typically stored in special archive files with the extension <code>.a</code>, referred to as static libraries. 它们是使用单独的工具 GNU 归档程序 <code>ar</code> 从目标文件创建的，并由链接器在编译时用于解析对函数的引用。</p>
+<p>标准系统库通常位于目录 <code>/usr/lib</code> 和<code> /lib</code> 中，如果系统同时支持 32 位和 64 位，那么前面的表示 32 位的库文件目录，<code>/usr/lib64</code> 和 <code>/lib64</code> 表示 64 位的库目录。例如，C 数学库通常存储在类 Unix 系统上的文件 <code>/usr/lib/libm.a</code> 中。该库中函数的相应原型声明在头文件 <code>/usr/include/math.h</code> 中给出。C 标准库本身存储在 <code>/usr/lib/libc.a</code> 中，包含 ANSI/ISO C 标准中指定的函数，例如 <code>printf</code> ——每个 C 程序默认链接到此库。</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// calc.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">double</span> x = <span class="built_in">sqrt</span>(<span class="number">2.0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"The square root of 2.0 is %f\n"</span>, x);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>假设系统路径上没有对应的目录，<code>gcc -Wall calc.c -o calc</code>，</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/tmp/ccbR6Ojm.o: In function ‘main’:</span><br><span class="line">    /tmp/ccbR6Ojm.o(.text+0x19): undefined reference</span><br><span class="line">to ‘sqrt’</span><br></pre></td></tr></tbody></table></figure>
+<p>问题在于，如果没有外部数学库 <code>libm.a</code>，则无法解析对 <code>sqrt</code> 函数的引用。函数 <code>sqrt</code> 未在程序或默认库 <code>libc.a</code> 中定义，并且除非明确选择，否则编译器不会链接到文件 <code>libm.a</code>。顺便说一句，错误消息中提到的文件 <code>/tmp/ccbR60jm.o</code> 是编译器从 <code>calc.c</code> 创建的临时对象文件，目的是执行链接过程。</p>
+<p>为了使编译器能够将 <code>sqrt</code> 函数链接到主程序 <code>calc.c</code>，需要提供库 <code>libm.a</code>。一个明显但繁琐的方法是，在命令行上明确指定它: <code>gcc -Wall calc.c /usr/lib/libm.a -o calc</code>。</p>
+<p>库 <code>libm.a</code> 包含所有数学函数的目标文件，例如 <code>sin</code>、<code>cos</code>、<code>exp</code>、<code>log</code> 和 <code>sqrt</code>。链接器会搜索这些文件以查找包含 <code>sqrt</code> 函数的目标文件。一旦找到 <code>sqrt</code> 函数的目标文件，就可以链接主程序并生成完整的可执行文件。可执行文件包括主函数的机器代码和 <code>sqrt</code> 函数的机器代码，从库 <code>libm.a</code> 中相应的目标文件复制而来。</p>
+<p>为了避免在命令行上指定长路径，编译器提供了一个用于链接库的快捷选项 <code>-l</code>。例如，<code>gcc -Wall calc.c -lm -o calc</code>，和前面的等价。</p>
+<p>一般来说，编译器选项 <code>-lNAME</code> 将尝试将目标文件与标准库目录中的库文件 <code>libNAME.a</code> 或者 <code>libNAME.so</code> 链接起来。</p>
+<h4 id="Link-order-of-libraries"><a href="#Link-order-of-libraries" class="headerlink" title="Link order of libraries"></a>Link order of libraries</h4><p>命令行上库的顺序与目标文件的顺序相同：从左到右搜索。对于目标文件，大多数现代编译器都会搜索所有库，无论顺序如何。但是，由于并非所有编译器都这样做，因此最好遵循从左到右对库进行排序的惯例。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall calc.c -lm -o calc <span class="comment"># correct order</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cc -Wall -lm calc.c -o calc  <span class="comment"># incorrect order</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Using-library-header-files"><a href="#Using-library-header-files" class="headerlink" title="Using library header files"></a>Using library header files</h3><p>使用库时，必须包含适当的头文件，以便用正确的类型声明函数参数和返回值。如果没有声明，函数的参数可能会以错误的类型传递，从而导致结果损坏。</p>
+<p>C 源码可以不包含头文件吗，在编译的时候指定对于的目标文件。虽然在某些情况下不包含头文件可以编译通过，但通常不推荐这么做。建议尽可能包含所需的头文件，以确保代码的可移植性和可维护性。</p>
+<p>为什么需要 <code>-l</code>，<code>-l</code> 一般要和 <code>-L</code> 配合。</p>
+<p><code>gcc</code> 默认只会链接一些基础库，比如 <code>libc</code>（标准 C 库），但对于其他库，比如数学库 <code>libm</code>、线程库 <code>libpthread</code> 等，依然需要显式指定 <code>-l</code> 选项来链接。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/gcc/" rel="tag"><i class="fa fa-tag"></i> gcc</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/11/02/how-linux-work-08/" rel="prev" title="how linux work 08">
+      <i class="fa fa-chevron-left"></i> how linux work 08
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GCC-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">GCC 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Major-features-of-GCC"><span class="nav-number">1.1.</span> <span class="nav-text">Major features of GCC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compiling-a-C-program"><span class="nav-number">2.</span> <span class="nav-text">Compiling a C program</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AA-C-%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.1.</span> <span class="nav-text">编译一个 C 程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%BC%96%E8%AF%91%E5%99%A8%E8%AD%A6%E5%91%8A%E6%89%BE%E5%88%B0%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84%E9%94%99%E8%AF%AF"><span class="nav-number">2.2.</span> <span class="nav-text">使用编译器警告找到程序中的错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%A4%9A%E4%B8%AA%E6%BA%90%E4%BB%A3%E7%A0%81%E6%96%87%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">编译多个源代码文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%8B%AC%E7%9A%84%E7%BC%96%E8%AF%91%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.</span> <span class="nav-text">单独的编译文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BA%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.1.</span> <span class="nav-text">从源文件创建目标文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.2.</span> <span class="nav-text">从目标文件生成可执行文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Link-order-of-object-files"><span class="nav-number">2.4.3.</span> <span class="nav-text">Link order of object files</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Recompiling-and-relinking"><span class="nav-number">2.5.</span> <span class="nav-text">Recompiling and relinking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linking-with-external-libraries"><span class="nav-number">2.6.</span> <span class="nav-text">Linking with external libraries</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Link-order-of-libraries"><span class="nav-number">2.6.1.</span> <span class="nav-text">Link order of libraries</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-library-header-files"><span class="nav-number">2.7.</span> <span class="nav-text">Using library header files</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">293k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">4:27</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
