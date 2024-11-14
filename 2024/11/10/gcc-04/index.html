@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="An Introduction to GCC 04">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gcc 04">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2024/11/10/gcc-04/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="An Introduction to GCC 04">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-10T06:55:21.000Z">
+<meta property="article:modified_time" content="2024-11-10T06:55:21.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="gcc">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2024/11/10/gcc-04/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>gcc 04 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">18</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">82</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2024/11/10/gcc-04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          gcc 04
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-11-10 14:55:21" itemprop="dateCreated datePublished" datetime="2024-11-10T14:55:21+08:00">2024-11-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>8.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>8 mins.</span>
+            </span>
+            <div class="post-description">An Introduction to GCC 04</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Platform-specific-options"><a href="#Platform-specific-options" class="headerlink" title="Platform-specific options"></a>Platform-specific options</h2><p>GCC provides a range of platform-specific options for different types of CPUs. These options control features such as hardware floating-point modes, and the use of special instructions for different CPUs. They can be selected with the ‘-m’ option on the command line, and work with all the GCC language frontends, such as gcc and g++.</p>
+<h3 id="Intel-and-AMD-x86-options"><a href="#Intel-and-AMD-x86-options" class="headerlink" title="Intel and AMD x86 options"></a>Intel and AMD x86 options</h3><p>可以使用 GCC 平台特定的选项来控制广泛使用的 Intel 和 AMD x86 处理器系列（386、486、奔腾等）的功能。</p>
+<p>在这些平台上，GCC <strong>默认</strong>生成与 x86 系列所有处理器兼容的可执行代码 - 一直追溯到 386。但是，也可以针对特定处理器进行编译以获得更好的性能。Also referred to as <code>targeting</code> a specific processor. 针对不同平台编译。</p>
+<p><code>gcc -Wall -march=pentium4 hello.c</code> 使用特定 <code>-march=CPU</code> 选项生成的代码将运行得更快，但无法在 x86 系列的其他处理器上运行。如果计划分发可执行文件以供在 Intel 和 AMD 处理器上通用使用，则应在不使用任何 <code>-march</code> 选项的情况下编译它们。</p>
+<p>作为替代方案，<code>-mcpu=CPU</code> 选项在速度和可移植性之间提供了折衷方案——它生成的代码在指令调度方面针对特定处理器进行了调整，但不使用 x86 系列中其他 CPU 上不可用的任何指令。生成的代码将与所有 CPU 兼容，并且在 <code>-mcpu</code> 指定的 CPU 上具有速度优势。<code>-mcpu</code> 生成的可执行文件无法达到与 <code>-march</code> 相同的性能，但在实践中可能更方便。</p>
+<p>AMD 已将 32 位 x86 指令集增强为 64 位指令集（称为 x86-64），该指令集已在其 AMD64 处理器中实现。在 AMD64 系统上，GCC 默认生成 64 位代码。选项 <code>-m32</code> 允许生成 32 位代码。</p>
+<p>AMD64 处理器有几种不同的内存模型，用于在 64 位模式下运行的程序。默认模型是小代码模型，允许代码和数据大小最大为 2 GB。中等代码模型允许无限的数据大小，可以使用 <code>-mcmodel=medium</code> 进行选择。还有一个大代码模型，除了无限的数据大小外，还支持无限的代码大小。它目前尚未在 GCC 中实现，因为中等代码模型足以满足所有实际用途 — 实际中不会遇到大小大于 2 GB 的可执行文件。</p>
+<p>为系统级代码（例如 Linux 内核）提供了特殊的内核代码模型 <code>-mcmodel=kernel</code>。需要注意的一点是，默认情况下，在 AMD64 上，堆栈指针下方会分配一个 128 字节的内存区域用于临时数据，称为红区 red-zone，Linux 内核不支持该区域。在 AMD64 上编译 Linux 内核需要使用选项 <code>-mcmodel=kernel -mno-red-zone</code>。</p>
+<h3 id="DEC-Alpha-options"><a href="#DEC-Alpha-options" class="headerlink" title="DEC Alpha options"></a>DEC Alpha options</h3><p>DEC Alpha 处理器的默认设置可最大程度地提高浮点性能，但代价是完全支持 IEEE 算术功能。DEC Alpha 处理器的默认配置不支持无穷大算术和渐进下溢 infinities or underflows（非规范化数字）。产生无穷大或下溢的运算将生成浮点异常（也称为陷阱），并导致程序终止，除非操作系统捕获并处理异常（这通常效率低下）。IEEE 标准规定这些运算应生成特殊结果以表示 IEEE 数字格式的数量。</p>
+<p>在大多数情况下，DEC Alpha 默认行为是可以接受的，因为大多数程序不会产生无穷大或下溢。对于需要这些功能的应用程序，GCC 提供了选项 <code>-mieee</code> 以完全支持 IEEE 算术。</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span> <span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">double</span> x = <span class="number">1.0</span>, y = <span class="number">0.0</span>;</span><br><span class="line">    <span class="built_in">printf</span> (<span class="string">"x/y = %g\n"</span>, x / y);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>在 IEEE 算术中，1/0 的结果是 inf（无穷大）。如果使用默认设置针对 Alpha 处理器编译程序，则会生成异常，从而终止程序：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall alpha.c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./a.out</span></span><br><span class="line">Floating point exception (on an Alpha processor)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用 <code>-mieee</code> 选项可确保完全符合 IEEE 标准 – 除法 1/0 正确产生结果 inf 并且程序继续成功执行：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall -mieee alpha.c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./a.out</span></span><br><span class="line">x/y = inf</span><br></pre></td></tr></tbody></table></figure>
+<p>请注意，使用 <code>-mieee</code> 编译时，生成浮点异常的程序运行速度会更慢，因为异常是在软件而不是硬件中处理的。</p>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>故障排查。GCC provides several help and diagnostic options to assist in troubleshooting problems with the compilation process.</p>
+<h3 id="Help-for-command-line-options"><a href="#Help-for-command-line-options" class="headerlink" title="Help for command-line options"></a>Help for command-line options</h3><p>为了简要提醒各种命令行选项，GCC 提供了一个帮助选项，显示顶级 GCC 命令行选项的摘要：<code>gcc --help</code>。</p>
+<p>要显示 gcc 及其相关程序（例如 GNU Linker 和 GNU Assembler）的完整选项列表，请使用上面的帮助选项和详细（<code>-v</code>）选项：<code>gcc -v --help</code>。</p>
+<p>此命令生成的完整选项列表非常长 - 可能希望使用 more 命令翻阅它，或将输出重定向到文件以供参考：<code>gcc -v --help 2&gt;&amp;1 | more</code>。</p>
+<h3 id="Version-numbers"><a href="#Version-numbers" class="headerlink" title="Version numbers"></a>Version numbers</h3><p><code>gcc --version</code> or <code>gcc -v</code></p>
+<p>在调查编译问题时，版本号很重要，因为旧版本的 GCC 可能缺少程序使用的某些功能。版本号的格式为主要版本.次要版本或主要版本.次要版本.微版本 major-version.minor-version.micro-version，其中附加的第三个微版本号用于发布系列中的后续错误修复版本。</p>
+<h3 id="Verbose-compilation"><a href="#Verbose-compilation" class="headerlink" title="Verbose compilation"></a>Verbose compilation</h3><p><code>-v</code> 选项还可用于显示有关用于编译和链接程序的命令的确切序列的详细信息。</p>
+<p><code>gcc -v -Wall hello.c</code></p>
+<p>当编译过程本身出现问题时，<code>-v</code> 生成的输出非常有用。它显示用于搜索头文件和库的完整目录路径、预定义的预处理器符号以及用于链接的目标文件和库。</p>
+<h2 id="Compiler-related-tools"><a href="#Compiler-related-tools" class="headerlink" title="Compiler-related tools"></a>Compiler-related tools</h2><h3 id="Creating-a-library-with-the-GNU-archiver"><a href="#Creating-a-library-with-the-GNU-archiver" class="headerlink" title="Creating a library with the GNU archiver"></a>Creating a library with the GNU archiver</h3><p>GNU 归档器将一组目标文件组合成一个归档文件，也称为库。归档文件只是一种将大量相关目标文件一起分发的便捷方式。</p>
+<p><code>ar cr libhello.a hello_fn.o bye_fn.o</code> The option <code>cr</code> stands for <code>create and replace</code>.</p>
+<p>The archiver ar also provides a <code>table of contents</code> option <code>t</code> to list the object files in an existing library:</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ar t libhello.a</span></span><br><span class="line">hello_fn.o</span><br><span class="line">bye_fn.o</span><br></pre></td></tr></tbody></table></figure>
+<p>请注意，当分发一个库时，它提供的公共函数和变量的头文件也应该可用，以便最终用户可以包含它们并获得正确的原型。</p>
+<p><code>gcc -Wall main.c libhello.a -o hello</code> or <code>gcc -Wall -L. main.c -lhello -o hello</code></p>
+<p>The option <code>-L.</code> is needed to add the current directory to the library search path.</p>
+<h3 id="Using-the-profiler-gprof"><a href="#Using-the-profiler-gprof" class="headerlink" title="Using the profiler gprof"></a>Using the profiler gprof</h3><p>The GNU profiler gprof is a useful tool for measuring the performance of a program—it records the number of calls to each function and the amount of time spent there, on a per-function basis. 可以从 gprof 的输出中轻松识别出消耗大量运行时间的函数。加速程序的努力应该首先集中在那些占据整个运行时间的函数上。</p>
+<p>To use profiling, the program must be compiled and linked with the <code>-pg</code> profiling option:</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall -c -pg collatz.c</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -Wall -pg collatz.o</span></span><br></pre></td></tr></tbody></table></figure>
+<p>这将创建一个经过检测的可执行文件，其中包含记录每个函数所花费时间的附加指令。</p>
+<p>If the program consists of more than one source file then the <code>-pg</code> option should be used when compiling each source file, and used again when linking the object files to create the final executable。</p>
+<p>Forgetting to link with the option <code>-pg</code> is a common error, which prevents profiling from recording any useful information.</p>
+<p>运行编译后的程序后，会在当前目录生成 <code>gmon.out</code> 文件，可以通过将可执行文件的名称作为参数来用 <code>gprof</code> 进行分析：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gprof a.out  <span class="comment"># 会读取生成的文件，输出统计信息</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Coverage-testing-with-gcov"><a href="#Coverage-testing-with-gcov" class="headerlink" title="Coverage testing with gcov"></a>Coverage testing with gcov</h3><p>GNU 覆盖测试工具 <code>gcov</code> 分析程序在运行期间每行代码的执行次数。这样就可以找到未使用或未在测试中执行的代码区域。当与 <code>gprof</code> 的分析信息相结合时，覆盖测试中的信息允许将加速程序的努力集中在源代码的特定行上。</p>
+<p>To enable coverage testing the program must be compiled with the following options: <code>gcc -Wall -fprofile-arcs -ftest-coverage cov.c</code>.</p>
+<p>这将创建一个经过检测的可执行文件，其中包含记录程序每行执行次数的附加指令。选项 <code>-ftest-coverage</code> 添加了用于计算各行执行次数的指令，而 <code>-fprofile-arcs</code> 则包含程序每个分支的检测代码。分支检测通过 <code>if</code> 语句和其他条件记录了不同路径的采用频率。然后必须运行可执行文件以创建覆盖率数据。</p>
+<p>执行程序后运行的数据被写入当前目录中的几个扩展名为 <code>.bb</code>、<code>.bbg</code> 和 <code>.da</code> 的文件中。</p>
+<p>这些数据使用 gcov 配合源代分析，上面的是基于可执行文件。<code>gcov cov.c</code></p>
+<p>The gcov command produces an annotated version of the original source file, with the file extension <code>.gcov</code>, containing counts of the number of times each line was executed. 没有执行的行会被 <code>######</code> 标记。</p>
+<h2 id="How-the-compiler-works"><a href="#How-the-compiler-works" class="headerlink" title="How the compiler works"></a>How the compiler works</h2><p>本章详细介绍了 GCC 如何将源文件转换为可执行文件。编译是一个多阶段过程，涉及多个工具，包括 GNU 编译器本身（通过 gcc 或 g++ 前端）、GNU 汇编器 as 和 GNU 链接器 ld。编译过程中使用的完整工具集称为工具链。</p>
+<h3 id="An-overview-of-the-compilation-process"><a href="#An-overview-of-the-compilation-process" class="headerlink" title="An overview of the compilation process"></a>An overview of the compilation process</h3><p>The sequence of commands executed by a single invocation of GCC con-sists of the following stages:</p>
+<ol>
+<li>preprocessing (to expand macros)</li>
+<li>compilation (from source code to assembly language)</li>
+<li>assembly (from assembly language to machine code)</li>
+<li>linking (to create the final executable)</li>
+</ol>
+<h3 id="The-preprocesssor"><a href="#The-preprocesssor" class="headerlink" title="The preprocesssor"></a>The preprocesssor</h3><p>编译过程的第一阶段是使用预处理器来扩展宏和包含的头文件。为了执行此阶段，GCC 执行以下命令：<code>cpp hello.c &gt; hello.i</code>。结果是一个文件 <code>hello.i</code>，其中包含扩展了所有宏的源代码。</p>
+<p>按照惯例，预处理文件的文件扩展名是 <code>.i</code>（对于 C 程序）和 <code>.ii</code>（对于 C++ 程序）。实际上，除非使用 <code>-save-temps</code> 选项，否则预处理文件不会保存到磁盘。</p>
+<h3 id="The-compiler"><a href="#The-compiler" class="headerlink" title="The compiler"></a>The compiler</h3><p>该过程的下一个阶段是将预处理源代码实际编译为特定处理器的汇编语言。命令行选项 <code>-S</code> 指示 gcc 将预处理的 C 源代码转换为汇编语言，而无需创建目标文件：<code>gcc -Wall -S hello.i</code>。</p>
+<p>The resulting assembly language is stored in the file <code>hello.s</code>.</p>
+<h3 id="The-assembler"><a href="#The-assembler" class="headerlink" title="The assembler"></a>The assembler</h3><p>The purpose of the assembler is to convert assembly language into machine code and generate an object file. When there are calls to external functions in the assembly source file, the assembler leaves the addresses of the external functions undefined, to be filled in later by the linker. The assembler can be invoked with the following command line: <code>as hello.s -o hello.o</code>.</p>
+<p>As with GCC, the output file is specified with the <code>-o</code> option. The resulting file <code>hello.o</code> contains the machine instructions for the Hello World program, with an undefined reference to <code>printf</code>.</p>
+<h3 id="The-linker"><a href="#The-linker" class="headerlink" title="The linker"></a>The linker</h3><p>编译的最后阶段是链接目标文件以创建可执行文件。In practice, an executable requires many external functions from system and C run-time (crt) libraries.Consequently, the actual link commands used internally by GCC are complicated.</p>
+<p>ld 命令很复杂，但是不需要我们关系，gcc 帮助链接目标文件。<code>gcc hello.o</code>.</p>
+<h2 id="Examining-compiled-files"><a href="#Examining-compiled-files" class="headerlink" title="Examining compiled files"></a>Examining compiled files</h2><h3 id="Identifying-files"><a href="#Identifying-files" class="headerlink" title="Identifying files"></a>Identifying files</h3><p>When a source file has been compiled to an object file or executable the options used to compile it are no longer obvious. The file command looks at the contents of an object file or executable and determines some of its characteristics, such as whether it was compiled with dynamic or static linking.</p>
+<p>当源文件被编译为目标文件或可执行文件时，用于编译它的选项不再明显。<code>file</code> 命令查看目标文件或可执行文件的内容并确定它的某些特性，例如它是使用动态链接还是静态链接编译的。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">file a.out</span></span><br><span class="line">a.out: ELF 32-bit LSB executable, Intel 80386,</span><br><span class="line">      version 1 (SYSV), dynamically linked (uses shared</span><br><span class="line">      libs), not stripped</span><br></pre></td></tr></tbody></table></figure>
+<p>The output shows that the executable file is dynamically linked, and com- piled for the Intel 386 and compatible processors.</p>
+<ul>
+<li>ELF<br>The internal format of the executable file (ELF stands for <code>Executable and Linking Format</code>, other formats such as COFF <code>Com-mon Object File Format</code> are used on some older operating systems (MS-DOS)</li>
+<li>32-bit<br>The word size (for some platforms this would be 64-bit).</li>
+<li>LSB byte order<br>Compiled for a platform with least significant byte first word ordering, such as Intel and AMD x86 processors (the alternative MSB most significant byte first is used by other processors</li>
+<li>Intel 80386<br>The processor the executable file was compiled for.</li>
+<li>version 1 (SYSV)<br>This is the version of the internal format of the file.</li>
+<li>dynamically linked<br>The executable uses shared libraries (statically linked indicates programs linked statically, for example using the <code>-static</code> option)</li>
+<li>not stripped<br>The executable contains a symbol table (this can be removed with the strip command).</li>
+</ul>
+<p>The file command can also be used on object files, where it gives similar output. </p>
+<h3 id="Examining-the-symbol-table"><a href="#Examining-the-symbol-table" class="headerlink" title="Examining the symbol table"></a>Examining the symbol table</h3><p>As described earlier in the discussion of debugging, executables and object files can contain a symbol table.This table stores the location of functions and variables by name, and can be displayed with the nm command:</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">man nm</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">nm a.out <span class="comment"># 查看符号表</span></span></span><br><span class="line">08048334 t Letext</span><br><span class="line">08049498 ? _DYNAMIC</span><br><span class="line">08049570 ? _GLOBAL_OFFSET_TABLE_</span><br><span class="line">........</span><br><span class="line">080483f0 T main</span><br><span class="line">08049590 b object.11</span><br><span class="line">0804948c d p.3</span><br><span class="line">         U printf@GLIBC_2.0</span><br></pre></td></tr></tbody></table></figure>
+<p>Among the contents of the symbol table, the output shows that the start of the main function has the hexadecimal offset 080483f0. Most of the symbols are for internal use by the compiler and operating system. A <code>T</code> in the second column indicates a function that is defined in the object file, while a <code>U</code> indicates a function which is undefined (and should be resolved by linking against another object file). A complete explanation of the output of nm can be found in the GNU Binutils manual.</p>
+<p>nm 命令最常见的用途是检查库是否包含特定函数的定义，通过在函数名称的第二列中查找“T”条目。</p>
+<h3 id="Finding-dynamically-linked-libraries"><a href="#Finding-dynamically-linked-libraries" class="headerlink" title="Finding dynamically linked libraries"></a>Finding dynamically linked libraries</h3><p>When a program has been compiled using shared libraries it needs to load those libraries dynamically at run-time in order to call external functions. The command ldd examines an executable and displays a list of the shared libraries that it needs. These libraries are referred to as the shared library dependencies of the executable. <code>ldd a.out</code></p>
+<p>The ldd command can also be used to examine shared libraries them- selves, in order to follow a chain of shared library dependencies.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/gcc/" rel="tag"><i class="fa fa-tag"></i> gcc</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2024/11/09/gcc-03/" rel="prev" title="gcc 03">
+      <i class="fa fa-chevron-left"></i> gcc 03
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Platform-specific-options"><span class="nav-number">1.</span> <span class="nav-text">Platform-specific options</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Intel-and-AMD-x86-options"><span class="nav-number">1.1.</span> <span class="nav-text">Intel and AMD x86 options</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DEC-Alpha-options"><span class="nav-number">1.2.</span> <span class="nav-text">DEC Alpha options</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Troubleshooting"><span class="nav-number">2.</span> <span class="nav-text">Troubleshooting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Help-for-command-line-options"><span class="nav-number">2.1.</span> <span class="nav-text">Help for command-line options</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Version-numbers"><span class="nav-number">2.2.</span> <span class="nav-text">Version numbers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Verbose-compilation"><span class="nav-number">2.3.</span> <span class="nav-text">Verbose compilation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compiler-related-tools"><span class="nav-number">3.</span> <span class="nav-text">Compiler-related tools</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Creating-a-library-with-the-GNU-archiver"><span class="nav-number">3.1.</span> <span class="nav-text">Creating a library with the GNU archiver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-the-profiler-gprof"><span class="nav-number">3.2.</span> <span class="nav-text">Using the profiler gprof</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coverage-testing-with-gcov"><span class="nav-number">3.3.</span> <span class="nav-text">Coverage testing with gcov</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-the-compiler-works"><span class="nav-number">4.</span> <span class="nav-text">How the compiler works</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#An-overview-of-the-compilation-process"><span class="nav-number">4.1.</span> <span class="nav-text">An overview of the compilation process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-preprocesssor"><span class="nav-number">4.2.</span> <span class="nav-text">The preprocesssor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-compiler"><span class="nav-number">4.3.</span> <span class="nav-text">The compiler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-assembler"><span class="nav-number">4.4.</span> <span class="nav-text">The assembler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-linker"><span class="nav-number">4.5.</span> <span class="nav-text">The linker</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Examining-compiled-files"><span class="nav-number">5.</span> <span class="nav-text">Examining compiled files</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Identifying-files"><span class="nav-number">5.1.</span> <span class="nav-text">Identifying files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Examining-the-symbol-table"><span class="nav-number">5.2.</span> <span class="nav-text">Examining the symbol table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Finding-dynamically-linked-libraries"><span class="nav-number">5.3.</span> <span class="nav-text">Finding dynamically linked libraries</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">321k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">4:52</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
