@@ -120,3 +120,23 @@ iotop 是为数不多的显示线程 ID 的命令。
 ## cgroup
 略
 
+## 平均负载
+The Load Average which is also known as system load is a metric that indicates the average number of processes that were **runnable** or **waiting to be run** on system CPU over the last couple of minutes. This information helps you represent the overall system workload and identify potential performance. The load average is an important metric in Linux that reflects the average system load over specific time intervals.
+
+### Load avg 是什么
+The load average represents the average number of processes in two states:
+1. Runnable
+These processes are ready to run on the CPU but might be waiting for their turn due to other processes already utilizing it.
+2. Uninterruptible
+These processes are currently running on the CPU and cannot be interrupted except for critical system events.
+Uninterruptible（不可中断）进程是一种进程状态，表示进程正在等待某些系统资源或操作完成，此时该进程无法被中断或杀死。这种状态在进程状态列表中通常用 D 表示（可以通过 ps aux 查看）。不可中断的状态主要用于内核中执行的某些重要操作，例如等待磁盘 I/O 操作完成。
+
+因此，要理解单核系统上 Linux 的平均负载为 1，表示平均有一个进程需要 CPU 资源，要么正在运行，要么正在等待执行。
+
+### 解释负载平均值
+There’s no single definitive interpretation of the ideal load average as it depends on several factors:
+
+1. A higher number of cores allows handling more processes simultaneously so a higher load average might be acceptable on a multi-core system compared to a single-core system.
+2. The nature of running applications and user activity also impacts the load average.
+3. Resource-intensive tasks like video editing will naturally contribute to a higher load average compared to basic tasks like browsing the web.
+
