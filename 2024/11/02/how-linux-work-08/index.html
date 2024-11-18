@@ -226,14 +226,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.2k</span>
+              <span>6.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
+              <span>6 mins.</span>
             </span>
             <div class="post-description">how linux work 08 - 进程和资源监控</div>
 
@@ -304,6 +304,19 @@
 <p>在最右边的 CPU 标题下，您可以看到 us、sy、id 和 wa 列中 CPU 时间的分布。这些分别列出了 CPU 在用户任务、系统（内核）任务、空闲时间和等待 I/O 上花费的时间百分比。</p>
 <h3 id="iostat-iotop-pidstat"><a href="#iostat-iotop-pidstat" class="headerlink" title="iostat iotop pidstat"></a>iostat iotop pidstat</h3><p>iotop 是为数不多的显示线程 ID 的命令。</p>
 <h2 id="cgroup"><a href="#cgroup" class="headerlink" title="cgroup"></a>cgroup</h2><p>略</p>
+<h2 id="平均负载"><a href="#平均负载" class="headerlink" title="平均负载"></a>平均负载</h2><p>The Load Average which is also known as system load is a metric that indicates the average number of processes that were <strong>runnable</strong> or <strong>waiting to be run</strong> on system CPU over the last couple of minutes. This information helps you represent the overall system workload and identify potential performance. The load average is an important metric in Linux that reflects the average system load over specific time intervals.</p>
+<h3 id="Load-avg-是什么"><a href="#Load-avg-是什么" class="headerlink" title="Load avg 是什么"></a>Load avg 是什么</h3><p>The load average represents the average number of processes in two states:</p>
+<ol>
+<li>Runnable<br>These processes are ready to run on the CPU but might be waiting for their turn due to other processes already utilizing it.</li>
+<li>Uninterruptible<br>These processes are currently running on the CPU and cannot be interrupted except for critical system events.<br>Uninterruptible（不可中断）进程是一种进程状态，表示进程正在等待某些系统资源或操作完成，此时该进程无法被中断或杀死。这种状态在进程状态列表中通常用 D 表示（可以通过 ps aux 查看）。不可中断的状态主要用于内核中执行的某些重要操作，例如等待磁盘 I/O 操作完成。</li>
+</ol>
+<p>因此，要理解单核系统上 Linux 的平均负载为 1，表示平均有一个进程需要 CPU 资源，要么正在运行，要么正在等待执行。</p>
+<h3 id="解释负载平均值"><a href="#解释负载平均值" class="headerlink" title="解释负载平均值"></a>解释负载平均值</h3><p>There’s no single definitive interpretation of the ideal load average as it depends on several factors:</p>
+<ol>
+<li>A higher number of cores allows handling more processes simultaneously so a higher load average might be acceptable on a multi-core system compared to a single-core system.</li>
+<li>The nature of running applications and user activity also impacts the load average.</li>
+<li>Resource-intensive tasks like video editing will naturally contribute to a higher load average compared to basic tasks like browsing the web.</li>
+</ol>
 
     </div>
 
@@ -388,7 +401,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tracking-Processes"><span class="nav-number">1.</span> <span class="nav-text">Tracking Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lsof"><span class="nav-number">2.</span> <span class="nav-text">lsof</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lsof-output"><span class="nav-number">2.1.</span> <span class="nav-text">lsof output</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tracing-Program-Execution-and-System-Calls"><span class="nav-number">3.</span> <span class="nav-text">Tracing Program Execution and System Calls</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#strace"><span class="nav-number">3.1.</span> <span class="nav-text">strace</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Threads"><span class="nav-number">4.</span> <span class="nav-text">Threads</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Single-Threaded-and-Multithreaded-Processes"><span class="nav-number">4.1.</span> <span class="nav-text">Single-Threaded and Multithreaded Processes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">查看线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%9B%91%E6%8E%A7%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.</span> <span class="nav-text">资源监控介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E9%87%8F-CPU-Time"><span class="nav-number">5.1.</span> <span class="nav-text">测量 CPU Time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adjusting-Process-Priorities"><span class="nav-number">5.2.</span> <span class="nav-text">Adjusting Process Priorities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Load-Averages"><span class="nav-number">5.3.</span> <span class="nav-text">Load Averages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Managing-High-Loads"><span class="nav-number">5.4.</span> <span class="nav-text">Managing High Loads</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Monitoring-Memory-Status"><span class="nav-number">5.5.</span> <span class="nav-text">Monitoring Memory Status</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#How-Memory-Works"><span class="nav-number">5.5.1.</span> <span class="nav-text">How Memory Works</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Page-Faults"><span class="nav-number">5.5.2.</span> <span class="nav-text">Page Faults</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Minor-page-faults"><span class="nav-number">5.5.2.1.</span> <span class="nav-text">Minor page faults</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Major-page-faults"><span class="nav-number">5.5.3.</span> <span class="nav-text">Major page faults</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vmstat"><span class="nav-number">5.6.</span> <span class="nav-text">vmstat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iostat-iotop-pidstat"><span class="nav-number">5.7.</span> <span class="nav-text">iostat iotop pidstat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cgroup"><span class="nav-number">6.</span> <span class="nav-text">cgroup</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tracking-Processes"><span class="nav-number">1.</span> <span class="nav-text">Tracking Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lsof"><span class="nav-number">2.</span> <span class="nav-text">lsof</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lsof-output"><span class="nav-number">2.1.</span> <span class="nav-text">lsof output</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tracing-Program-Execution-and-System-Calls"><span class="nav-number">3.</span> <span class="nav-text">Tracing Program Execution and System Calls</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#strace"><span class="nav-number">3.1.</span> <span class="nav-text">strace</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Threads"><span class="nav-number">4.</span> <span class="nav-text">Threads</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Single-Threaded-and-Multithreaded-Processes"><span class="nav-number">4.1.</span> <span class="nav-text">Single-Threaded and Multithreaded Processes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BA%BF%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">查看线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%9B%91%E6%8E%A7%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.</span> <span class="nav-text">资源监控介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E9%87%8F-CPU-Time"><span class="nav-number">5.1.</span> <span class="nav-text">测量 CPU Time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adjusting-Process-Priorities"><span class="nav-number">5.2.</span> <span class="nav-text">Adjusting Process Priorities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Load-Averages"><span class="nav-number">5.3.</span> <span class="nav-text">Load Averages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Managing-High-Loads"><span class="nav-number">5.4.</span> <span class="nav-text">Managing High Loads</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Monitoring-Memory-Status"><span class="nav-number">5.5.</span> <span class="nav-text">Monitoring Memory Status</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#How-Memory-Works"><span class="nav-number">5.5.1.</span> <span class="nav-text">How Memory Works</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Page-Faults"><span class="nav-number">5.5.2.</span> <span class="nav-text">Page Faults</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Minor-page-faults"><span class="nav-number">5.5.2.1.</span> <span class="nav-text">Minor page faults</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Major-page-faults"><span class="nav-number">5.5.3.</span> <span class="nav-text">Major page faults</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vmstat"><span class="nav-number">5.6.</span> <span class="nav-text">vmstat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iostat-iotop-pidstat"><span class="nav-number">5.7.</span> <span class="nav-text">iostat iotop pidstat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cgroup"><span class="nav-number">6.</span> <span class="nav-text">cgroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E5%9D%87%E8%B4%9F%E8%BD%BD"><span class="nav-number">7.</span> <span class="nav-text">平均负载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Load-avg-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">7.1.</span> <span class="nav-text">Load avg 是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A%E8%B4%9F%E8%BD%BD%E5%B9%B3%E5%9D%87%E5%80%BC"><span class="nav-number">7.2.</span> <span class="nav-text">解释负载平均值</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -462,13 +475,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">321k</span>
+    <span title="Symbols count total">322k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">4:52</span>
+    <span title="Reading time total">4:53</span>
 </div>
 
         
