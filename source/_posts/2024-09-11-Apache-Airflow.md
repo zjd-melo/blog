@@ -7,4 +7,4 @@ tags: [airflow]
 description: airflow
 ---
 
-{{ execution_date.in_timezone('Europe/Amsterdam') }}
+`{{ execution_date.in_timezone('Europe/Amsterdam') }}`
