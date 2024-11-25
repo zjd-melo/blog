@@ -226,14 +226,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.1k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>4 mins.</span>
             </span>
             <div class="post-description">The C programming language ch-1</div>
 
@@ -284,7 +284,111 @@
 <h3 id="symbolic-constants"><a href="#symbolic-constants" class="headerlink" title="symbolic constants"></a>symbolic constants</h3><p>符号常量<br><code>#define PI 3.1415</code></p>
 <h3 id="character-input-and-output"><a href="#character-input-and-output" class="headerlink" title="character input and output"></a>character input and output</h3><p><code>getchar()/putchar()</code></p>
 <p><code>for(int i=0;i&lt;10;++i);</code>null statement</p>
-<p><code>nl = nw = nc = 0;</code> 相当于 <code>nl = (nw = (nc = 0 ))</code><br>right to left</p>
+<h3 id="赋值表达式"><a href="#赋值表达式" class="headerlink" title="赋值表达式"></a>赋值表达式</h3><p><strong>赋值表达式是有返回值的</strong>。</p>
+<p><code>nl = nw = nc = 0;</code> 相当于 <code>nl = (nw = (nc = 0 ))</code> right to left</p>
+<p>在 C 语言中，赋值表达式有返回值，这是 C 语言的一个核心特性。这使得赋值表达式既能执行赋值操作，也能返回赋值结果，从而允许赋值操作与其他逻辑结合使用。</p>
+<h4 id="赋值表达式返回值的规则"><a href="#赋值表达式返回值的规则" class="headerlink" title="赋值表达式返回值的规则"></a>赋值表达式返回值的规则</h4><p>返回值等于被赋的值：赋值表达式 x = y 的返回值是赋值操作完成后变量 x 的新值，也就是 y 的值。</p>
+<p>赋值表达式的类型：赋值表达式的类型是左操作数（即被赋值的变量）的类型。例如：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x;</span><br><span class="line"><span class="type">float</span> y = <span class="number">3.14</span>;</span><br><span class="line">x = y; <span class="comment">// **返回值是整数类型，因为 x 是 int**</span></span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> {</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (x = y) {  <span class="comment">// 赋值表达式返回值为 y，即 10</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"x is %d\n"</span>, x);  <span class="comment">// 输出 x is 10</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>连续赋值</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> {</span><br><span class="line">    <span class="type">int</span> a, b, c;</span><br><span class="line">    a = b = c = <span class="number">5</span>;  <span class="comment">// 赋值从右向左进行，返回值为 c 的值 5</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"a=%d, b=%d, c=%d\n"</span>, a, b, c);  <span class="comment">// 输出 a=5, b=5, c=5</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="赋值表达式的实际应用"><a href="#赋值表达式的实际应用" class="headerlink" title="赋值表达式的实际应用"></a>赋值表达式的实际应用</h4><ol>
+<li>结合条件语句 赋值表达式返回值的特性允许在条件语句中直接进行赋值并判断其结果。<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> {</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="keyword">while</span> ((x = getchar()) != EOF) {  <span class="comment">// 将 getchar() 的返回值赋给 x 并判断是否为 EOF</span></span><br><span class="line">        <span class="built_in">putchar</span>(x);  <span class="comment">// 输出读取的字符</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">} </span><br></pre></td></tr></tbody></table></figure></li>
+<li>结合复杂逻辑 可以在一行中完成多个变量的赋值和比较：<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> {</span><br><span class="line">    <span class="type">int</span> x, y;</span><br><span class="line">    <span class="keyword">if</span> ((x = <span class="number">5</span>) == (y = <span class="number">5</span>)) {  <span class="comment">// 同时赋值并比较</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"x and y are both %d\n"</span>, x);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><p>运算优先级： 赋值操作符 = 的优先级较低（比逻辑操作符 == 和算术操作符 +、- 低），所以需要用括号明确优先级。<br><code>if (x = 5 == y)  // 等价于 if (x = (5 == y))</code> 如果希望先赋值，再进行比较，需要添加括号：<code>if ((x = 5) == y)</code>  明确优先级，先赋值 x，再比较 x 和 y。</p>
+<p>初学者常常误用 =（赋值）代替 ==（比较）。如：</p>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (x = <span class="number">1</span>) {  <span class="comment">// 实际上是赋值操作，而不是判断 x 是否等于 1</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>为了防止这种错误，可以使用编译器警告或更规范的代码写法（如常量写在左侧：if (1 == x)）。</p>
+<p>在 C 语言中，赋值表达式会返回被赋的值，这使得它既能执行赋值操作，又能用于条件判断或连续赋值。合理利用赋值表达式的返回值特性，可以编写简洁高效的代码，但要注意括号优先级和避免逻辑错误。</p>
+<p><strong>表达式是有返回值的，java 也一样，但是 python 不能，python 的表达式是语句，不能用在条件判断中，python 3.8 引入了 赋值表达式（海象运算符 :=）</strong></p>
+<h3 id="表达式和语句"><a href="#表达式和语句" class="headerlink" title="表达式和语句"></a>表达式和语句</h3><p>在编程中，表达式和语句是两个基本概念，但它们的用途和功能不同。</p>
+<p>以下是它们的详细区别：</p>
+<ol>
+<li>表达式（Expression）</li>
+</ol>
+<ul>
+<li>定义：表达式是具有值的代码片段。它可以进行计算，并返回一个结果。</li>
+<li>用途：用来计算、操作数据、返回结果，可以嵌套在其他表达式或语句中。</li>
+<li>组成：可以由变量、常量、操作符、函数调用等组成。</li>
+</ul>
+<p>特点</p>
+<ul>
+<li>表达式会返回一个值。</li>
+<li>表达式可以嵌套在语句中。</li>
+<li>表达式的值可以被赋值给变量，或者直接参与运算。</li>
+</ul>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 表达式示例（C语言）</span></span><br><span class="line"><span class="type">int</span> x = <span class="number">5</span>;       <span class="comment">// 这里的 "5" 是表达式，返回值是 5</span></span><br><span class="line"><span class="type">int</span> y = x + <span class="number">3</span>;   <span class="comment">// "x + 3" 是表达式，返回值是 8</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d"</span>, y); <span class="comment">// 函数调用 printf() 是一个表达式，返回值是字符数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 表达式示例（Python）</span></span><br><span class="line">x = <span class="number">5</span>          # <span class="string">"5"</span> 是表达式</span><br><span class="line">y = x * <span class="number">2</span>      # <span class="string">"x * 2"</span> 是表达式，返回值是 <span class="number">10</span></span><br><span class="line">print(y &gt; <span class="number">5</span>)   # <span class="string">"y &gt; 5"</span> 是表达式，返回值是 True</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="2">
+<li>语句（Statement）</li>
+</ol>
+<ul>
+<li>定义：语句是一条完整的指令，用来执行某种操作。它通常不返回值，而是改变程序的状态（如赋值、控制流程等）。</li>
+<li>用途：控制程序的行为（如条件判断、循环、赋值）。</li>
+<li>组成：可以包含一个或多个表达式。</li>
+</ul>
+<p>特点</p>
+<ul>
+<li>语句通常不返回值（部分语言中例外，比如 Python 的赋值表达式语句）。</li>
+<li>语句是程序的基本单元，执行操作，但通常不嵌套在其他语句中。</li>
+<li>语句可以包含表达式。</li>
+</ul>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 语句示例（C语言）</span></span><br><span class="line"><span class="type">int</span> x = <span class="number">5</span>;         <span class="comment">// 赋值语句</span></span><br><span class="line"><span class="keyword">if</span> (x &gt; <span class="number">3</span>) {       <span class="comment">// 条件语句</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Yes"</span>); <span class="comment">// 函数调用语句</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 语句示例（Python）</span></span><br><span class="line">x = <span class="number">5</span>             # 赋值语句</span><br><span class="line"><span class="keyword">if</span> x &gt; <span class="number">3</span>:         # 条件语句</span><br><span class="line">    print(<span class="string">"Yes"</span>)  # 函数调用语句</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h4 id="表达式和语句的对比"><a href="#表达式和语句的对比" class="headerlink" title="表达式和语句的对比"></a>表达式和语句的对比</h4><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>表达式</th>
+<th>语句</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定义</td>
+<td>代码片段，返回值。</td>
+<td>完整指令，用于执行操作。</td>
+</tr>
+<tr>
+<td>是否返回值</td>
+<td>必须有返回值。</td>
+<td>通常无返回值（少数例外，如 Python 中 :=）</td>
+</tr>
+<tr>
+<td>作用</td>
+<td>计算值或进行操作，返回一个结果。</td>
+<td>改变程序状态或控制程序执行流。</td>
+</tr>
+<tr>
+<td>嵌套能力</td>
+<td>可以嵌套在其他表达式或语句中。</td>
+<td>通常不能嵌套在其他语句中.</td>
+</tr>
+<tr>
+<td>组成</td>
+<td>变量、常量、操作符、函数调用等。</td>
+<td>表达式和控制结构（如 if、while 等）。</td>
+</tr>
+<tr>
+<td>示例</td>
+<td>x + y、3 &gt; 2</td>
+<td>x = 5;、if (x &gt; 3) {…}</td>
+</tr>
+</tbody></table>
+<figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">5</span>;        <span class="comment">// 整体是语句，其中 "5" 是表达式</span></span><br><span class="line"><span class="type">int</span> y = x + <span class="number">3</span>;    <span class="comment">// 整体是语句，其中 "x + 3" 是表达式，返回值是 8</span></span><br><span class="line"><span class="keyword">if</span> (y &gt; <span class="number">5</span>) {      <span class="comment">// 条件语句，其中 "y &gt; 5" 是表达式，返回值是布尔值 true</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>, y); <span class="comment">// 函数调用语句，其中 "printf()" 是表达式，返回值是打印的字符数</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="number">5</span>           <span class="comment"># 赋值语句，其中 "5" 是表达式</span></span><br><span class="line">y = x + <span class="number">3</span>       <span class="comment"># 赋值语句，其中 "x + 3" 是表达式，返回值是 8</span></span><br><span class="line"><span class="keyword">if</span> y &gt; <span class="number">5</span>:       <span class="comment"># 条件语句，其中 "y &gt; 5" 是表达式，返回值是 True</span></span><br><span class="line">    <span class="built_in">print</span>(y)    <span class="comment"># 函数调用语句，其中 "print(y)" 是函数调用</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>表达式更关注计算和返回值，可以作为更复杂结构的一部分。</li>
+<li>语句更关注完成某种操作或控制流程，是程序逻辑的构建块。</li>
+</ul>
+<p>两者经常结合使用：语句中包含表达式，表达式的结果用于控制语句的执行逻辑。</p>
 <p>写一个wc程序</p>
 <h3 id="functions"><a href="#functions" class="headerlink" title="functions"></a>functions</h3><p><code>int sum(int i, int);</code><br><code>int sum(int, int)</code></p>
 <p>function prototype</p>
@@ -385,7 +489,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">格式化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#symbolic-constants"><span class="nav-number">2.</span> <span class="nav-text">symbolic constants</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#character-input-and-output"><span class="nav-number">3.</span> <span class="nav-text">character input and output</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#functions"><span class="nav-number">4.</span> <span class="nav-text">functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#old-version-function-declare-and-define"><span class="nav-number">4.1.</span> <span class="nav-text">old version function declare and define</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Arguments-Call-by-Value"><span class="nav-number">5.</span> <span class="nav-text">Arguments - Call by Value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#External-Variables-and-Scope"><span class="nav-number">6.</span> <span class="nav-text">External Variables and Scope</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">格式化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#symbolic-constants"><span class="nav-number">2.</span> <span class="nav-text">symbolic constants</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#character-input-and-output"><span class="nav-number">3.</span> <span class="nav-text">character input and output</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%8B%E5%80%BC%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">赋值表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%8B%E5%80%BC%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E8%A7%84%E5%88%99"><span class="nav-number">4.1.</span> <span class="nav-text">赋值表达式返回值的规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%8B%E5%80%BC%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">4.2.</span> <span class="nav-text">赋值表达式的实际应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">4.3.</span> <span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8C%E8%AF%AD%E5%8F%A5"><span class="nav-number">5.</span> <span class="nav-text">表达式和语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8C%E8%AF%AD%E5%8F%A5%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">5.1.</span> <span class="nav-text">表达式和语句的对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#functions"><span class="nav-number">6.</span> <span class="nav-text">functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#old-version-function-declare-and-define"><span class="nav-number">6.1.</span> <span class="nav-text">old version function declare and define</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Arguments-Call-by-Value"><span class="nav-number">7.</span> <span class="nav-text">Arguments - Call by Value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#External-Variables-and-Scope"><span class="nav-number">8.</span> <span class="nav-text">External Variables and Scope</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -459,13 +563,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">322k</span>
+    <span title="Symbols count total">325k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">4:53</span>
+    <span title="Reading time total">4:55</span>
 </div>
 
         
