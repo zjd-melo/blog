@@ -2,8 +2,8 @@
 title: python sort
 date: 2024-08-17 09:59:53
 updated: 2024-08-17 09:59:53
-categories: python
-tags: [python]
+categories: Python
+tags: [Python]
 description: sort
 ---
 

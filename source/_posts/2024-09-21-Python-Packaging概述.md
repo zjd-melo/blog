@@ -2,8 +2,8 @@
 title: Python Packaging概述
 date: 2024-09-21 19:17:22
 updated: 2024-09-21 19:17:22
-categories: python
-tags: [python]
+categories: Python
+tags: [Python]
 description: 关于 Python 打包相关概念 
 ---
 
