@@ -10,6 +10,7 @@ description: About git rebase
 > The `git rebase` command allows you to easily change a series of commits, modifying the history of your repository. You can reorder, edit, or squash commits together.
 
 通过 `git rebase` 能完成：
+
 - Edit previous commit messages
 - Combine multiple commits into one
 - Delete or revert commits that are no longer necessary
@@ -23,14 +24,14 @@ description: About git rebase
 
 ### Rebasing commits against a point in time
 
----
+----
 `git rebase --interactive commit-id`
 
 ### rebase可选的操作
 
----
+----
 
-| command | desc                                                                                                      | 
+| command | desc                                                                                                      |
 |---------|-----------------------------------------------------------------------------------------------------------|
 | pick    | pick commits，此时可以 delete 、reorder commits                                                                  |
 | reword  | 和 pick 很像，但是会停止 rebase，给你修改 commit message 的机会， 任何当前 commit 做的代码修改都不受影响                                   |
@@ -41,8 +42,9 @@ description: About git rebase
 
 ### An example of using `git rebase`
 
----
+----
 使用 rebase 时，会使用配置的编辑器打开一个文件描述选择要 rebase 的 commits 范围的详细信息
+
 ```text
 pick 1fc6c95 Patch A
 pick 6b2481b Patch B
@@ -66,15 +68,17 @@ pick 7b36971 something to move before patch B
 # However, if you remove everything, the rebase will be aborted.
 #
 ```
+
 - 文件列出了7个 commits，说明从 rebase 的 starting point 到 当前分支状态直接有 7 次提交
 - The commits you chose to rebase are sorted in the order of the oldest changes (at the top) to the newest changes (at the bottom).
 - Each line lists a command (by default, pick), the commit SHA, and the commit message.整个 rebase 过程都是围绕这些命令完成的
 - After the commits, Git tells you the range of commits we're working with (41a72e6..7b36971).
 - Finally, Git gives some help by telling you the commands that are available to you when rebasing commits.
 
-### Demo 
+### Demo
 
----
+----
+
 ```shell
 mkdir demo
 cd demo
@@ -120,19 +124,22 @@ touch index.html
 git add .
 git commit -m "7. something to move before patch B"
 ```
+
 ### 目标
 
----
-1. **squash** squash 第五个 bd089b9 commit 到第一个 commit 
+----
+
+1. **squash** squash 第五个 bd089b9 commit 到第一个 commit
 2. **pick** 把第七个 commit 移到第二个 commit 之前  
-3. **fixup** 合并第四个 commit 到 第二个 commit    
+3. **fixup** 合并第四个 commit 到 第二个 commit
 4. **edit** 把第三个 commit 分成更小的 commit
 5. **reword** 修改 bd089b9 commit message
 
 ### actions
 
----
+----
 要完成上面五个目的，只需合理的修改 rebase 命令
+
 ```shell
 git rebase -i HEAD~7
 
@@ -146,6 +153,7 @@ pick 792fdd1 7. something to move before patch B
 ```
 
 定义 rebase 行为
+
 ```shell
 pick 0777897 1. Patch A
 squash bd089b9 5. something to add to patch A, reword commit message
@@ -155,10 +163,12 @@ fixup 02ba6e9 4. A fix for Patch B
 edit bd089b9 5. something to add to patch A
 reword f691b1d 5. i cant' typ goods
 ```
+
 1. This file is Git's way of saying, "Hey, here's what I'm about to do with this squash." It lists the first commit's message ("Patch A"), and the second commit's message ("something to add to patch A"). If you're happy with these commit messages, you can save the file, and close the editor. Otherwise, you can edit commit message. When the editor is closed, the rebase continues.
 
 2. Git processes the two pick commands, It also processes the fixup command, since it doesn't require any interaction,fixup merges the changes from 02ba6e9 into the commit before it, 2d01a11. Both changes will have the same commit message: "Patch B".
 3. Git gets to the edit opration, stop, prints the following message to the terminal
+
     ```shell
    You can amend the commit now, with
 
@@ -172,9 +182,11 @@ reword f691b1d 5. i cant' typ goods
    
    git commit --amend 可以修改最新提交信息
    ```
+
 4. Git then gets to the reword command, 打开编辑器让你修改 commit message
 
 ### 推送 rebase 到 远程
+
 ```shell
 # Don't override changes
 git push origin main --force-with-lease
@@ -184,5 +196,3 @@ git push origin main --force
 ```
 
 注意：demo 有文件冲突跑不通，要做一些修改。
-
-**github getting started demo**
