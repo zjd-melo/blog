@@ -275,7 +275,7 @@
 <h3 id="关闭套接字"><a href="#关闭套接字" class="headerlink" title="关闭套接字"></a>关闭套接字</h3><p><code>int closesocket(Socket sd)</code></p>
 <ul>
 <li>关闭一个描述符为 sd 的套接字</li>
-<li>如果多个进程共享一个套接字，调用 <code>closesocket</code> 将套接字引用计数减1，减至0才关闭</li>
+<li>如果多个进程共享一个套接字，调用 <code>closesocket</code> 将套接字引用计数减 1，减至 0 才关闭</li>
 <li>一个进程中的多线程对一个套接字的使用无计数<ul>
 <li>如果进程中的一个线程调用 <code>closecocket</code> 将一个套接字关闭，该进程中的其他线程也将不能访问该套接字</li>
 </ul>
@@ -323,7 +323,7 @@
 </ul>
 <h3 id="setsockopt-getsockopt"><a href="#setsockopt-getsockopt" class="headerlink" title="setsockopt getsockopt"></a>setsockopt getsockopt</h3><h2 id="网络字节序列"><a href="#网络字节序列" class="headerlink" title="网络字节序列"></a>网络字节序列</h2><ul>
 <li>TCP/IP 定义了标准的用于协议头中的二进制整数表示：网络字节序（network byte order）</li>
-<li>某些 Socket API 函数的参数需要存储未网络字节序（IP，端口）<ul>
+<li>某些 Socket API 函数的参数需要存储网络字节序（IP，端口）<ul>
 <li>htons：本地字节序转为网络字节序（16bits）</li>
 <li>ntohs: 网络字节序转为本地字节序（16bits）</li>
 <li>htonl：本地字节序转为网络字节序（32bits）</li>
