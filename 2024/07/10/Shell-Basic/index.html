@@ -252,7 +252,7 @@
 <ul>
 <li>ordinary files (-)</li>
 <li>directory files (d)</li>
-<li>special files <ul>
+<li>special files<ul>
 <li>c 字符设备文件</li>
 <li>s 套接字文件</li>
 <li>l 链接文件</li>
@@ -299,10 +299,14 @@
 <h4 id="用途-1"><a href="#用途-1" class="headerlink" title="用途"></a>用途</h4><p>软链接适用于创建快捷方式或指向其他文件系统和目录的场景</p>
 <h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><ol>
 <li><p>cp 一个软链接会发生什么？<br>默认会复制软链接指向的文件，可以通过 <code>-P</code> 或者 <code>--no-dereference</code>(mac 使用 -R) 选项来指定复制软链接本身。</p>
- <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo "Hello World" &gt; original_file.txt</span><br><span class="line">ln -s original_file.txt symlink.txt</span><br><span class="line">cp -P symlink.txt copied_symlink.txt</span><br></pre></td></tr></tbody></table></figure></li>
-<li><p>怎么找到一个文件所有的硬链接呢？</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls -li file.txt</span><br><span class="line">find /path/to/search -inum 123456</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">也可以通过 <span class="built_in">stat</span> 查找文件有多少硬链接数</span></span><br></pre></td></tr></tbody></table></figure>
+ <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo "Hello World" &gt; original_file.txt</span><br><span class="line">ln -s original_file.txt symlink.txt</span><br><span class="line">cp -P symlink.txt copied_symlink.txt</span><br></pre></td></tr></tbody></table></figure>
 </li>
+<li><p>怎么找到一个文件所有的硬链接呢？</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls -li file.txt</span><br><span class="line">find /path/to/search -inum 123456</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">也可以通过 <span class="built_in">stat</span> 查找文件有多少硬链接数</span></span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="3">
 <li><p>一个文件只有一个 inode 号，inode 维护了很多信息，包含文件所在的数据块等。</p>
 </li>
 <li><p>删除软链接指向的文件后，再创建相同名称的文件，软连接会恢复吗？<br>会，软链接存储的是目标文件的路径，而不是目标文件的 inode。</p>
@@ -316,6 +320,7 @@
 <h2 id="filename-substitution"><a href="#filename-substitution" class="headerlink" title="filename substitution"></a>filename substitution</h2><h3 id="The-Asterisk"><a href="#The-Asterisk" class="headerlink" title="The Asterisk"></a>The Asterisk</h3><p>会进行文件替换，比如 <code>ls *</code> 会列出所有文件，<code>echo *aaa</code> 如果没有匹配到任何文件，echo 会打印 <code>*aaa</code>。</p>
 <h3 id="Matching-single-Characters"><a href="#Matching-single-Characters" class="headerlink" title="Matching single Characters"></a>Matching single Characters</h3><p><code>*</code> 匹配0个或多个，<code>?</code>匹配一个。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo ?   # 匹配单个字符的文件名</span><br><span class="line">echo ??  # 匹配两个字符的文件名</span><br><span class="line">echo a?  # 匹配以a开头的两个字符的文件名</span><br><span class="line">echo ??* # 匹配至少两个字符的文件名</span><br></pre></td></tr></tbody></table></figure>
+
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[] # [] 的作用和`?` 类似</span><br><span class="line">[a-z] # 所有小写字母</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">List files that begin with a lowercase letter and don’t end with a digit</span></span><br><span class="line">ls [a-z]*[!0-9] </span><br></pre></td></tr></tbody></table></figure>
 
 <h2 id="Filename-Nuances-文件名细微差别"><a href="#Filename-Nuances-文件名细微差别" class="headerlink" title="Filename Nuances 文件名细微差别"></a>Filename Nuances 文件名细微差别</h2><h3 id="文件名中的空格"><a href="#文件名中的空格" class="headerlink" title="文件名中的空格"></a>文件名中的空格</h3><p>问题是由于 shell 使用空白字符分隔单词，也就是说 <code>echo hello world</code> shell 会解析为调用 echo 并且有两个参数。</p>
@@ -328,6 +333,7 @@
 <p><code>cat file1 file2 &gt; file3</code>，这就是 <code>cat</code> 命令名称的由来，当使用超过一个文件时，它的作用就相当于 <code>concatenate</code> 多个文件。</p>
 <h3 id="INPUT-Redirection"><a href="#INPUT-Redirection" class="headerlink" title="INPUT Redirection"></a>INPUT Redirection</h3><p>正如命令的输出可以重定向到文件一样，命令的输入也可以从文件重定向。当然，只有通常从标准输入获取输入的命令才能以这种方式从文件重定向其输入。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wc -l users</span><br><span class="line">wc -l &lt; users</span><br></pre></td></tr></tbody></table></figure>
+
 <p>两个命令的结果是不一样的，前者会输出文件名，这指出了两者之间的微妙差异，在第一种情况下，wc 知道它正在从文件 users 读取输入。<br>在第二种情况下，它只能看到通过标准输入提供给它的原始数据。就 wc 而言，它不知道它的输入是来自终端还是来自文件，只知道是标准输入，<br>因此它无法报告文件名！</p>
 <h3 id="标准错误"><a href="#标准错误" class="headerlink" title="标准错误"></a>标准错误</h3><p>大多数情况下，我们很少关心标准错误和标准输出的区别，标准错误会把错误信息也打印到终端。但是还是有一些区别的。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">即使重定向了，但是错误信息不会出现在文件中</span></span><br><span class="line">ls n* &gt; foo </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">要想错误信息也出现在文件中，可以使用 2&gt;，中间不能有空格</span> </span><br></pre></td></tr></tbody></table></figure>
