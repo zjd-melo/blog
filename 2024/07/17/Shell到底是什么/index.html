@@ -28,6 +28,7 @@
 <meta property="og:site_name" content="Dying Memory">
 <meta property="og:description" content="Shell 到底是什么">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/kernel.png">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/getty.png">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/login.png">
 <meta property="og:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/user_login.png">
@@ -37,7 +38,7 @@
 <meta property="article:author" content="朱佳东">
 <meta property="article:tag" content="Shell">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/getty.png">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/kernel.png">
 
 <link rel="canonical" href="https://zjd-melo.github.io/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/">
 
@@ -251,7 +252,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="The-Kernel-and-the-Utilities"><a href="#The-Kernel-and-the-Utilities" class="headerlink" title="The Kernel and the Utilities"></a>The Kernel and the Utilities</h2><p>![kernel](kernel.png<br>Unix 系统在逻辑上可以分为两个部分：the kernel and the utilities。 或者，如果你愿意的话，内核和其他所有内容通常都通过 shell 访问。</p>
+        <h2 id="The-Kernel-and-the-Utilities"><a href="#The-Kernel-and-the-Utilities" class="headerlink" title="The Kernel and the Utilities"></a>The Kernel and the Utilities</h2><p><img src="/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/kernel.png" alt="kernel"><br>Unix 系统在逻辑上可以分为两个部分：the kernel and the utilities。 或者，如果你愿意的话，内核和其他所有内容通常都通过 shell 访问。</p>
 <p>内核是 Unix 系统的核心，从计算机启动到关闭期间都驻留在计算机的内存中。</p>
 <p>磁盘上各种各样的 tools 构成了完整的 Unix 系统体验，只有当调用这些 utilities 时，才会被加载到内存并执行。事实上，你所知道的每一个 Unix 命令都是一个实用程序；因此，该程序驻留在磁盘上，并且仅根据你的请求才被调入内存。</p>
 <p>比如当执行 <code>date</code> 命令时，Unix 系统会从磁盘上找到名为 <code>date</code> 的程序，并加载到内存中，然后开始执行加载到内存中命令的指令。</p>
@@ -265,7 +266,7 @@
 <p>如果使用类似 <code>ssh</code> 的程序连接系统，就会被分配一个 <code>pseudo-terminal</code> 或者 <code>pseudo-tty</code>，即伪终端，这就是为什么使用 <code>who</code> 命令能看到 <code>ptty3</code> 或者 <code>pty1</code> 的原因。</p>
 <p>有一个专门的程序（login）读取用户输入的账号和密码，并进行认证，如果认证通过了，会调用登陆程序。</p>
 <p><img src="/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/login.png" alt="login"></p>
-<p>当 <code>login</code> 开始执行时，它会在终端显示 <code>Password: </code> 字符串，并且等待输入，当输入密码并敲回车后，<code>login</code> 程序会使用 <code>/etc/passwd</code> 文件进行相关认证，这个文件包含每个用户的<br>相关信息，比如 <code>login name</code>、<code>home directory</code>、用户登陆后启动的程序等。文件每行最后一列（冒号分隔）就是 <code>login shell</code>，如果未指定，则默认使用 <code>standard shell</code> 即 <code>/bin/sh</code>。</p>
+<p>当 <code>login</code> 开始执行时，它会在终端显示 <code>Password:</code> 字符串，并且等待输入，当输入密码并敲回车后，<code>login</code> 程序会使用 <code>/etc/passwd</code> 文件进行相关认证，这个文件包含每个用户的<br>相关信息，比如 <code>login name</code>、<code>home directory</code>、用户登陆后启动的程序等。文件每行最后一列（冒号分隔）就是 <code>login shell</code>，如果未指定，则默认使用 <code>standard shell</code> 即 <code>/bin/sh</code>。</p>
 <p>如果使用终端程序登陆远程主机，那么会调用本地的 <code>ssh</code> 连接服务器上的 <code>sshd</code>，如果是在自己的电脑上打开终端，会自动帮你进行登陆操作，不需要再次输入密码了。</p>
 <p><code>login</code> 程序验证（<code>/etc/shadow</code>）完加密密码之后，它会检查要执行的登陆程序的名称。大多数情况下都是 <code>/bin/sh</code>、<code>/bin/bash</code>。也允许自定义其他登陆程序，或者为了文件所属者管理不需要进行交互的账号的程序 <code>/bin/nologin</code>。</p>
 <p>这样做的目的就是允许任何登陆账号在任何时候登陆系统时运行任何程序，shell 通常是最通用的，但绝不是唯一的选择。</p>
@@ -294,6 +295,7 @@
 <h3 id="I-x2F-O-Redirection"><a href="#I-x2F-O-Redirection" class="headerlink" title="I/O Redirection"></a>I/O Redirection</h3><p><code>shell</code> 还负责处理输入和输出重定向。</p>
 <p>一个很经典的例子：</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wc -l users  # 从文件读</span><br><span class="line">wc -l &lt; users # 从标准输入读</span><br></pre></td></tr></tbody></table></figure>
+
 <p>上面两个命令的输出是不一样的，第一个命令实际上有两个参数 <code>-l</code> 和 <code>users</code>，第二个只有一个参数 <code>-l</code>，没有文件名，此时 wc 会从标准输入获取输入结果。</p>
 <h3 id="Hooking-up-a-Pipeline"><a href="#Hooking-up-a-Pipeline" class="headerlink" title="Hooking up a Pipeline"></a>Hooking up a Pipeline</h3><p>就像 <code>shell</code> 扫描命令行搜索重定向符号一样，他也会搜索管道符号，并把前一个命令的标准输出连接到后一个命令的标准输入上，然后开始执行两个程序。</p>
 <p><code>who | wc -l</code> <code>shell</code> 发现管道符分隔了 <code>who</code> 和 <code>wc</code> 命令，连接前一个命令的标准输出到后一个命令的标准输入上，然后开始同时执行两个命令。当 <code>who</code> 开始执行后，<br>它把结果输出到标准输出上，并不会意识到最终结果不会写到终端而是另一个命令的标准输入上。</p>
@@ -303,6 +305,7 @@
 <h2 id="tty"><a href="#tty" class="headerlink" title="tty"></a>tty</h2><p><code>tty</code> 命令可以知道当前使用的是哪个字符设备（终端）。</p>
 <p>在终端或者命令行运行的命令会打开当前使用的终端作为其标准输入、标准输出和标准错误。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tty</span><br><span class="line">cat</span><br><span class="line">^z</span><br><span class="line">jobs -l</span><br><span class="line">ll /proc/pid/fd # 三个软连接都会指向当前终端</span><br></pre></td></tr></tbody></table></figure>
+
     </div>
 
     
