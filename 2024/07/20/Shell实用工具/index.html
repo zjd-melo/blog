@@ -267,7 +267,7 @@
 <p>比如 <code>X*</code> 匹配 0、1、2… 个大写 <code>X</code>，而 <code>XX*</code> 则匹配一个或多个 <code>X</code>，因为表达式中指定了一个 <code>X</code> 后跟随 0 个或多个 <code>X</code>，可以使用 <code>+</code> 号完成同样的事，<code>+</code> 匹配一个或多个，至少出现一次，所以 <code>XX*</code> 和 <code>X+</code> 是等价的。</p>
 <p><code>1,$s/  */ /g</code> 把所有多余的空格去掉，<code>This     is     an example</code> —&gt; <code>This is an example</code>，这个表达式告诉 <code>ed</code> 把所有一个空格后跟 0 或多个空格的字符串替换成一个空格。</p>
 <p><code>.*</code> 通常用来匹配0多个任意字符。<strong>Bear in mind that a regular expression matches the longest string of characters that match the pattern.</strong> 最长匹配原则，所以这个表达式总是匹配整行。</p>
-<p><code>e.*e</code> 匹配一行中从第一个 <code>e</code> 到最后一个 <code>e</code> 的所有字符。<code>element</code> 在 <code>vim</code> 中使用 <code>:%s/e.*e/a/gc</code> 替换为 <code>ant</code>，最长匹配。 </p>
+<p><code>e.*e</code> 匹配一行中从第一个 <code>e</code> 到最后一个 <code>e</code> 的所有字符。<code>element</code> 在 <code>vim</code> 中使用 <code>:%s/e.*e/a/gc</code> 替换为 <code>ant</code>，最长匹配。</p>
 <p>怎么匹配 <code>-</code> 和 <code>]</code> 呢，<code>[-0-9]</code> 或者 <code>[0-9-]</code>， <code>[]a-z]</code>。</p>
 <h3 id="匹配精确数量的字符"><a href="#匹配精确数量的字符" class="headerlink" title="匹配精确数量的字符 \{ ...\}"></a>匹配精确数量的字符 <code>\{ ...\}</code></h3><p><code>XX*</code> 匹配 <code>X</code> 后跟随 0 或多个 <code>X</code>，<code>XXX*</code> 匹配至少两个 <code>XX</code> 后跟随 0 或多个 <code>X</code>，有更方便的方式 <code>\{min, max\}</code> 完成这个任务，<code>min</code> 表示最少匹配多少次前面的正则表达式的模式，<code>max</code> 表示最多匹配多少次，必须使用转义字符转义。还有种特殊模式 <code>\{10\}</code> 表示前面的正则模式必须匹配 10 次，才算匹配上，如果只有一个数字 <code>\{1,\}</code>则表示至少出现一次到最长的那次，<code>+\{5,\}</code> 匹配至少五个加号，如果超过五个，匹配最长的那个。</p>
 <p><code>[A-Za-z]\{4,7\}</code> 匹配长度为 4 到 7 的字母串。<code>1,$s/^.\{10\}//</code> 删除每行开头的 10 个字符，如果不足 10 就不会删除，如果硬要删呢，使用 <code>1,$s/^.\{0,10\}//</code>。</p>
