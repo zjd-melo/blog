@@ -257,10 +257,11 @@
 <li>shell 没有数据类型的概念，统一当作字符串处理 <code>count=1</code> 这里的 1 会当作字符</li>
 </ul>
 <p>因为 shell 是一种解释型的语言，可以直接在终端上给变量赋值。</p>
-<h3 id="显示变量的值"><a href="#显示变量的值" class="headerlink" title="显示变量的值"></a>显示变量的值</h3><p>使用 <code>echo</code> 显示变量的值 <code>echo $var</code>，对 shell 来说 当 <code>$</code> 符号后跟几个字符时，<code>$</code> 是有特殊含义的，shell 在执行脚本时会进行 <code>variable substitution</code>。 </p>
+<h3 id="显示变量的值"><a href="#显示变量的值" class="headerlink" title="显示变量的值"></a>显示变量的值</h3><p>使用 <code>echo</code> 显示变量的值 <code>echo $var</code>，对 shell 来说 当 <code>$</code> 符号后跟几个字符时，<code>$</code> 是有特殊含义的，shell 在执行脚本时会进行 <code>variable substitution</code>。</p>
 <p>变量可以用在任何命令和任何地方，并且在执行之前会被 shell 替换。</p>
 <p><code>ls $my_bin</code>，<code>cd $my_bin</code>，<code>number=99</code> <code>echo There   are $number cats</code>。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">command=wc</span><br><span class="line">option=-l</span><br><span class="line">file=names</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash"><span class="built_in">command</span> <span class="variable">$option</span> <span class="variable">$file</span></span></span><br></pre></td></tr></tbody></table></figure>
+
 <p>shell 先进行变量替换再执行命令。</p>
 <h3 id="变量可以赋值给其他变量"><a href="#变量可以赋值给其他变量" class="headerlink" title="变量可以赋值给其他变量"></a>变量可以赋值给其他变量</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">val1=10</span><br><span class="line">val2=val1</span><br><span class="line">echo $val2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">跟想的不一样？</span></span><br><span class="line">val2=$val1  # this is better</span><br></pre></td></tr></tbody></table></figure>
 
@@ -273,6 +274,7 @@
 <p>注意 <code>dataflag=' '</code> 和前面的是不相同的，<code>dataflag</code> 此时保存的是一个空格。</p>
 <h3 id="Filename-Subsitution-and-Variables"><a href="#Filename-Subsitution-and-Variables" class="headerlink" title="Filename Subsitution and Variables"></a>Filename Subsitution and Variables</h3><p>有个 puzzle，<code>x=*</code> x 是什么，shell 会把字符 <code>*</code> 存到变量 <code>x</code> 中，还是把当前文件夹下所有的文件名存到 <code>x</code> 里面呢？答案是后者。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span></span> </span><br><span class="line">f1.txt</span><br><span class="line">f2.txt</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">x=*</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="variable">$x</span></span></span><br><span class="line">f1.txt f2.txt</span><br></pre></td></tr></tbody></table></figure>
+
 <p>从这个例子中可以学到很多，是在执行 <code>x=*</code> 的时候保存了文件名还是执行 <code>echo $x</code> 时 shell 执行替换呢？</p>
 <p>shell 在定义变量时并不会执行 <code>filename subsitution</code>，因此 <code>x=*</code>，只会把 <code>*</code> 赋值给 <code>x</code>，在变量替换后执行 <code>echo</code> 前会进行文件名替换。</p>
 <p>执行顺序：</p>
