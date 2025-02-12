@@ -253,7 +253,7 @@
 <ul>
 <li>单引号 <code>'</code></li>
 <li>双引号 <code>"</code></li>
-<li>backslash 反斜线 <code>\</code> </li>
+<li>backslash 反斜线 <code>\</code></li>
 <li>back quote 反引号 ```</li>
 </ul>
 <p>前两个和最后一个必须成对出现，第三个则可以在命令中出现多次，对于 shell 来说每个引号都有特殊的含义。</p>
@@ -266,6 +266,7 @@
 
 <p>如果用单引号括起来，甚至 <code>Enter</code> 键也会保留为命令参数的一部分：</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">'How are you today,</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="string">melon'</span></span></span><br><span class="line">How are you today,</span><br><span class="line">melon</span><br></pre></td></tr></tbody></table></figure>
+
 <p>在解析完第一行后，shell 发现引号还没匹配到，所以 shell 使用 <code>&gt;</code> 来提示用户输入结束的引号。</p>
 <p><code>&gt;</code> 叫做 <code>secondary prompt</code> 辅助提示符，每当 shell 等待用户完成输入多行命令时就会显示该字符。</p>
 <p>将包含空格或特殊字符的值分配给 shell 变量时也需要引号，尽管存在细微差别，如下所示：</p>
@@ -287,6 +288,7 @@
 <p>现在能看到没有引号、单引号、双引号之间的主要差别了，第一个例子中，shell 看到了 <code>*</code> 会进行文件名替换，第二个例子中，shell 忽略单引号中的内容，直接打印，最后一个例子中，双引号告诉 shell，变量名替换依然要执行，只不过是在双引号中执行，所以，shell 使用 <code>*</code> 替换了 <code>$filelist</code>，但是文件名替换不会在双引号中执行，所以 <code>*</code> 安全的传递给了 <code>echo</code>。</p>
 <p><strong>如果想要替换变量的值，但不希望 shell 专门解析替换后的字符，请将变量括在双引号内。</strong></p>
 <h3 id="双引号和没有引号的区别"><a href="#双引号和没有引号的区别" class="headerlink" title="双引号和没有引号的区别"></a>双引号和没有引号的区别</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">address=<span class="string">"39 East 12th</span></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="string">New York"</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="variable">$address</span></span></span><br><span class="line">39 East 12th New York</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">"<span class="variable">$address</span>"</span></span></span><br><span class="line">39 East 12th</span><br><span class="line">New York</span><br></pre></td></tr></tbody></table></figure>
+
 <p>注意在这个例子中，分配给 <code>address</code> 变量的值是包裹在单引号还是双引号中的并没有什么区别。无论哪种情况，shell 都会显示辅助命令提示符，以表明它正在等待相应的结束引号。</p>
 <p>第一个例子其实和 <code>echo one     two three</code> 一样，shell 从命令中移除空格、tabs 和 newlines（whitespace characters），然后分隔成多个参数传递给对应的命令。</p>
 <p><img src="/blog/2024/07/28/Shell%E4%B8%AD%E7%9A%84%E5%BC%95%E5%8F%B7/args.png" alt="args"></p>
@@ -301,12 +303,14 @@
 <p><code>echo \\</code> 和 <code>echo '\'</code> 效果一样。</p>
 <h3 id="Using-the-Backslash-for-Continuing-Lines"><a href="#Using-the-Backslash-for-Continuing-Lines" class="headerlink" title="Using the Backslash for Continuing Lines"></a>Using the Backslash for Continuing Lines</h3><p>之前提到 <code>\c</code> 和 <code>'c'</code> 等价，但是有个区别是当 <code>\</code> 作为一行中最后一个字符时：</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">单引号告诉 shell 忽略（保留）换行的特殊意义</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lines=one<span class="string">'</span></span>  </span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="string">'</span>two</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">"<span class="variable">$lines</span>"</span></span></span><br><span class="line">one</span><br><span class="line">two</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">lines=one\</span></span><br><span class="line"><span class="language-bash">&gt;two</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">"<span class="variable">$lines</span>"</span></span></span><br><span class="line">onetwo </span><br></pre></td></tr></tbody></table></figure>
+
 <p>当反斜线作为一行中最后一个字符出现时，shell 会把它当作 <code>line continuation character</code>，会移除换行就像没有敲过换行一样，通常用来输入很长的命令时使用。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Longinput="The shell treats a backslash that's the \</span><br><span class="line">last character of a line of input as a line \</span><br><span class="line">continuation. It removes the newline too."</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="The-Backslash-Inside-Double-Quotes"><a href="#The-Backslash-Inside-Double-Quotes" class="headerlink" title="The Backslash Inside Double Quotes"></a>The Backslash Inside Double Quotes</h3><p>之前提到反斜线是在双引号中被 shell 解释的三个字符之一（不会被忽略）。这意味着可以使用这些引号内的反斜杠来删除在双引号内解释的字符的含义（即其他反斜杠、美元符号、反引号、换行符和其他双引号）。</p>
 <p>如果反斜杠位于双引号内的任何其他字符之前，则 shell 会忽略反斜杠后字符的特殊意义并将其传递给程序：</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">"\$x"</span></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">x</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">"\ is the backslash character"</span></span></span><br><span class="line">\ is the backslash character</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">x=5</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">"The value of x is \"<span class="variable">$x</span>\""</span></span></span><br><span class="line">The value of x is "5"</span><br></pre></td></tr></tbody></table></figure>
+
 <p>在第一个示例中，反斜杠位于美元符号之前，因此 shell 会忽略美元符号，删除反斜杠，并将结果传递给 <code>echo</code>。在第二个示例中，反斜杠位于空格之前，双引号内的 shell 不会解释该空格。因此 shell 会忽略反斜杠并将其传递给 <code>echo</code> 命令。最后一个示例显示了用于将双引号括在双引号字符串内的反斜杠。</p>
 <h3 id="exercise"><a href="#exercise" class="headerlink" title="exercise"></a>exercise</h3><p>怎么打印 <code>&lt;&lt;&lt; echo $x &gt;&gt;&gt; displays the value of x, which is $x</code>。</p>
 <ol>
@@ -322,7 +326,7 @@
 </ul>
 <h3 id="The-Back-Quote"><a href="#The-Back-Quote" class="headerlink" title="The Back Quote"></a>The Back Quote</h3><p>反引号与之前遇到的任何类型的引号不同，因为它的目的不是保护 shell 中的字符，而是告诉 shell 用其输出替换所包含的命令。</p>
 <p>现在使用反引号通常不推荐，老的 shell 通常使用反引号，更好的方式是使用 <code>$()</code>。</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> The <span class="built_in">date</span> and time is: `<span class="built_in">date</span>`</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> Your current working directory is `<span class="built_in">pwd</span>`</span></span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo The date and time is: `date`</span><br><span class="line">echo Your current working directory is `pwd`</span><br></pre></td></tr></tbody></table></figure>
 
 <p>shell 能够识别反引号并期待一个命令包在反引号中，然后执行该命令并把输出替换到反引号的位置，然后在继续处理。</p>
 <h3 id="The-Construct"><a href="#The-Construct" class="headerlink" title="The $(...) Construct"></a>The <code>$(...)</code> Construct</h3><p>现在绝大多数的系统都支持这种语法。</p>
