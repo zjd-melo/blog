@@ -249,7 +249,7 @@
         <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>数据库索引是数据库中不同的数据结构。每个索引都需要单独的磁盘空间，因为它维护了被索引表的数据，从某种意义上来说完全是<br>冗余的，但是这种冗余是可以接受的，它避免了每次检索查询都查找表中的每一行数据。但是索引还有其他用途。</p>
 <p>SQL 语句中的 <code>WHERE</code> 子句定义了查询的条件，因此会利用索引的核心功能，快速定位数据。</p>
 <p>列是否被索引会影响表之间联接的执行效率。本质上，<code>JOIN</code> 操作允许将规范化数据模型中的数据转换为<br>非规范化形式，以实现特定的处理目的。由于 <code>JOIN</code> 操作组合了分散在许多表中的数据，因此需要从不同<br>页面进行更多读取，因此它们对磁盘查找延迟特别敏感，因此正确的索引会对响应时间产生很大影响。</p>
-<h2 id="JOIN"><a href="#JOIN" class="headerlink" title="JOIN"></a>JOIN</h2><p>查询时使用三种常见的 <code>JOIN</code> 算法（nested loops、hash join 和 ），但所有算法的相似之处在于它们一次仅处理两个表。</p>
+<h2 id="JOIN"><a href="#JOIN" class="headerlink" title="JOIN"></a>JOIN</h2><p>查询时使用三种常见的 <code>JOIN</code> 算法（nested loops、hash join 和 Sort merge join），但所有算法的相似之处在于它们一次仅处理两个表。</p>
 <p>涉及更多表的 SQL 查询需要多个步骤。首先，通过连接两个表形成一个中间表，然后再与另外一张表关联，以此类推。</p>
 <h2 id="Nested-loop-join"><a href="#Nested-loop-join" class="headerlink" title="Nested loop join"></a>Nested loop join</h2><p>nested loop join 是最基本的 join 算法。将其视为两个嵌套查询：外部（驱动）查询从一个表中获取<br>结果，第二个查询从另一个表中为驱动查询的每一行获取相应的数据。因此，嵌套循环连接最适合与要连接<br>的列上的索引配合使用。如果驱动查询返回较小的结果集，则嵌套循环联接可提供良好的性能。否则，<br>优化器可能会选择不同的连接算法。</p>
 <h2 id="Hash-join"><a href="#Hash-join" class="headerlink" title="Hash join"></a>Hash join</h2><p>哈希连接将候选记录从连接的一侧加载到哈希表中，可以非常快速地从连接的另一侧探测每一行。调整哈希连<br>接需要与嵌套循环连接完全不同的索引方法。由于连接是使用哈希表完成的，因此无需对要连接的列建立索引。<br>唯一可以提高散列连接性能的索引是连接的 WHERE 谓词或 ON 谓词中的列；事实上，这是哈希连接使用索引<br>的唯一时刻。实际上，哈希连接的性能是通过水平（更少的行）或垂直（更少的列）减小哈希表的大小来实现的。</p>
