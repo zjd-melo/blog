@@ -115,6 +115,7 @@ $ /usr/bin/time cal > /dev/null
 在最右边的 CPU 标题下，您可以看到 us、sy、id 和 wa 列中 CPU 时间的分布。这些分别列出了 CPU 在用户任务、系统（内核）任务、空闲时间和等待 I/O 上花费的时间百分比。
 
 ### iostat iotop pidstat
+
 iotop 是为数不多的显示线程 ID 的命令。
 
 ## cgroup
