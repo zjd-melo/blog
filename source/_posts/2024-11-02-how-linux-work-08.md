@@ -125,6 +125,7 @@ iotop 是为数不多的显示线程 ID 的命令。
 The Load Average which is also known as system load is a metric that indicates the average number of processes that were **runnable** or **waiting to be run** on system CPU over the last couple of minutes. This information helps you represent the overall system workload and identify potential performance. The load average is an important metric in Linux that reflects the average system load over specific time intervals.
 
 ### Load avg 是什么
+
 The load average represents the average number of processes in two states:
 1. Runnable
 These processes are ready to run on the CPU but might be waiting for their turn due to other processes already utilizing it.
