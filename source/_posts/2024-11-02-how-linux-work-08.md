@@ -80,6 +80,7 @@ However, if the load average is very high and you sense that the system is slowi
 检查整个系统内存状态的最简单方法之一是运行 `free` 命令或查看 `/proc/meminfo`，以查看缓存和缓冲区使用了多少实际内存。正如刚才提到的，内存短缺可能会导致性能问题。如果 caches 和 buffers 没有占用很多内存，那么很有可能内存资源不足了。
 
 #### How Memory Works
+
 之前提到过，CPU 有一个内存管理单元 memory management unit MMU 来增加访问内存的灵活性，内核通过将进程使用的内存分解为称为页面 pages 的较小块来协助 MMU。内核维护页表，page table，将进程的虚拟页面地址映射到内存中的真实页面地址。当进程访问内存时，MMU 会根据内核的页表将进程使用的虚拟地址转换为实际地址。用户进程实际上并不需要所有内存页面都立即可用才能运行。内核通常会在进程需要时加载和分配页面；该系统称为按需分页 on-demand paging 或简称为请求分页 demand paging。要了解其工作原理，请考虑程序如何启动并作为新进程运行：
 1. 内核将程序指令代码的开头加载到内存页面中。
 2. 内核可能会为新进程分配一些工作内存页面。
@@ -87,6 +88,7 @@ However, if the load average is very high and you sense that the system is slowi
 4. 类似地，如果程序需要的工作内存比最初分配的要多，内核就会通过查找空闲页面（或腾出空间）并将其分配给进程来处理这个问题。
 
 #### Page Faults
+
 如果进程想要使用内存页面时该页面尚未准备好，则该进程会触发页面错误。发生页面错误时，内核会从进程手中接管 CPU 以准备页面。页面错误有两种：minor and major.
 ##### Minor page faults
 当所需页面实际上位于主内存中，但 MMU 不知道它在哪里时，就会发生 minor 页面错误。当进程请求更多内存或 MMU 没有足够的空间来存储进程的所有页面位置时（MMU 的内部映射表通常很小），就会发生这种情况。在这种情况下，内核会将页面信息告知 MMU，并允许进程继续。minor 页面错误无需担心，许多页面错误都是在进程运行时发生的。当进程访问的内存页尚未在其工作集的物理内存中，但可以通过从操作系统的页面缓存中快速获得时，就会发生 minor page fault。
