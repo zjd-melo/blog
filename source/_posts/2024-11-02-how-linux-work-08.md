@@ -30,6 +30,7 @@ description: how linux work 08 - 进程和资源监控
 - strace system call trace
 - ltrace library trace
 ### strace
+
 sys call is a privileged opration that a user-space process asks the kernel to perform. 比如打开并读取文件。strace 工具打印一个进程的所有的系统调用。
 
 `strace cat /dev/null`，默认情况下，strace 输出到标准错误，可以使用 -o 选项把数据写入文件中，也可以使用 `2>` 重定向。
