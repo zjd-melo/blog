@@ -274,7 +274,7 @@
 <p><code>login shell</code> 和 <code>login</code> 程序不是一回事。</p>
 <p><img src="/blog/2024/07/17/Shell%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/user_login.png" alt="user_login.png"></p>
 <p>正如前面提到的，<code>init</code> 程序运行类似于 <code>getty</code> 的程序来进行网络连接。例如，<code>sshd</code>、<code>telnetd</code> 和 <code>rlogind</code> 分别通过 <code>ssh</code>、<code>telnet</code> 和 <code>rlogin</code> 应答连接请求。这些程序不是直接连接到特定的物理终端或调制解调器线路，<br>而是将用户的 <code>shell</code>(on server) 连接到 <code>pseudo-ttys</code>(on client)。无论你是通过网络、X Windows 屏幕还是通过网络终端连接程序登陆系统，使用 <code>who</code> 查看，都可以看到 <code>pts</code>。</p>
-<h2 id="Typing-Commands-to-the-Shell"><a href="#Typing-Commands-to-the-Shell" class="headerlink" title="Typing Commands to the Shell"></a>Typing Commands to the Shell</h2><p>当 shell 启动后，会终端显示一个 <code>command prompt</code>，通常是一个 <code>$</code> 符合，并等待用户输入命令。每次输入命令并回车后，shell 都会分析输入的内容并且执行相关命令响应用户请求。</p>
+<h2 id="Typing-Commands-to-the-Shell"><a href="#Typing-Commands-to-the-Shell" class="headerlink" title="Typing Commands to the Shell"></a>Typing Commands to the Shell</h2><p>当 shell 启动后，会终端显示一个 <code>command prompt</code>，通常是一个 <code>$</code> 符号，并等待用户输入命令。每次输入命令并回车后，shell 都会分析输入的内容并且执行相关命令响应用户请求。</p>
 <p>如果我们向 <code>shell</code> 请求调用一个特定的程序，<code>shell</code> 会根据 <code>PATH</code> 变量指定的路径搜索相关目录直到找到为止。当找到对应的程序后，<code>shell</code> 会 <code>clone</code> 一个自己(<code>subshell</code>)，并请求内核使用找到的程序替代 <code>subshell</code>，然后<br><code>login shell</code> 会”挂起”直到对应的程序执行完毕。内核复制指定程序开始执行程序对应的指令。复制的程序被叫做 <code>process</code>。这样，保存在磁盘文件中的程序和内存中逐行执行的进程就产生了区别。</p>
 <p>如果执行的程序向标准输出写入内容，如果没有重定向或者使用管道，那么这些内容就会出现在终端上。同样如果标准输入没有被重定向或使用管道，那么就会等待用户的输入。</p>
 <p>当对应的程序执行完毕，它就会从内存中消失，并且控制权重新回到 <code>login shell</code>，并给出命令行提示符，等待用户输入。</p>
