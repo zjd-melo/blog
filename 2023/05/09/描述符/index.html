@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>12k</span>
+              <span>13k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -295,15 +295,19 @@
 </ul>
 <p><strong>data descriptor</strong>  define <code>__set__</code> or <code>__delete__</code></p>
 <p><strong>non-data descriptor</strong> only define <code>__get__</code></p>
-<p><strong>DIFFS</strong></p>
+<p>区别：<strong>DIFFS</strong></p>
 <p>Data and non-data descriptors differ in how overrides are calculated with respect to entries in an instance’s dictionary.</p>
 <ul>
 <li>If an instance’s dictionary has an entry with the same name as a data descriptor, the data descriptor takes precedence.</li>
 <li>If an instance’s dictionary has an entry with the same name as a non-data descriptor, the dictionary entry takes precedence.</li>
 </ul>
 <p>To make a read-only data descriptor, define both <code>__get__()</code> and <code>__set__()</code>with the <code>__set__()</code> raising an AttributeError<br>when called. Defining the <code>__set__()</code> method with an exception raising placeholder is enough to make it a data descriptor.</p>
+<p>如何初始化值呢？</p>
+<ol>
+<li>提供一个方法直接操作 <code>__dict__</code>;</li>
+</ol>
 <h3 id="描述符的调用-⭐"><a href="#描述符的调用-⭐" class="headerlink" title="描述符的调用 ⭐"></a>描述符的调用 ⭐</h3><hr>
-<p>obj.x 关于描述符的调用顺序取决obj是什么，object, class, or instance of super？</p>
+<p>obj.x 关于描述符的调用顺序取决 obj 是什么，object, class, or instance of super？</p>
 <h4 id="invocation-from-an-object-⭐"><a href="#invocation-from-an-object-⭐" class="headerlink" title="invocation from an object ⭐"></a>invocation from an object ⭐</h4><hr>
 <p>instance.x 表达式会发生如下操作，数据描述符描述符具有最高优先级</p>
 <ol>
@@ -316,7 +320,9 @@
 <p><strong>The logic for a dotted lookup is in <code>object.__getattribute__()</code></strong></p>
 <p>注意：<code>__getattribute__</code> 中没有 <code>__getattr__()</code> hook</p>
 <p>That is why calling <code>__getattribute__()</code> directly or with <code>super().__getattribute__</code> will bypass <code>__getattr__()</code> entirely.</p>
-<p>dot operator 和 getattr() 函数负责当 <code>__getarribute__()</code> 抛出 AttributeError 时调用 <code>__getattr__</code>. 这些逻辑封装在一个helper function中</p>
+<p>dot operator 和 getattr() 函数负责当 <code>__getarribute__()</code> 抛出 AttributeError 时调用 <code>__getattr__</code>. 这些逻辑封装在一个helper function 中。</p>
+<p><code>__getattribute__</code> 几乎每次都会触发，只有在该函数跑出 AttributeError 时，<code>__getattr__</code> 才会被调用（最后一步尝试）。</p>
+<p>描述符的逻辑在 <code>__getattribute__</code> 函数内，最好谨慎覆盖该函数，一般都用 <code>__getattr__</code>。</p>
 <p>⭐</p>
 <figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">find_name_in_mro</span>(<span class="params">cls, name, default</span>):</span><br><span class="line">    <span class="keyword">for</span> base <span class="keyword">in</span> cls.__mro__:</span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">in</span> <span class="built_in">vars</span>(base):</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">vars</span>(base)[name]</span><br><span class="line">    <span class="keyword">return</span> default</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">object_getattribute</span>(<span class="params">obj, name</span>):</span><br><span class="line">    null = <span class="built_in">object</span>()</span><br><span class="line">    objtype = <span class="built_in">type</span>(obj)  <span class="comment"># 对象的类</span></span><br><span class="line">    cls_var = find_name_in_mro(objtype, name, null)  <span class="comment"># 类的属性</span></span><br><span class="line">    descr_get = <span class="built_in">getattr</span>(<span class="built_in">type</span>(cls_var), <span class="string">'__get__'</span>, null)  <span class="comment"># 是否定义 __get__</span></span><br><span class="line">    <span class="keyword">if</span> descr_get <span class="keyword">is</span> <span class="keyword">not</span> null:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">hasattr</span>(<span class="built_in">type</span>(cls_var), <span class="string">'__set__'</span>) <span class="keyword">or</span> (<span class="built_in">hasattr</span>(<span class="built_in">type</span>(cls_var), <span class="string">'__delete__'</span>)):</span><br><span class="line">            <span class="keyword">return</span> descr_get(cls_var, obj, objtype)  <span class="comment"># 数据描述符</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">hasattr</span>(obj, <span class="string">'__dict__'</span>) <span class="keyword">and</span> name <span class="keyword">in</span> <span class="built_in">vars</span>(obj):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">vars</span>(obj)[name]  <span class="comment"># instance variable</span></span><br><span class="line">    <span class="keyword">if</span> descr_get <span class="keyword">is</span> <span class="keyword">not</span> null:</span><br><span class="line">        <span class="keyword">return</span> descr_get(cls_var, obj, objtype)  <span class="comment"># 非数据描述符</span></span><br><span class="line">    <span class="keyword">if</span> cls_var <span class="keyword">is</span> <span class="keyword">not</span> null:</span><br><span class="line">        <span class="keyword">return</span> cls_var  <span class="comment"># class variable</span></span><br><span class="line">    <span class="keyword">raise</span> AttributeError(name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># helper function</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getattr_hook</span>(<span class="params">obj, name</span>):</span><br><span class="line">    <span class="string">"Emulate slot_tp_getattr_hook() in Objects/typeobject.c"</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> obj.__getattribute__(name)</span><br><span class="line">    <span class="keyword">except</span> AttributeError:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">hasattr</span>(<span class="built_in">type</span>(obj), <span class="string">'__getattr__'</span>):</span><br><span class="line">            <span class="keyword">raise</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">type</span>(obj).__getattr__(obj, name)  <span class="comment"># __getattr__</span></span><br></pre></td></tr></tbody></table></figure>
 
@@ -333,7 +339,7 @@
 <li>Non-data descriptors may be overridden by instance dictionaries.</li>
 </ol>
 <h3 id="Automatic-name-notification"><a href="#Automatic-name-notification" class="headerlink" title="Automatic name notification"></a>Automatic name notification</h3><hr>
-<p>发生在类定义的时候由元类调用 <code>__set_name__()</code>，如果在类定义后手动添加descriptor，则需要手动调用 <code>__set_name__</code>.</p>
+<p>发生在类定义的时候由元类调用 <code>__set_name__()</code>，如果在类定义后手动添加 descriptor，则需要手动调用 <code>__set_name__</code>.</p>
 <p>Sometimes it is desirable for a descriptor to know what class variable name it was assigned to.</p>
 <p>When a new class is created, the type metaclass scans the dictionary of the new class. If any of the entries are descriptors and if they define <code>__set_name__()</code>, that method is called with two arguments. The owner is the class where the descriptor is used, and the name is the class variable the descriptor was assigned to.</p>
 <p>Since the update logic is in <code>type.__new__()</code>, notifications only take place at the time of class creation.<br>If descriptors are added to the class afterwards, <code>__set_name__()</code> will need to be called manually.</p>
