@@ -6,8 +6,10 @@ tags:
 description: how this site was built.
 ---
 
-**hexo** 
+```shell
+hexo
 
-**hexo-theme-next**
+hexo-theme-next
 
-**github pages**
+github pages
+```
