@@ -252,16 +252,16 @@
 <h3 id="shift-codes"><a href="#shift-codes" class="headerlink" title="shift codes"></a>shift codes</h3><p>换挡码，一个编码在不同上下文中有不同的含义，即一个编码有双重身份， 它改变了作用域内编码的含义，直到作用域结束。</p>
 <h3 id="escape-codes"><a href="#escape-codes" class="headerlink" title="escape codes"></a>escape codes</h3><p>逃逸码/转义码</p>
 <p>大写字母标识符标识紧随它的字母(而且仅仅是紧随它的字母)应该被译为大写，类似这样的编码被称为”逃逸码”，逃逸码让你”逃逸”对编码串单调的、一成不变的解析，而转入一种新的解析方式中。</p>
-<h3 id="bus-总线"><a href="#bus-总线" class="headerlink" title="bus 总线"></a>bus 总线</h3><p>在一些小型的计算机中，一块电路板足以容纳所有的集成电路，但这种情况并不常见，通常遇到的是另外一种情况，计算机中的各个部件按照功能被分别安装在两个或更多的电路板上，这些电路板之间通过总线通信。总线就是数字信号的集合，这些信号提供给计算机上的每块电路板。通常把这些信号分为四类。 </p>
+<h3 id="bus-总线"><a href="#bus-总线" class="headerlink" title="bus 总线"></a>bus 总线</h3><p>在一些小型的计算机中，一块电路板足以容纳所有的集成电路，但这种情况并不常见，通常遇到的是另外一种情况，计算机中的各个部件按照功能被分别安装在两个或更多的电路板上，这些电路板之间通过总线通信。总线就是数字信号的集合，这些信号提供给计算机上的每块电路板。通常把这些信号分为四类。</p>
 <ul>
 <li><p>地址信号</p>
-<p>  这些信号由微处理器产生，通常用来对RAM进行寻址操作，当然也可以用来对连接到计算机的其他设备进行寻址操作。</p>
+<p>  这些信号由微处理器产生，通常用来对 RAM 进行寻址操作，当然也可以用来对连接到计算机的其他设备进行寻址操作。</p>
 </li>
 <li><p>数据输出信号</p>
-<p>  这些信号由微处理器产生的，用来把数据写入到RAM或其他设备</p>
+<p>  这些信号由微处理器产生的，用来把数据写入到 RAM 或其他设备</p>
 </li>
 <li><p>数据输入信号</p>
-<p>  这些信号由计算机的其他部分提供，由微处理器读取，通常情况下数据输入信号由RAM输出</p>
+<p>  这些信号由计算机的其他部分提供，由微处理器读取，通常情况下数据输入信号由 RAM 输出</p>
 </li>
 <li><p>控制信号</p>
 <p>  这些信号多种多样，通常与计算机中特定的微处理器相对应</p>
@@ -270,12 +270,12 @@
 <p>总线还可以为不同的电路板供电</p>
 <h3 id="PCIe-PCI-E"><a href="#PCIe-PCI-E" class="headerlink" title="PCIe PCI-E"></a>PCIe PCI-E</h3><p>Peripheral Component Interconnect Express<br>总线协议</p>
 <h3 id="RAM"><a href="#RAM" class="headerlink" title="RAM"></a>RAM</h3><p>RAM size = 2 的 地址信号个数次幂</p>
-<h4 id="SRAM"><a href="#SRAM" class="headerlink" title="SRAM"></a>SRAM</h4><p>static RAM 用于CPU缓存<br>按 CPU 每个机器周期能对内存的访问次数分为 </p>
+<h4 id="SRAM"><a href="#SRAM" class="headerlink" title="SRAM"></a>SRAM</h4><p>static RAM 用于CPU缓存<br>按 CPU 每个机器周期能对内存的访问次数分为</p>
 <ul>
-<li>SARAM single access </li>
+<li>SARAM single access</li>
 <li>DARAM dual access</li>
 </ul>
-<h4 id="DRAM"><a href="#DRAM" class="headerlink" title="DRAM"></a>DRAM</h4><p>dynamic RAM用于内存，一般需要定期访问数据，即refresh，需要外围电路支持</p>
+<h4 id="DRAM"><a href="#DRAM" class="headerlink" title="DRAM"></a>DRAM</h4><p>dynamic RAM 用于内存，一般需要定期访问数据，即 refresh，需要外围电路支持</p>
 <ul>
 <li>SDRAM Synchronous DRAM  早期的内存条，和 CPU 外频率一致</li>
 <li>DDRSDRAM Dual data rate 利用了信号的下降沿</li>
@@ -291,7 +291,7 @@
 <h3 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h3><p>printed circuit board 印刷电路板</p>
 <h3 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h3><p>Redundant arrays of independent disks 独立硬盘冗余阵列</p>
 <h3 id="显示器"><a href="#显示器" class="headerlink" title="显示器"></a>显示器</h3><h4 id="分辨率-resolution"><a href="#分辨率-resolution" class="headerlink" title="分辨率 resolution"></a>分辨率 resolution</h4><p>显示器分辨率是指可再现图像细节的级别，分辨率越高，显示的影像越高。</p>
-<p><strong>显示器分辨率涉及以下几种因素</strong></p>
+<p>显示器分辨率涉及以下几种因素。</p>
 <h4 id="像素-pixel"><a href="#像素-pixel" class="headerlink" title="像素 pixel"></a>像素 pixel</h4><p>像素是图像元素的简称，像素是组成屏幕的微小圆点，每个像素由红色、绿色和蓝色组成（RGB）。</p>
 <h4 id="点距"><a href="#点距" class="headerlink" title="点距"></a>点距</h4><p>点距是屏幕上像素之间的距离，点距越小，生成的图像越好。</p>
 <h4 id="对比度-明暗比"><a href="#对比度-明暗比" class="headerlink" title="对比度 明暗比"></a>对比度 明暗比</h4><p>指最亮点（白色）与最暗点（黑色）之间光强差异的测量，目前尚无标准，只能用肉眼观察。</p>
