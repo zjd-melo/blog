@@ -226,7 +226,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>689</span>
+              <span>795</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -250,15 +250,15 @@
 <p>变量（Variables）和常量（constants）是一个程序中基本的操作对象。<br>对象的类型决定了值域和对应的操作。</p>
 </blockquote>
 <hr>
-<p><strong>lower case for variable names</strong></p>
-<p><strong>upper case for symbolic constant</strong></p>
-<p>At least the first 31 characters of an internal name are significant. For function names and external variables, the number may be less than 31, because external names may be used by assemblers and loaders over which the language has no control. For external names, the standard guarantees uniqueness only for 6 characters and a single case.<br>不同编译器有不同的实现。</p>
+<p>约定：<strong>lower case for variable names</strong>，<strong>upper case for symbolic constant</strong></p>
+<p>At least the first 31 characters of an internal name are significant. For function names and external variables, the number may be less than 31, because external names may be used by assemblers and loaders over which the language has no control. For external names, the standard guarantees uniqueness only for 6 characters and a single case.<br>在早期 C 标准中，局部变量名至少前 31 个字符有意义；<br>而函数名和全局变量名因为依赖汇编器/链接器，可能更短，标准只保证前 6 个字符（不分大小写）有效，所以名字过长或大小写不同可能被当成同一个符号。<br>不同编译器有不同的实现。</p>
 <h3 id="数据类型和长度"><a href="#数据类型和长度" class="headerlink" title="数据类型和长度"></a>数据类型和长度</h3><p>C语言中的类型很少：<code>char</code>, <code>int</code>, <code>float</code>, <code>double</code></p>
-<p>除此之外还有一些qualifiers可以修饰这些类型<br>比如 <code>short</code>, <code>long</code>, <code>signed</code>, <code>unsigned</code></p>
+<p>除此之外还有一些 qualifiers 可以修饰这些类型<br>比如 <code>short</code>, <code>long</code>, <code>signed</code>, <code>unsigned</code></p>
 <figure class="highlight c"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">short</span> <span class="type">int</span> sh;</span><br><span class="line"><span class="type">long</span> <span class="type">int</span> counter;</span><br><span class="line"><span class="comment">// int 可以省略</span></span><br></pre></td></tr></tbody></table></figure>
-<p><code>short</code> 和 <code>long</code> 的目的是提供不同长度的整型数据，<code>int</code>一般是机器的 nature size<br><code>short</code> 一般是 16 bits，<code>int</code>一般是16 bits 或者 32 bits，取决于编译器</p>
+
+<p><code>short</code> 和 <code>long</code> 的目的是提供不同长度的整型数据，<code>int</code>一般是机器的 nature size<br><code>short</code> 一般是 16 bits，<code>int</code>一般是 16 bits 或者 32 bits，取决于编译器</p>
 <p>&lt;limits.h&gt;  和 &lt;float.h&gt; 中定义了关于类型大小的符号常量。</p>
-<p><strong>写一个程序打印各个类型的取值范围</strong></p>
+<p>Q：<strong>写一个程序打印各个类型的取值范围</strong></p>
 
     </div>
 
