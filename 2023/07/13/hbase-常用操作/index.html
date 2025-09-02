@@ -226,14 +226,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.7k</span>
+              <span>4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>4 mins.</span>
             </span>
             <div class="post-description">HBase 常用操作</div>
 
@@ -248,6 +248,9 @@
       
         <h3 id="复制表"><a href="#复制表" class="headerlink" title="复制表"></a>复制表</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">disable 't_table'</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建快照</span></span><br><span class="line">snapshot 't_table', 't_table_snapshot'</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从快照中恢复到新的表</span></span><br><span class="line">clone_snapshot 't_table_snapshot', 't_table_new'</span><br><span class="line">delete_snapshot 't_table_snapshot'</span><br><span class="line">enable 't_table'</span><br></pre></td></tr></tbody></table></figure>
 
+<p>注意：这种方式存在 bug，见 <a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/HBASE-25206">HBASE-25206</a>。</p>
+<p>使用快照实现复制表，是通过 HFileLink 实现的，如果原表有更新操作，会创建新的 HFile，可以认为是一种 copy on write，如果原表更新很频繁，会复制很多 HFile，相当于把复制表的开销平摊到写入时，如果要复制表实现备份并且原表后续有写入操作建议使用其他方法实现，快照方式更适用于表的重命名。</p>
+<p>这里使用自带的复制工具。<br><code>hbase org.apache.hadoop.hbase.mapreduce.CopyTable --new.name=Y X;</code><br>Y 为新表名，X 为要复制的表。该工具还有其他参数，比如可以指定 rowkey 范围复制，还可以指定复制多少个版本的数据，还有其他选项。</p>
 <h3 id="修改表-schema"><a href="#修改表-schema" class="headerlink" title="修改表 schema"></a>修改表 schema</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alter 't_table', {NAME=&gt;'cf', COMPRESSION=&gt;'none'}</span><br><span class="line">flush 't_table'</span><br><span class="line">major_compact 't_table'</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查询单行数据的多个版本</span></span><br><span class="line">get 't_table', '0001', {COLUMN=&gt;'cf:name', VERSIONS=&gt;10}</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">RAW=&gt;<span class="literal">true</span> 可以查看 tombstones</span></span><br><span class="line">scan 't_table', {RAW=&gt;true, VERSIONS=&gt;5}</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">STOPROW,</span> </span><br><span class="line">scan 't_table', {RAW=&gt;true, VERSIONS=&gt;100, STARTROW=&gt;'2663_1392913', LIMIT=&gt;1}</span><br></pre></td></tr></tbody></table></figure>
@@ -260,11 +263,12 @@
 <h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><h4 id="Delete-marker-（tombstone）"><a href="#Delete-marker-（tombstone）" class="headerlink" title="Delete marker （tombstone）"></a>Delete marker （tombstone）</h4><p>三种删除标记</p>
 <ol>
 <li>Delete        删除特定列列指定的版本</li>
-<li>DeleteColumn  删除特定列的所有版本 </li>
+<li>DeleteColumn  删除特定列的所有版本</li>
 <li>DeleteFamily  删除特定列族所有列</li>
 </ol>
-<p><strong>DeleteColumn,DeleteFamily 都能删除特定时间版本之前的数据，而 Delete mark，只能删除当前版本即一个cell</strong></p>
+<p>注意：<strong>DeleteColumn,DeleteFamily 都能删除特定时间版本之前的数据，而 Delete mark，只能删除当前版本即一个cell</strong></p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">put 't_table', '0001', 'cf1:name', 'name1', 1</span><br><span class="line">put 't_table', '0001', 'cf1:name', 'name2', 2</span><br><span class="line">put 't_table', '0001', 'cf1:name', 'name3', 3</span><br><span class="line">put 't_table', '0001', 'cf1:name', 'name4', 4</span><br><span class="line">put 't_table', '0001', 'cf1:name', 'name5', 5</span><br><span class="line">put 't_table', '0001', 'cf1:name', 'name7', 7</span><br><span class="line">put 't_table', '0001', 'cf1:age', '1', 1</span><br><span class="line">put 't_table', '0001', 'cf1:age', '2', 2</span><br><span class="line">put 't_table', '0001', 'cf1:age', '3', 3</span><br><span class="line">put 't_table', '0001', 'cf1:age', '4', 4</span><br><span class="line">put 't_table', '0001', 'cf1:age', '5', 5</span><br><span class="line">put 't_table', '0001', 'cf2:name', 'name1', 1</span><br><span class="line">put 't_table', '0001', 'cf2:name', 'name2', 2</span><br><span class="line">put 't_table', '0001', 'cf2:name', 'name3', 3</span><br><span class="line">put 't_table', '0001', 'cf2:name', 'name4', 4</span><br><span class="line">put 't_table', '0001', 'cf2:name', 'name5', 5</span><br><span class="line">put 't_table', '0001', 'cf2:age', '1', 1</span><br><span class="line">put 't_table', '0001', 'cf2:age', '2', 2</span><br><span class="line">put 't_table', '0001', 'cf2:age', '3', 3</span><br><span class="line">put 't_table', '0001', 'cf2:age', '4', 4</span><br><span class="line">put 't_table', '0001', 'cf2:age', '5', 5</span><br></pre></td></tr></tbody></table></figure>
+
 <figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> happybase</span><br><span class="line"></span><br><span class="line">conn = happybase.Connection(host=<span class="string">'172.19.14.142'</span>, port=<span class="number">9090</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># DeleteFamily mark，时间戳为当前时间，相当于删除当前行</span></span><br><span class="line">conn.table(<span class="string">'t_table'</span>).delete(<span class="string">'0001'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># DeleteFamily mark，删除 cf1 列族的 [1, 3]</span></span><br><span class="line">conn.table(<span class="string">'t_table'</span>).delete(<span class="string">'0001'</span>, columns=[<span class="string">'cf1'</span>], timestamp=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># DeleteColumn mark，删除 cf1:name [1, 5]</span></span><br><span class="line">conn.table(<span class="string">'t_table'</span>).delete(<span class="string">'0001'</span>, columns=[<span class="string">'cf1:name'</span>], timestamp=<span class="number">5</span>)</span><br><span class="line"><span class="comment"># DeleteColumn mark，删除当前行所有列族时间小于等于5的版本</span></span><br><span class="line">conn.table(<span class="string">'t_table'</span>).delete(<span class="string">'0001'</span>, timestamp=<span class="number">5</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># DeleteColumn mark，删除 cf1:name [1, current_ts]</span></span><br><span class="line">conn.table(<span class="string">'t_table'</span>).delete(<span class="string">'0001'</span>, columns=[<span class="string">'cf1:name'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># happybase 没法模拟 Delete 标记，并且 hbase shell 的行为不好理解</span></span><br></pre></td></tr></tbody></table></figure>
 
     </div>
@@ -424,13 +428,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">352k</span>
+    <span title="Symbols count total">353k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">5:20</span>
+    <span title="Reading time total">5:21</span>
 </div>
 
         
