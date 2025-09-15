@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="内部结构和设计原则-part1_1 Computer System Overview">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS 内部结构和设计原则-part1_1">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="内部结构和设计原则-part1_1 Computer System Overview">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/basic_elements.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/instruction_cycle.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/IO.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/interupt.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/interrupt_cycle.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/short_io.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/long_io.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/multiple_interupts.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/memory.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/cache.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/cache_memory.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/cache_read.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/SMP.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/multicore.png">
+<meta property="article:published_time" content="2025-09-13T01:23:16.000Z">
+<meta property="article:modified_time" content="2025-09-13T01:23:16.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/basic_elements.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>OS 内部结构和设计原则-part1_1 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">87</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OS 内部结构和设计原则-part1_1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-13 09:23:16" itemprop="dateCreated datePublished" datetime="2025-09-13T09:23:16+08:00">2025-09-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/OS/" itemprop="url" rel="index"><span itemprop="name">OS</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>13 mins.</span>
+            </span>
+            <div class="post-description">内部结构和设计原则-part1_1 Computer System Overview</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Learning-Objectives"><a href="#Learning-Objectives" class="headerlink" title="Learning Objectives"></a>Learning Objectives</h2><ul>
+<li>描述计算机系统的基本元素和它们内在的关系</li>
+<li>解释处理器执行指令时采取的步骤</li>
+<li>理解中断的概念，并且处理器怎样以及为什么要使用中断</li>
+<li>列出并描述典型计算机内存层次结构的级别。</li>
+<li>解释多处理器系统（multiprocessor system）和多核计算机（multicore）的基本特征</li>
+<li>讨论局部性 locality 的概念并分析多级内存层次结构的性能</li>
+<li>了解堆栈的操作及其用于支持过程调用和返回的功能</li>
+</ul>
+<blockquote>
+<p>操作系统 (OS) 利用一个或多个处理器的硬件资源为系统用户提供一组服务。OS 还代表用户管理辅助内存和 I/O（输入/输出）设备。因此，在开始研究操作系统之前，了解底层计算机系统硬件非常重要。</p>
+</blockquote>
+<hr>
+<h2 id="基本要素"><a href="#基本要素" class="headerlink" title="基本要素"></a>基本要素</h2><p>从顶层来看，计算机由处理器、内存和 I/O 组件组成，每种类型都有一个或多个模块。这些组件以某种方式互连，以实现计算机的主要功能，即执行程序。因此，计算机有四个主要结构元素：</p>
+<ul>
+<li>Processor<br> 控制计算机的运行并执行其数据处理功能。当只有一个处理器时，通常称为中央处理器 (CPU)。</li>
+<li>Main memory<br>  存储数据和程序。这类内存通常具有易失性；也就是说，当计算机关闭时，内存中的内容会丢失。相比之下，即使计算机系统关闭，磁盘内存中的内容也会保留。主内存也称为实内存（real memory）或主存储器（primary memory）。</li>
+<li>I/O modules<br> 在计算机及其外部环境之间移动数据。外部环境由各种设备组成，包括辅助存储设备（例如磁盘）、通信设备和终端。</li>
+<li>System Bus<br> 提供处理器、主存储器和 I/O 模块之间的通信。</li>
+</ul>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/basic_elements.png" alt="计算机基本要素"></p>
+<p>上图描述了这些顶层组件。处理器的功能之一是与内存交换数据。为此，它通常使用两个内部（对处理器而言）寄存器：一个内存地址寄存器 (MAR)，用于指定下一次读写操作在内存中的地址；以及一个内存缓冲寄存器 (MBR)，用于包含要写入内存的数据，或接收从内存读取的数据。同样，I/O 地址寄存器 (I/OAR) 指定特定的 I/O 设备。I/O 缓冲寄存器 (I/OBR) 用于在 I/O 模块和处理器之间交换数据。</p>
+<p>MBR 一般多大？有几个？</p>
+<p>MBR（Memory Buffer Register / Memory Data Register） 的位数，通常与数据总线宽度相同。</p>
+<p>严格来说，MBR（Memory Buffer Register / Memory Data Register）在 CPU 里只有一个，它是 CPU 与主存之间的“数据缓冲寄存器”。原因是：每次 CPU 访问内存（读或写），都需要经过 MAR（地址寄存器）+ MBR（数据寄存器） 的配合：</p>
+<ol>
+<li>读内存：地址 → MAR，内存把该地址的数据放到 MBR，CPU 再从 MBR 取走。</li>
+<li>写内存：数据 → MBR，地址 → MAR，控制信号写入内存。</li>
+</ol>
+<p>所以 MBR 是一个通道，不需要多个。<br>但这里有两个扩展点：</p>
+<p>MBR 的物理实现</p>
+<ul>
+<li><p>在 CPU 内部，它可能是由一组触发器/寄存器阵列组成的，不是单一一个物理寄存器。</p>
+</li>
+<li><p>但从逻辑概念上来说，CPU 设计里只定义了一个 MBR。</p>
+</li>
+</ul>
+<p>现代 CPU 的扩展：</p>
+<ul>
+<li><p>有的教材会把 输入缓冲寄存器（IBR, Instruction Buffer Register）或 指令寄存器 IR 单独拿出来。</p>
+</li>
+<li><p>多核 CPU / 多通道存储时，每个核或通道可能各有一个“MBR 等效结构”</p>
+</li>
+</ul>
+<p>所以：单核 CPU：1 个 MBR（逻辑上）。多核/多通道 CPU：每个核或通道都有自己的数据缓冲，但那已经超出了“经典组成原理”的 MBR 定义</p>
+<p>内存模块由一组按顺序编号的地址定义的位置组成。每个位置包含一个位模式，可以解释为指令或数据。I/O 模块将数据从外部设备传输到处理器和内存，反之亦然。它包含内部缓冲区，用于临时存储数据，直到可以发送为止。当前计算机内存一般以字节为单位寻址。</p>
+<hr>
+<h2 id="指令执行"><a href="#指令执行" class="headerlink" title="指令执行"></a>指令执行</h2><p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/instruction_cycle.png" alt="指令周期"></p>
+<p>处理器执行的程序由存储在内存中的一组指令组成。最简单的指令处理过程包含两个步骤：处理器一次从内存中读取（提取）一条指令，并执行每条指令。程序执行由重复的指令提取和指令执行过程组成。指令执行可能涉及多个操作，具体取决于指令的性质。</p>
+<p>单条指令所需的处理过程称为一个指令周期。图中用简化的两步描述来描述指令周期。这两个步骤分别称为取指阶段和执行阶段。只有当处理器关闭、发生某种不可恢复的错误或遇到导致处理器停止的程序指令时，程序执行才会停止。</p>
+<p>在每个指令周期开始时，处理器都会从内存中读取一条指令。通常，程序计数器 (PC) 保存着下一条待读取指令的地址。除非另有指示，否则处理器每次读取指令后都会递增 PC，以便按顺序读取下一条指令（即位于下一个更高内存地址的指令）。例如，假设一台简化的计算机，其中每条指令占用一个 16 位的内存字。假设程序计数器设置为位置 300。处理器接下来将从位置 300 读取指令。在接下来的指令周期中，它将从位置 301、302、303 等位置读取指令。此顺序可能会有所改变。</p>
+<p>提取的指令被加载到指令寄存器 (IR) 中。指令中包含一些位，用于指定处理器要执行的操作。处理器解释指令并执行所需的操作。通常，这些操作分为四类：</p>
+<ol>
+<li>Processor-memory: Data may be transferred from processor to memory, or from memory to processor.</li>
+<li>Processor-I/O:Datamaybetransferredtoorfromaperipheraldevicebytrans- ferring between the processor and an I/O module.</li>
+<li>Data processing: The processor may perform some arithmetic or logic opera- tion on data.</li>
+<li>Control: An instruction may specify that the sequence of execution be altered. For example, the processor may fetch an instruction from location 149, which specifies that the next instruction be from location 182. The processor sets the program counter to 182. Thus, on the next fetch stage, the instruction will be fetched from location 182 rather than 150.</li>
+</ol>
+<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><p>中断的分类：</p>
+<ol>
+<li>Program: 由指令执行过程中发生的某些情况生成，例如算术溢出、除以零、尝试执行非法机器指令或引用用户允许的内存空间之外的内容。</li>
+<li>Timer: 由处理器内的计时器生成。这使得操作系统能够定期执行某些功能。</li>
+<li>I/O: 由 I/O 控制器生成，用于表示操作正常完成或表示各种错误情况。</li>
+<li>Hardware failure: 由故障产生，例如电源故障或内存奇偶校验错误。</li>
+</ol>
+<p>几乎所有计算机都提供了一种机制，允许其他模块（I/O、内存）中断处理器的正常顺序。</p>
+<p>中断的主要作用是提高处理器的利用率。例如，大多数 I/O 设备的运行速度都比处理器慢得多。假设处理器正在向打印机传输数据。每次写入操作后，处理器必须暂停并保持空闲状态，直到打印机跟上。这种暂停的时间可能长达数千甚至数百万个指令周期。显然，这非常浪费处理器的性能。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/IO.png" alt="IO"></p>
+<p>举一个具体的例子，考虑一台运行速度为 1 GHz 的 PC，它每秒大约允许执行 10^9 条指令。典型的硬盘转速为每分钟 7200 转，半磁道旋转时间为 4 毫秒，比处理器慢 400 万倍。</p>
+<p>如图中 a 所示，用户程序执行一系列与处理交错的 WRITE 调用。实心垂直线表示程序中的代码段。代码段 1、2 和 3 指的是不涉及 I/O 的指令序列。WRITE 调用指向一个 I/O 例程，该例程是一个系统实用程序，将执行实际的 I/O 操作。该 I/O 程序由三部分组成：</p>
+<ol>
+<li>图中 a 标记为 4 的一系列指令，用于准备实际的 I/O 操作。这可能包括将要输出的数据复制到特殊缓冲区，以及准备设备命令的参数。</li>
+<li>实际的 I/O 命令。如果不使用中断，一旦发出此命令，程序必须等待 I/O 设备执行请求的功能（或定期检查 I/O 设备的状态，即轮询 I/O 设备）。程序可以通过简单地重复执行测试操作来确定 I/O 操作是否完成来等待。</li>
+<li>完成操作的一系列指令（图a中标记为 5）。这可能包括设置指示操作成功或失败的标志。</li>
+</ol>
+<p>虚线表示处理器的执行路径；也就是说，这条线显示了指令的执行顺序。因此，在遇到第一条 WRITE 指令后，用户程序被中断，并继续执行 I/O 程序。I/O 程序执行完成后，紧接着 WRITE 指令之后的用户程序将恢复执行。由于 I/O 操作可能需要相对较长的时间才能完成，I/O 程序会挂起等待操作完成；因此，用户程序会在 WRITE 调用点停止相当长一段时间。</p>
+<h3 id="中断和指令周期"><a href="#中断和指令周期" class="headerlink" title="中断和指令周期"></a>中断和指令周期</h3><p>利用中断，处理器可以在 I/O 操作进行的同时执行其他指令。考虑图 b 中的控制流。与之前一样，用户程序到达一个点，并以 WRITE 调用的形式发出系统调用。在这种情况下调用的 I/O 程序仅包含准备代码和实际的 I/O 命令。执行完这几条指令后，控制权返回给用户程序。同时，外部设备正忙于从计算机内存中接收数据并打印。此 I/O 操作与用户程序中指令的执行同时进行。</p>
+<p>当外部设备准备好接受服务时（即准备好从处理器接收更多数据时），该外部设备的 I/O 模块会向处理器发送中断请求信号。处理器的响应方式是暂停当前程序的运行；跳转到为该特定 I/O 设备提供服务的例程（称为中断处理程序）；并在设备服务完成后恢复原来的执行。图 b 中标出了此类中断发生的点。需要注意的是，中断可以在主程序的任何位置发生，而不仅仅是某条特定的指令。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/interupt.png" alt="interupt"><br>对于用户程序来说，中断会暂停正常的执行序列。中断处理完成后，程序将恢复执行。因此，用户程序无需包含任何特殊代码来处理中断；处理器和操作系统负责暂停用户程序，然后从中断点恢复执行。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/interrupt_cycle.png" alt="interrupt_cycle"><br>为了适应中断，在指令周期中添加了一个中断阶段，如图所示。在中断阶段，处理器检查是否发生了任何中断，中断信号的存在表明发生了中断。如果没有待处理的中断，处理器将进入取指阶段并取当前程序的下一条指令。如果有待处理的中断，处理器将暂停当前程序的执行并执行中断处理程序。中断处理程序通常是操作系统的一部分。通常，此例程会确定中断的性质并执行所需的任何操作。在示例中，处理程序会确定哪个 I/O 模块生成了中断，并且可能会跳转到一个将向该 I/O 模块写入更多数据的程序。当中断处理程序完成后，处理器可以在中断点恢复用户程序的执行。</p>
+<p>显然，这个过程会产生一些开销。必须执行额外的指令（在中断处理程序中）来确定中断的性质并决定适当的操作。然而，由于等待 I/O 操作会浪费相对较多的时间，因此使用中断可以更高效地利用处理器。</p>
+<p>为了理解效率的提升，以下两个图分别展示了使用中断处理短 IO 和长 IO 的情况，都是发起两次写。对应上面的虚线图，仔细对比执行过程。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/short_io.png" alt="short_io"><br><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/long_io.png" alt="long_io"></p>
+<p>short_io：I/O操作所需的时间相对较短：小于用户程序中两次写入操作之间完成指令执行的时间。</p>
+<p>long_io：更典型的情况是，特别是对于打印机等慢速设备，I/O 操作将比执行一系列用户指令花费更多的时间。图 c 显示了这种状态。在这种情况下，用户程序在第一个调用引发的 I/O 操作完成之前到达第二个 WRITE 调用。结果是用户程序在该点挂起。当前一个 I/O 操作完成后，可以处理这个新的 WRITE 调用，并启动新的 I/O 操作。上图显示了使用和不使用中断的这种情况的时序。我们可以看到效率仍然有所提高，因为执行 I/O 操作的部分时间与用户指令的执行重叠。</p>
+<h3 id="中断处理"><a href="#中断处理" class="headerlink" title="中断处理"></a>中断处理</h3><p>中断会触发处理器硬件和软件中的一系列事件。上图显示了典型的中断序列。当 I/O 设备完成 I/O 操作时，会发生以下硬件事件序列：</p>
+<ol>
+<li>设备向处理器发出中断信号。</li>
+<li>处理器在响应中断之前完成当前指令的执行，如指令周期图所示。</li>
+<li>处理器检测是否有待处理的中断请求，确定存在中断请求后，会向发出中断的设备发送确认信号 acknowledgment。该确认信号允许设备移除其中断信号。</li>
+<li>接下来，处理器需要停止并准备将控制权移交给中断例程。首先，它会保存在中断点恢复当前程序所需的信息。所需的最少信息是程序状态字3 (PSW) 和下一条待执行指令的位置，该位置包含在程序计数器 (PC) 中。这些信息可以推送到控制堆栈。</li>
+<li>然后，处理器将响应此中断的中断处理例程的入口位置加载到程序计数器中。根据计算机架构和操作系统的设计，可能只有一个程序，也可能每种中断类型对应一个程序，或者每个设备和每种中断类型对应一个程序。如果有多个中断处理例程，处理器必须确定要调用哪一个。此信息可能包含在原始中断信号中，或者处理器可能需要向发出中断的设备发出请求，以获取包含所需信息的响应。一旦程序计数器加载完毕，处理器就会进入下一个指令周期，首先执行指令获取操作。由于指令获取操作由程序计数器的内容决定，因此控制权将转移到中断处理程序。该程序的执行将导致以下操作：</li>
+<li>此时，与被中断程序相关的程序计数器和程序状态寄存器 (PSW) 已保存在控制堆栈中。然而，还有其他信息被视为正在执行的程序状态的一部分。具体来说，需要保存处理器寄存器的内容，因为这些寄存器可能会被中断处理程序使用。因此，所有这些值以及任何其他状态信息都需要保存。通常，中断处理程序首先会将所有寄存器的内容保存在堆栈中。其他必须保存的状态信息将在后续讨论。</li>
+<li>中断处理程序现在可以继续处理中断了。这包括检查与 I/O 操作或其他导致中断的事件相关的状态信息。它还可能涉及向 I/O 设备发送额外的命令或确认。</li>
+<li>当中断处理完成时，将从堆栈中检索保存的寄存器值并将其恢复到寄存器中。</li>
+<li>最后一步是从堆栈中恢复PSW和程序计数器的值。这样，下一条要执行的指令将来自之前被中断的程序。</li>
+</ol>
+<p>保存被中断程序的所有状态信息以便稍后恢复运行非常重要。这是因为中断不是程序中调用的例程。相反，中断可能随时发生，因此可能发生在用户程序执行的任何时刻。它的发生是不可预测的。</p>
+<h3 id="多个中断"><a href="#多个中断" class="headerlink" title="多个中断"></a>多个中断</h3><p>到目前为止，我们讨论了单个中断的发生。然而，假设在处理中断时可能发生一个或多个中断。例如，程序可能正在从通信线路接收数据，并同时打印结果。打印机每次完成打印操作时都会产生一个中断。通信线路控制器每次收到一个数据单元时都会产生一个中断。该数据单元可以是一个字符或一个数据块，具体取决于通信规则的性质。无论如何，在处理打印机中断时都有可能发生通信中断。</p>
+<p>处理多个中断有两种方法：顺序执行和优先级。</p>
+<p>处理多个中断有两种方法。第一种方法是在处理中断时禁用中断。禁用中断意味着处理器会忽略任何新的中断请求信号。如果在此期间发生中断，该中断通常会保持待处理状态，并在处理器重新启用中断后进行检查。因此，如果在用户程序执行时发生中断，则会立即禁用中断。中断处理程序完成后，在恢复用户程序之前重新启用中断，处理器会检查是否发生了其他中断。这种方法很简单，因为中断是严格按照顺序处理的。</p>
+<p>上述方法的缺点是它没有考虑相对优先级或时间紧迫的需求。例如，当输入从通信线路到达时，可能需要快速吸收，以便为更多输入腾出空间。如果第一批输入在第二批到达之前尚未处理完毕，数据可能会丢失，因为 I/O 设备上的缓冲区可能会被填满并溢出。</p>
+<p>第二种方法是定义中断优先级，并允许高优先级中断导致低优先级中断处理程序被中断。作为第二种方法的示例，考虑一个具有三个 I/O 设备的系统：打印机、磁盘和通信线路，它们的优先级分别递增，为 2、4 和 5。说明了一种可能的序列。用户程序从 t = 0 开始。在 t = 10 时，发生打印机中断；用户信息被放置在控制堆栈中，并继续执行打印机中断服务例程 (ISR)。当此例程仍在执行时，在 t = 15 时发生通信中断。由于通信线路的优先级高于打印机，因此中断请求被接受。打印机 ISR 被中断，其状态被推送到堆栈，并继续执行通信 ISR。在执行此例程时，发生磁盘中断（t = 20）。由于此中断的优先级较低，因此只需保持该中断，然后通信 ISR 即可运行至完成。</p>
+<p>当通信 ISR 完成（t = 25）时，将恢复先前的处理器状态，即执行打印机 ISR。然而，在该例程中哪怕只有一条指令能够执行之前，处理器都会执行更高优先级的磁盘中断，并将控制权移交给磁盘 ISR。只有当该例程完成（t = 35）时，打印机 ISR 才会恢复。当该例程完成（t = 40）时，控制权最终返回给用户程序。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/multiple_interupts.png" alt="multiple_interupts"></p>
+<h2 id="The-memory-hierarchy"><a href="#The-memory-hierarchy" class="headerlink" title="The memory hierarchy"></a>The memory hierarchy</h2><p>计算机内存的设计约束可以归结为三个问题：多少？多快？多贵？ How much? How fast? How expensive?</p>
+<p>关于内存容量的问题，目前尚无定论。如果容量足够，开发应用程序时很可能会用到它。至于速度，某种程度上来说，这个问题更容易回答。为了实现最佳性能，内存必须能够跟上处理器的速度。也就是说，当处理器执行指令时，不希望它暂停等待指令或操作数。最后一个问题也必须考虑。对于实际系统而言，内存的成本必须相对于其他组件而言合理。</p>
+<p>正如预期的那样，内存的三个关键特性（容量、访问时间和成本）之间存在权衡。各种技术都用于实现内存系统，并且在这些技术中，存在以下关系：</p>
+<ul>
+<li>访问速度更快，每比特成本更高</li>
+<li>容量更大，每比特成本更低</li>
+<li>容量更大，访问速度更慢</li>
+</ul>
+<p>设计师面临的困境（dilemma）显而易见。设计师希望使用能够提供大容量的存储器技术，这既是因为需要大容量，也是因为每比特成本较低。然而，为了满足性能要求，设计师需要使用价格昂贵、容量相对较低且访问速度较快的存储器。</p>
+<p>摆脱这一困境的方法是不要依赖单一的内存组件或技术，而是采用内存层次结构。如图显示了一个典型的内存层次结构。沿着层次结构向下，会发生以下情况：</p>
+<ol>
+<li>降低每比特成本</li>
+<li>增加容量</li>
+<li>增加访问时间</li>
+<li>降低处理器访问内存的频率 局部性原理</li>
+</ol>
+<p>因此，更小、更昂贵、更快的存储器会被更大、更便宜、更慢的存储器所补充。这种组织方式成功的关键在于降低较低级别的访问频率。<br><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/memory.png" alt="memory"></p>
+<p>局部性原理：这一原则可以应用于两级以上的内存。速度最快、体积最小、成本最高的内存类型由处理器内部的寄存器组成。通常，一个处理器包含几十个这样的寄存器，但有些处理器甚至包含数百个寄存器。跳过下两级，主存是计算机的主要内部存储系统。主存中的每个位置都有一个唯一的地址，大多数机器指令都引用一个或多个主存地址。主存通常会扩展一个速度更高、体积更小的缓存。缓存通常对程序员不可见，对处理器也不可见。它是一种用于在主存和处理器寄存器之间分阶段移动数据以提高性能的设备。</p>
+<p>在软件中，可以有效地在层次结构中添加额外的层级。例如，可以使用主内存的一部分作为缓冲区，临时保存即将读出到磁盘的数据。这种技术有时被称为磁盘缓存（disk cache），它通过两种方式提升性能：</p>
+<ol>
+<li>磁盘写入是集群式的。Disk writes are clustered. 我们不再进行多次小规模的数据传输，而是进行几次大规模的数据传输。这提高了磁盘性能，并最大限度地减少了处理器的参与。</li>
+<li>一些需要写出的数据可能会在下次转储到磁盘之前被程序引用。在这种情况下，数据会从软件缓存中快速检索，而不是从磁盘缓慢检索。</li>
+</ol>
+<h2 id="Cache-memory"><a href="#Cache-memory" class="headerlink" title="Cache memory"></a>Cache memory</h2><p>虽然缓存对操作系统来说是不可见的，但它会与其他内存管理硬件交互。此外，虚拟内存方案中使用的许多原理也适用于缓存。</p>
+<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>在所有指令周期中，处理器至少访问一次内存以获取指令，并且通常会额外访问一次或多次以获取操作数和/或存储结果。处理器执行指令的速率显然受到内存周期时间（从内存读取一个字或将一个字写入内存所需的时间）的限制。由于处理器和主内存速度之间持续存在的不匹配，这种限制一直是一个严重的问题。多年来，处理器速度的增长速度一直快于内存访问速度。面临着速度、成本和大小之间的权衡。理想情况下，主内存应该采用与处理器寄存器相同的技术构建，使内存周期时间与处理器周期时间相当。这一直是一个成本过高的策略。解决方案是利用局部性原理，在处理器和主内存之间提供一个小型、快速的内存，即缓存 cache。</p>
+<h3 id="Cache-Principles"><a href="#Cache-Principles" class="headerlink" title="Cache Principles"></a>Cache Principles</h3><p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/cache.png" alt="cache"><br>高速缓存旨在提供接近现有最快内存的内存访问时间，同时支持具有较便宜类型的半导体内存价格的大内存容量。</p>
+<p>有一个相对较大但速度较慢的主存储器，以及一个较小但速度较快的高速缓存。高速缓存包含部分主存储器的副本。当处理器尝试读取存储器中的字节或字时，会检查该字节或字是否在高速缓存中。如果在，则将该字节或字传送给处理器。如果不在，则将由固定数量字节组成的主存储器块读入高速缓存，然后将该字节或字传送给处理器。由于引用局部性现象，当将一个数据块提取到高速缓存中以满足单个内存引用时，很可能近期的许多内存引用都将指向该块中的其他字节。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/cache_memory.png" alt="cahce_memory"></p>
+<p>上图描述了缓存/主存系统的结构。主存最多包含 2^n 个可寻址字，每个字都有一个唯一的 n 位地址。为了便于映射，将该内存视为由多个固定长度的块组成，每个块包含 K 个字。也就是说，共有 M = 2^n/K 个块。缓存由 C 个槽 slot（也称为行 cache line）组成，每个槽包含 K 个字，槽的数量远少于主存块的数量（C &lt;&lt; M）。主存块的某些子集驻留在缓存的槽中。如果读取不在缓存中的内存块中的字，则该块将被传输到缓存的某个槽中。由于块的数量多于槽的数量，因此单个槽无法唯一且永久地专用于特定块。因此，每个槽都包含一个标签，用于标识当前存储的是哪个特定块。该标签通常是地址的若干高阶位，指向所有以该位序列开头的地址。</p>
+<p>举一个简单的例子，假设有一个 6 位地址和 2 位标签。标签 01 指的是具有以下地址的位置块：<code>010000、010001、010010、010011、010100、010101、010110、010111、011000、011001、011010、011011、011100、011101、011100、011101、011110、011111</code>。</p>
+<p>缓存里的 tag（标记） 是用来 区分不同内存块 的。</p>
+<p>CPU 的缓存（Cache）通常采用 组相联映射（set-associative mapping） 或 直接映射（direct-mapped）。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/cache_read.png" alt="cache_read"></p>
+<p>处理器生成要读取的字的地址 RA。如果该字包含在缓存中，则将其传递给处理器。否则，包含该字的块将被加载到缓存中，并将该字传递给处理器。</p>
+<h3 id="Cache-Design"><a href="#Cache-Design" class="headerlink" title="Cache Design"></a>Cache Design</h3><p>关于缓存设计的详细讨论超出了本书的范围。这里简要概述了关键要素。我们将看到，在处理虚拟内存和磁盘缓存设计时必须解决类似的设计问题。它们分为以下几类：</p>
+<ul>
+<li>Cache size</li>
+<li>Block size</li>
+<li>Mapping function</li>
+<li>Replacement algorithm</li>
+<li>Write policy</li>
+<li>Number of cache levels</li>
+</ul>
+<p>已经讨论过缓存大小的问题。事实证明，即使相当小的缓存也能对性能产生显著的影响。另一个大小问题是块大小：缓存和主存之间交换的数据单位。考虑从相对较小的块大小开始，然后逐渐增加大小。随着块大小的增加，每次块传输都会将更多有用的数据带入缓存。结果将是命中率由于局部性原理而增加：被引用字附近的数据在不久的将来很可能被引用。然而，随着块变得更大，命中率将开始下降，使用新获取数据的概率变得小于重用必须从缓存中移出以便为新块腾出空间的数据的概率。</p>
+<p>当新的数据块读入缓存时，映射函数会确定该块将占用哪个缓存位置。两个约束会影响映射函数的设计。首先，当读入一个块时，可能需要替换另一个块。我们希望以这样的方式实现这一点，即尽量减少替换近期需要的块的可能性。映射函数越灵活，我们设计替换算法以最大化命中率的空间就越大。其次，映射函数越灵活，搜索缓存以确定给定块是否在缓存中所需的电路就越复杂。</p>
+<p>当新块需要加载到缓存中，且缓存中的所有槽位都已被其他块填满时，替换算法会（在映射函数的约束范围内）选择要替换的块。希望替换近期最不可能再次使用的块。虽然无法识别这样的块，但一个合理有效的策略是替换在缓存中存在时间最长且未被引用的块。此策略称为最近最少使用 (LRU) 算法。需要硬件机制来识别最近最少使用的块。</p>
+<p>如果缓存中某个块的内容发生更改，则必须先将其写回主存，然后再替换它。写入策略决定了内存写入操作的发生时间。一种极端情况是，每次更新块时都会进行写入操作。另一种极端情况是，仅在替换块时才进行写入操作。后一种策略可以最大限度地减少内存写入操作，但会使主存处于过时状态。这可能会干扰多处理器操作以及 I/O 硬件模块的直接内存访问。</p>
+<h2 id="Direct-Memory-Access"><a href="#Direct-Memory-Access" class="headerlink" title="Direct Memory Access"></a>Direct Memory Access</h2><p>三种 I/O 操作：programmed I/O、interrupt-driven I/O 和 direct memory access（DMA）。</p>
+<p>当处理器执行程序并遇到与 I/O 相关的指令时，它会通过向相应的 I/O 模块发出命令来执行该指令。对于程序控制的 I/O，I/O 模块会执行请求的操作，然后设置 I/O 状态寄存器中的相应位，但不会采取进一步的行动来通知处理器。具体来说，它不会中断处理器。因此，在调用 I/O 指令后，处理器必须主动确定 I/O 指令何时完成。为此，处理器会定期检查 I/O 模块的状态，直到发现操作已完成。</p>
+<p>使用程控 I/O 时，处理器必须等待很长时间才能让相关的 I/O 模块准备好接收或发送更多数据。在等待期间，处理器必须反复查询 I/O 模块的状态。结果，整个系统的性能水平严重下降。</p>
+<p>另一种方案称为中断驱动 I/O，即处理器向模块发出 I/O 命令，然后继续执行其他有用的工作。当 I/O 模块准备好与处理器交换数据时，它会中断处理器并请求服务。然后，处理器像以前一样执行数据传输，并恢复其先前的处理。</p>
+<p>中断驱动的 I/O 虽然比简单的程序控制 I/O 更高效，但仍然需要处理器主动干预才能在内存和 I/O 模块之间传输数据，并且任何数据传输都必须经过处理器的路径。因此，这两种 I/O 形式都存在两个固有的缺点：</p>
+<ol>
+<li>I/O 传输速率受限于处理器询问和服务设备的速度。</li>
+<li>处理器忙于管理 I/O 传输；每次 I/O 传输都必须执行许多指令。</li>
+</ol>
+<p>当需要移动大量数据时，需要一种更高效的技术：直接内存访问 (DMA)。DMA 功能可以由系统总线上的独立模块执行，也可以集成到 I/O 模块中。无论哪种情况，该技术的工作原理如下。当处理器希望读取或写入数据块时，它会通过发送以下信息向 DMA 模块发出命令：</p>
+<ul>
+<li>Whether a read or write is requested</li>
+<li>The address of the I/O device involved</li>
+<li>The starting location in memory to read data from or write data to</li>
+<li>The number of words to be read or written</li>
+</ul>
+<p>然后，处理器继续执行其他工作。它已将此 I/O 操作委托给 DMA 模块，该模块将负责处理。DMA 模块将整个数据块（一次一个字）直接传输到内存或从内存中读取，无需经过处理器。传输完成后，DMA 模块会向处理器发送中断信号。因此，处理器只参与传输的开始和结束。</p>
+<p>DMA 模块需要控制总线才能与内存之间传输数据。由于这种总线使用竞争，有时处理器需要总线时必须等待 DMA 模块。请注意，这并非中断；处理器不会保存上下文并执行其他操作。相反，处理器会暂停一个总线周期（即通过总线传输一个字所需的时间）。总体效果是，当 DMA 传输期间处理器需要访问总线时，其执行速度会变慢。然而，对于多字 I/O 传输，DMA 比中断驱动或程序控制 I/O 效率高得多。</p>
+<p>DMA 需要占用总线，当 CPU 需要使用总线是则需要等。Nevertheless, for a multiple-word I/O transfer, DMA is far more efficient than interrupt-driven or programmed I/O.</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>CPU是否搬运数据</th>
+<th>CPU是否忙等</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PIO</strong></td>
+<td>✅ 是（CPU执行load/store拷贝）</td>
+<td>✅ 忙等</td>
+<td>简单I/O、小数据</td>
+</tr>
+<tr>
+<td><strong>中断驱动 I/O</strong></td>
+<td>✅ 是（CPU执行load/store拷贝）</td>
+<td>❌ 不忙等（中断通知）</td>
+<td>中小数据，响应实时</td>
+</tr>
+<tr>
+<td><strong>DMA</strong></td>
+<td>❌ 否（DMA控制器拷贝）</td>
+<td>❌ 不忙等</td>
+<td>大数据传输（磁盘、网卡）</td>
+</tr>
+</tbody></table>
+<p>中断驱动的 io 需要 CPU 参与搬运数据，中断驱动 I/O（Interrupt-Driven I/O）主要解决的问题是：当外设准备好数据时，用中断通知 CPU，而不是让 CPU 一直轮询等待。但数据的搬运过程 在这种模式下还是需要 CPU 来参与的。</p>
+<ul>
+<li>程序轮询 I/O：CPU 不断检查设备状态 → 数据搬运也是 CPU 做。</li>
+<li>中断驱动 I/O：CPU 空闲时可以做别的事，等设备中断再搬运数据 → 数据搬运仍然是 CPU 做。</li>
+<li>DMA（Direct Memory Access）I/O：CPU 不再负责数据搬运，只负责告诉 DMA 控制器源地址、目标地址和长度 → 真正的数据传输完全由 DMA 控制器完成。</li>
+</ul>
+<p>中断驱动 I/O 解决的是等待效率问题，但搬运数据仍然依赖 CPU。如果要真正解放 CPU，需要用 DMA。</p>
+<h2 id="多处理器和多核架构"><a href="#多处理器和多核架构" class="headerlink" title="多处理器和多核架构"></a>多处理器和多核架构</h2><p>传统上，计算机被视为顺序执行机器。大多数计算机编程语言都要求程序员将算法指定为指令序列。处理器通过按顺序逐条执行机器指令来执行程序。每条指令都按照一系列操作（获取指令、获取操作数、执行操作、存储结果）执行。</p>
+<p>这种对计算机的看法从来就不完全正确。在微操作层面，多个控制信号是同时生成的。指令流水线，至少在取指和执行操作重叠的程度上，已经存在很长时间了。这两种都是并行执行功能的例子。</p>
+<p>随着计算机技术的不断发展和硬件成本的下降，计算机设计人员越来越多地寻求并行性，通常是为了提升性能，有时也是为了提高可靠性。将探讨三种通过复制处理器实现并行性的方法：对称多处理器 (SMP)、多核计算机和集群。</p>
+<h3 id="Symmetric-Multiprocessors"><a href="#Symmetric-Multiprocessors" class="headerlink" title="Symmetric Multiprocessors"></a>Symmetric Multiprocessors</h3><p>SMP 可以定义为具有以下特征的独立计算机系统：</p>
+<ol>
+<li>有两个或两个以上具有可比能力的相似处理器。</li>
+<li>这些处理器共享相同的主存储器和 I/O 设施，并通过总线或其他内部连接方案相互连接，使得每个处理器的内存访问时间大致相同。</li>
+<li>所有处理器共享对 I/O 设备的访问，可以通过相同的通道或通过提供到同一设备的路径的不同通道。</li>
+<li>所有处理器都可以执行相同的功能（因此称为对称）。</li>
+<li>该系统由集成操作系统控制，该系统提供处理器及其程序在作业、任务、文件和数据元素级别的交互。</li>
+</ol>
+<p>与单处理器组织相比，SMP 组织具有许多潜在优势，其中包括：</p>
+<ul>
+<li>性能：如果计算机要完成的工作可以组织起来，使得某些部分可以并行完成，那么具有多个处理器的系统将比具有同类型的单个处理器的系统产生更高的性能。</li>
+<li>可用性：在非对称多处理器系统中，由于所有处理器都能执行相同的功能，因此单个处理器的故障不会导致机器停止运行。相反，系统可以继续运行，但性能会降低。</li>
+<li>增量增长：用户可以通过添加额外的处理器来增强系统性能。</li>
+<li>扩展：供应商可以根据系统中配置的处理器数量提供一系列具有不同价格和性能特征的产品。</li>
+</ul>
+<p>需要注意的是，这些优势是潜在的，而非必然的。操作系统必须提供工具和功能来利用 SMP 系统中的并行性。<br>SMP 的一个吸引人的特性是，多个处理器的存在对用户来说是透明的。操作系统负责在各个​​处理器上调度任务，并负责处理器之间的同步。</p>
+<p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/SMP.png" alt="SMP"></p>
+<p>上图展示了 SMP 的一般组织结构。SMP 包含多个处理器，每个处理器都包含自己的控制单元、算术逻辑单元和寄存器。每个处理器通常具有两级专用缓存，分别称为 L1 和 L2。每个处理器及其专用缓存都位于单独的芯片上。每个处理器都可以通过某种形式的互连机制访问共享主存储器和 I/O 设备；共享总线是一种常用设施。处理器可以通过存储器相互通信（消息和状态信息保留在共享地址空间中）。处理器之间也可以直接交换信号。存储器的组织方式通常允许多个处理器同时访问不同的存储器块。</p>
+<p>在现代计算机中，处理器通常至少具有一层专用于该处理器的缓存。这种缓存的使用方式引入了一些新的设计考量。由于每个本地缓存都包含主存一部分的映像，因此如果一个缓存中的字被更改，则可能会使另一个缓存中的字无效。为了防止这种情况发生，必须通知其他处理器已发生更新。这个问题被称为缓存一致性问题，通常由硬件而不是操作系统来解决。</p>
+<h3 id="Multicore-Computers"><a href="#Multicore-Computers" class="headerlink" title="Multicore Computers"></a>Multicore Computers</h3><p><img src="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/multicore.png" alt="multicore"></p>
+<p>多核计算机，也称为芯片多处理器，将两个或多个处理器（称为核心）集成在一块硅片（称为“裸片”）上。通常，每个核心包含独立处理器的所有组件，例如寄存器、ALU、流水线硬件和控制单元，以及一级指令和数据缓存。除了多个核心之外，当代多核芯片还包含二级缓存，在某些情况下还包含三级缓存。</p>
+<p>多核计算机的发展动机可以概括如下。几十年来，微处理器系统的性能一直稳步提升，通常是指数级的。这部分是由于硬件趋势，例如时钟频率的提高，以及由于微型计算机组件日益小型化而能够将高速缓存更靠近处理器。为了利用指令执行和内存访问的并行性，处理器设计复杂性的提高也提高了性能。简而言之，设计人员在使用更复杂的处理器实现更高性能方面遇到了实际限制。设计人员发现，利用硬件进步来提高性能的最佳方法是将多个处理器和大量高速缓存放在单个芯片上。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/OS/" rel="tag"><i class="fa fa-tag"></i> OS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2025/01/17/pip/" rel="prev" title="pip">
+      <i class="fa fa-chevron-left"></i> pip
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Learning-Objectives"><span class="nav-number">1.</span> <span class="nav-text">Learning Objectives</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%A6%81%E7%B4%A0"><span class="nav-number">2.</span> <span class="nav-text">基本要素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="nav-number">3.</span> <span class="nav-text">指令执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD"><span class="nav-number">4.</span> <span class="nav-text">中断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E5%92%8C%E6%8C%87%E4%BB%A4%E5%91%A8%E6%9C%9F"><span class="nav-number">4.1.</span> <span class="nav-text">中断和指令周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86"><span class="nav-number">4.2.</span> <span class="nav-text">中断处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E4%B8%AD%E6%96%AD"><span class="nav-number">4.3.</span> <span class="nav-text">多个中断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-memory-hierarchy"><span class="nav-number">5.</span> <span class="nav-text">The memory hierarchy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cache-memory"><span class="nav-number">6.</span> <span class="nav-text">Cache memory</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Motivation"><span class="nav-number">6.1.</span> <span class="nav-text">Motivation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache-Principles"><span class="nav-number">6.2.</span> <span class="nav-text">Cache Principles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cache-Design"><span class="nav-number">6.3.</span> <span class="nav-text">Cache Design</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Direct-Memory-Access"><span class="nav-number">7.</span> <span class="nav-text">Direct Memory Access</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E5%92%8C%E5%A4%9A%E6%A0%B8%E6%9E%B6%E6%9E%84"><span class="nav-number">8.</span> <span class="nav-text">多处理器和多核架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Symmetric-Multiprocessors"><span class="nav-number">8.1.</span> <span class="nav-text">Symmetric Multiprocessors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multicore-Computers"><span class="nav-number">8.2.</span> <span class="nav-text">Multicore Computers</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">366k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">5:33</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
