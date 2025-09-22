@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjd-melo.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="内部结构和设计原则-part1_2 Operating System Overview">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS 内部结构和设计原则-part1_2">
+<meta property="og:url" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/index.html">
+<meta property="og:site_name" content="Dying Memory">
+<meta property="og:description" content="内部结构和设计原则-part1_2 Operating System Overview">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/overview.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/resource.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/simple_batch.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/cpu_utilization.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/multiprogramming.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/time_sharing.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/disk_traffic.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/process.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/VM.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/VM_address.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/shcedule.png">
+<meta property="og:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/multiprocess.png">
+<meta property="article:published_time" content="2025-09-20T01:09:24.000Z">
+<meta property="article:modified_time" content="2025-09-20T01:09:24.000Z">
+<meta property="article:author" content="朱佳东">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/overview.png">
+
+<link rel="canonical" href="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh_CN'
+  };
+</script>
+
+  <title>OS 内部结构和设计原则-part1_2 | Dying Memory</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Dying Memory</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">22</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">89</span></a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zjd-melo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh_CN">
+    <link itemprop="mainEntityOfPage" href="https://zjd-melo.github.io/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="朱佳东">
+      <meta itemprop="description" content="melon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dying Memory">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OS 内部结构和设计原则-part1_2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-09-20 09:09:24" itemprop="dateCreated datePublished" datetime="2025-09-20T09:09:24+08:00">2025-09-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/OS/" itemprop="url" rel="index"><span itemprop="name">OS</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>16 mins.</span>
+            </span>
+            <div class="post-description">内部结构和设计原则-part1_2 Operating System Overview</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Learning-Objectives"><a href="#Learning-Objectives" class="headerlink" title="Learning Objectives"></a>Learning Objectives</h2><ul>
+<li>从顶层总结操作系统 (OS) 的关键功能</li>
+<li>讨论操作系统从早期简单的批处理系统到现代复杂系统的演变</li>
+<li>简要解释操作系统研究的每项主要成就</li>
+<li>讨论对现代操作系统的发展起到重要作用的关键设计领域</li>
+<li>定义并讨论虚拟机和虚拟化</li>
+<li>理解多处理器和多核组织引入所带来的操作系统设计问题</li>
+</ul>
+<hr>
+<h2 id="操作系统的目的和功能"><a href="#操作系统的目的和功能" class="headerlink" title="操作系统的目的和功能"></a>操作系统的目的和功能</h2><p>An OS is a program that controls the execution of application programs, and acts as an interface between applications and the computer hardware.</p>
+<p>它可以被认为具有三个目标：</p>
+<ol>
+<li>便利性 Convenience ：操作系统使计算机使用起来更加方便。</li>
+<li>效率 Efficiency ：操作系统允许以高效的方式使用计算机系统资源。</li>
+<li>进化能力：操作系统的构建方式应允许有效地开发、测试和引入新的系统功能，而不会干扰服务。</li>
+</ol>
+<h3 id="The-OS-as-a-User-x2F-Computer-Interface"><a href="#The-OS-as-a-User-x2F-Computer-Interface" class="headerlink" title="The OS as a User/Computer Interface"></a>The OS as a User/Computer Interface</h3><p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/overview.png" alt="overview"></p>
+<p>向用户提供应用程序所使用的硬件和软件可以以分层的方式查看。这些应用程序的用户（最终用户）通常不关心计算机硬件的细节。因此，end user 最终用户把看待计算机系统就像是一组应用程序。应用程序可以用编程语言来表达，并由应用程序员开发。如果要应用程序开发要用到一组机器指令，完全负责控制计算机硬件，那么将面临一项极其复杂的任务。为了简化这项工作，系统提供了一组系统程序。其中一些程序被称为实用程序或库程序。这些库函数实现了协助程序创建、文件管理和 I/O 设备控制的常用功能。程序员将在开发应用程序时使用这些工具，并且应用程序在运行时将调用这些实用程序来执行某些功能。最重要的系统程序集合构成了操作系统。操作系统向程序员隐藏了硬件的细节，并为程序员提供了便捷的系统使用界面。它充当中介，使程序员和应用程序能够更轻松地访问和使用这些功能和服务。</p>
+<p>简而言之，操作系统通常提供以下领域的服务：</p>
+<ul>
+<li>程序开发：操作系统提供各种工具和服务，例如编辑器和调试器，以协助程序员创建程序。通常，这些服务以实用程序的形式提供，虽然严格来说并非操作系统核心的一部分，但它们会随操作系统提供，并被称为应用程序开发工具。</li>
+<li>程序执行：执行程序需要执行多个步骤。指令和数据必须加载到主内存中，I/O设备和文件必须初始化，并且必须准备其他资源。操作系统负责为用户处理这些调度任务。</li>
+<li>访问 I/O 设备：每个 I/O 设备都需要一组特定的指令或控制信号来操作。操作系统提供了一个统一的接口来隐藏这些细节，以便程序员可以通过简单的读写操作访问这些设备。</li>
+<li>控制文件访问：对于文件访问，操作系统不仅必须充分了解 I/O 设备（磁盘驱动器、磁带驱动器）的性质，还必须了解存储介质上文件所含数据的结构。对于多用户系统，操作系统可以提供保护机制来控制文件访问。</li>
+<li>系统访问：对于共享或公共系统，操作系统控制对整个系统以及特定系统资源的访问。访问功能必须保护资源和数据，防止未经授权的用户访问，并解决资源争用冲突。</li>
+<li>错误检测与响应：计算机系统运行时可能会发生各种错误。这些错误包括内部和外部硬件错误（例如内存错误、设备故障或失灵），以及各种软件错误（例如除以零、尝试访问禁用的内存位置以及操作系统无法批准应用程序的请求）。在每种情况下，操作系统都必须提供响应，以清除错误条件，同时对正在运行的应用程序的影响最小。响应方式包括结束导致错误的程序、重试操作，或者只是将错误报告给应用程序。</li>
+<li>审计：一个好的操作系统会收集各种资源的使用情况统计信息，并监控响应时间等性能参数。在任何系统上，这些信息都有助于预测未来的增强需求，并有助于调整系统以提高性能。在多用户系统中，这些信息还可用于计费。</li>
+</ul>
+<p>上图还指出了典型计算机系统中的三个关键接口：</p>
+<ul>
+<li>Instruction set architecture (ISA) 指令集架构：ISA 定义了计算机可以执行的机器语言指令集。该接口是硬件和软件之间的边界。需要注意的是，应用程序和实用程序都可以直接访问 ISA。对于这些程序，可以使用指令集的一个子集（用户 ISA）。操作系统可以访问用于管理系统资源的其他机器语言指令（系统 ISA）。</li>
+<li>Application binary interface (ABI) 应用程序二进制接口 (ABI)：ABI 定义了跨程序二进制可移植性的标准。​​ABI 定义了操作系统的系统调用接口，以及系统中通过用户 ISA 可用的硬件资源和服务。</li>
+<li>Application programming interface (API) 应用程序编程接口 (API)：API 允许程序通过用户指令集 (ISA) 以及高级语言 (HLL) 库调用访问系统中可用的硬件资源和服务。任何系统调用通常都通过库执行。使用 API 可以通过重新编译将应用软件轻松移植到支持相同 API 的其他系统。</li>
+</ul>
+<h3 id="The-OS-as-Resource-Manager"><a href="#The-OS-as-Resource-Manager" class="headerlink" title="The OS as Resource Manager"></a>The OS as Resource Manager</h3><p>操作系统负责控制计算机资源的使用，例如 I/O、主存储器和辅助存储器以及处理器执行时间。但这种控制的执行方式却很奇特。通常，我们认为控制机制是被控对象之外的某种东西，或者至少是被控对象中独立存在的部分。（例如，住宅供暖系统由恒温器控制，而恒温器与产热和散热装置是分开的。）但操作系统并非如此，作为一种控制机制，它在两个方面与众不同：</p>
+<ol>
+<li>操作系统的功能与普通计算机软件相同；也就是说，它也是由处理器执行的一个程序或一套程序。</li>
+<li>操作系统经常放弃控制，并且必须依靠处理器来重新获得控制权。</li>
+</ol>
+<p>与其他计算机程序一样，操作系统由处理器执行的指令组成。在执行过程中，操作系统会决定如何分配处理器时间以及哪些计算机资源可供使用。但为了让处理器执行这些决定，它必须停止执行操作系统程序并执行其他程序。因此，操作系统会放弃控制权，让处理器去做一些“有用的”工作，然后再恢复控制权，持续足够长的时间，让处理器做好执行下一个工作的准备。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/resource.png" alt="resource"></p>
+<p>图中显示了操作系统管理的主要资源。操作系统的一部分位于主存中。这包括内核（或核心），其中包含操作系统中最常用的功能，以及在给定时间内当前正在使用的操作系统的其他部分。主存的其余部分包含用户程序、实用程序和数据。正如我们将看到的，操作系统和处理器中的内存管理硬件共同控制主存的分配。操作系统决定程序执行时何时可以使用 I/O 设备，并控制对文件的访问和使用。处理器本身也是一种资源，操作系统必须确定要将多少处理器时间用于执行特定的用户程序。</p>
+<h3 id="Ease-of-Evolution-of-an-OS"><a href="#Ease-of-Evolution-of-an-OS" class="headerlink" title="Ease of Evolution of an OS"></a>Ease of Evolution of an OS</h3><p>由于多种原因，主流操作系统会随着时间的推移而发展：</p>
+<ul>
+<li>硬件升级加上新型硬件：例如，早期版本的 UNIX 和 Macintosh 操作系统并未采用分页机制，因为它们运行在没有分页硬件的处理器上。这些操作系统的后续版本经过修改，充分利用了分页功能。此外，图形终端和页面模式终端取代逐行滚动模式终端的使用也影响了操作系统的设计。例如，图形终端通常允许用户通过屏幕上的“窗口”同时查看多个应用程序。这需要操作系统提供更复杂的支持。</li>
+<li>新服务：为了满足用户需求或系统管理员的需求，操作系统会进行扩展以提供新服务。例如，如果发现现有工具难以维持用户的良好性能，则可以向操作系统添加新的测量和控制工具。</li>
+<li>修复：任何操作系统都会存在缺陷。随着时间的推移，这些缺陷会被不断发现并修复。当然，修复过程可能会引入新的缺陷。</li>
+</ul>
+<p>定期更新操作系统的需求对其设计提出了某些要求。一个显而易见的原则是，系统应该采用模块化结构，模块之间接口定义清晰，并且应该有完善的文档。对于大型程序（例如典型的当代操作系统），所谓的直接模块化是不够的。也就是说，除了简单地将程序划分为模块之外，还需要做更多的事情</p>
+<hr>
+<h2 id="操作系统的演化"><a href="#操作系统的演化" class="headerlink" title="操作系统的演化"></a>操作系统的演化</h2><p>在尝试理解操作系统的关键要求以及当代操作系统的主要功能的意义时，考虑操作系统多年来是如何发展的是很有帮助的。</p>
+<h3 id="Serial-Processing"><a href="#Serial-Processing" class="headerlink" title="Serial Processing"></a>Serial Processing</h3><p>串行处理。</p>
+<p>最早的计算机出现于 20 世纪 40 年代末到 50 年代中期，程序员直接与计算机硬件交互；那时没有操作系统。这些计算机由一个由显示灯、拨动开关、某种输入设备和打印机组成的控制台运行。机器码程序通过输入设备（例如读卡器）加载。如果程序因错误而暂停，指示灯会指示错误情况。如果程序正常完成，输出结果会显示在打印机上。这些早期系统存在两个主要问题：</p>
+<ul>
+<li>时间预约：大多数计算机中心（或机房）都使用纸质登记表来预约计算机时间。通常情况下，用户可以注册大约半小时的倍数时间段。但用户也可能注册一个小时，结果在45分钟内完成；这会浪费电脑处理时间。另一方面，用户可能会遇到问题，无法在规定时间内完成，并被迫在问题解决之前停止使用。</li>
+<li>配置时间：一个程序（称为作业）可能涉及将编译器和高级语言程序（源程序）加载到内存中，保存编译后的程序（目标程序），然后加载并链接目标程序和常用函数。每个步骤都可能涉及安装或卸载磁带或设置卡片组。如果发生错误，倒霉的用户通常不得不回到设置序列的开头。因此，仅仅是设置程序运行就花费了大量时间。</li>
+</ul>
+<p>这种操作模式可以称为串行处理，反映了用户以串行方式访问计算机的事实。随着时间的推移，各种系统软件工具应运而生，试图提高串行处理的效率。这些工具包括通用函数库、链接器、加载器、调试器和 I/O 驱动程序例程，它们作为通用软件供所有用户使用。</p>
+<h3 id="Simple-Batch-Systems"><a href="#Simple-Batch-Systems" class="headerlink" title="Simple Batch Systems"></a>Simple Batch Systems</h3><p>简单的批处理系统。</p>
+<p>早期的计算机非常昂贵，因此最大限度地提高处理器利用率非常重要，而由于预约和设置时间而浪费的时间是不可接受的。</p>
+<p>为了提高利用率，批处理操作系统的概念应运而生。第一个批处理操作系统（以及任何类型操作系统中的第一个）似乎是由通用汽车公司于20世纪50年代中期为IBM 701计算机开发的。该概念随后由许多IBM客户改进并应用于 IBM 704 计算机。到20世纪60年代初，许多供应商已经为其计算机系统开发了批处理操作系统。IBM 7090/7094 计算机的操作系统IBSYS 因其对其他系统的广泛影响而尤为引人注目。</p>
+<p>简单批处理方案的核心思想是使用一种称为监视器（monitor）的软件。在这种操作系统中，用户不再直接访问处理器。取而代之的是，用户将作业通过卡片或磁带提交给计算机操作员，操作员按顺序将这些作业分批处理，并将整个批次放入输入设备上，供监视器使用。每个程序在完成处理后都会跳回监视器，此时监视器会自动开始加载下一个程序。</p>
+<p>为了理解该方案的工作原理，从两个角度来看一下：监视器的角度和处理器的角度。</p>
+<ul>
+<li><p>从监视器的角度来看：监视器控制事件的顺序。为此，监视器的大部分内容必须始终位于主内存中并可供执行。这部分内容称为常驻监视器。监视器的其余部分由实用程序和常用函数组成，它们在任何需要它们的作业开始时作为子例程加载到用户程序中。监视器一次从输入设备（通常是读卡器或磁带驱动器）读取一个作业。读取作业时，当前作业被放置在用户程序区，并将控制权传递给该作业。当该作业完成后，它将控制权返回给监视器，监视器立即读取下一个作业。每个作业的结果都被发送到输出设备（例如打印机）以交付给用户。</p>
+</li>
+<li><p>处理器的视角：在某一时刻，处理器正在执行来自包含监视器的主存部分中的指令。这些指令导致下一个作业被读入主存的另一部分。读入作业后，处理器将在监视器中遇到分支指令，该指令指示处理器从用户程序的开头继续执行。然后，处理器将执行用户程序中的指令，直到遇到结束或错误条件。任何一个事件都会导致处理器从监视器程序中获取下一条指令。因此，“控制权传递给作业”仅仅意味着处理器现在正在获取和执行用户程序中的指令，而“控制权返回给监视器”意味着处理器现在正在获取和执行来自监视器程序的指令。</p>
+</li>
+</ul>
+<p>监视器执行调度功能：将一批作业排成队列，并尽可能快地执行这些作业，中间没有空闲时间。监视器还可以缩短作业设置时间。每个作业的指令都包含在原始形式的作业控制语言 (JCL) 中。这是一种特殊的编程语言，用于向监视器提供指令。一个简单的例子是，用户提交一个用 FORTRAN 编程语言编写的程序以及一些程序将要使用的数据。所有 FORTRAN 指令和数据都位于单独的穿孔卡片或磁带上的单独记录中。除了 FORTRAN 和数据行之外，作业还包括作业控制指令，以开头的 $ 表示。作业的整体格式如下所示：</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/simple_batch.png" alt="simple_batch"></p>
+<p>为了执行此作业，监视器读取 $FTN 行并从其大容量存储器（通常是磁带）加载适当的语言编译器。编译器将用户程序转换为目标代码，存储在内存或大容量存储器中。如果存储在内存中，则操作称为“编译、加载和运行”。如果存储在磁带上，则需要 $LOAD 指令。监视器读取此指令，并在编译操作后重新获得控制权。监视器调用加载器，加载器将目标程序加载到内存中（代替编译器）并将控制权转移给它。通过这种方式，不同子系统可以共享一大段主内存，尽管一次只能执行一个这样的子系统。</p>
+<p>在用户程序执行期间，任何输入指令都会导致读取一行数据。用户程序中的输入指令会调用操作系统的输入例程。输入例程会检查程序是否意外读取了 JCL 行。如果发生这种情况，则会出错，控制权将转移到监视器。用户作业完成后，监视器将扫描输入行，直到遇到下一条 JCL 指令。因此，系统可以免受程序数据行过多或过少的影响。</p>
+<p>监视器（或批处理操作系统）只是一个计算机程序。它依赖于处理器从主内存的各个部分获取指令的能力，从而交替地获取和放弃控制权。此外，还需要一些其他硬件功能：</p>
+<ul>
+<li>内存保护 Memory protection：用户程序执行时，不得更改包含监视器的内存区域。如果发生此类尝试，处理器硬件应检测到错误并将控制权移交给监视器。然后，监视器将中止当前作业，打印错误消息，并加载下一个作业。</li>
+<li>计时器 Timer：计时器用于防止单个作业独占系统。计时器在每个作业开始时设置。如果计时器到期，用户程序将停止，控制权将返回给监视器。</li>
+<li>特权指令 Privileged instructions：某些机器级指令被指定为特权指令，只能由监视器执行。如果处理器在执行用户程序时遇到此类指令，则会发生错误，导致控制权转移给监视器。特权指令包括 I/O 指令，因此监视器保留对所有 I/O 设备的控制权。例如，这可以防止用户程序意外读取下一个作业的控制指令。如果用户程序希望执行 I/O 操作，则必须请求监视器为其执行该操作。</li>
+<li>中断：早期的计算机型号没有此功能。此功能使操作系统在将控制权移交给用户程序以及从用户程序重新获得控制权时拥有更大的灵活性。</li>
+</ul>
+<p>内存保护和特权指令的考虑引出了操作模式的概念。用户程序在用户模式（user mode）下执行，在该模式下，某些内存区域受到保护，用户无法使用，并且某些指令可能无法执行。监视器在系统模式下（或后来称为内核模式（kernel mode））执行，在该模式下可以执行特权指令，并且可以访问受保护的内存区域。</p>
+<p>当然，操作系统也可以不包含这些功能。但计算机供应商很快就意识到，这样做的结果只会造成混乱，因此，即使是相对原始的批处理操作系统也配备了这些硬件功能。</p>
+<p>在批处理操作系统中，处理器时间在用户程序执行和监视器执行之间交替。这需要做出两方面的牺牲：一部分主内存被分配给监视器，一部分处理器时间被监视器占用。这两者都是开销。尽管存在这些开销，但简单的批处理系统仍然提高了计算机的利用率。</p>
+<h3 id="Multiprogrammed-Batch-Systems"><a href="#Multiprogrammed-Batch-Systems" class="headerlink" title="Multiprogrammed Batch Systems"></a>Multiprogrammed Batch Systems</h3><p>这种和简单批处理系统用户都不能实时干预。即使有简单的批处理操作系统提供的自动作业排序功能，处理器也经常处于空闲状态，问题在于 I/O 设备的速度比处理器慢。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/cpu_utilization.png" alt="cpu_utilization"></p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/multiprogramming.png" alt="multiprogramming"></p>
+<p>上图详细描述了一个典型的计算过程。该计算涉及一个程序，该程序处理一个记录文件，平均每个记录执行 100 条机器指令。在这个例子中，计算机超过 96% 的时间都在等待 I/O 设备完成与文件之间的数据传输。图 2.5a 展示了这种情况，其中只有一个程序，称为单道编程。处理器需要花费一定的时间执行，直到遇到一条 I/O 指令。然后，它必须等到该 I/O 指令执行完毕才能继续执行。</p>
+<p>这种低效率是不必要的。我们知道必须有足够的内存来容纳操作系统（常驻监视器）和一个用户程序。假设有足够的空间容纳操作系统和两个用户程序。当一个作业需要等待 I/O 时，处理器可以切换到另一个很可能不会等待 I/O 的作业。此外，我们可以扩展内存以容纳三个、四个或更多程序，并在它们之间切换。这种方法被称为多道程序设计或多任务处理。它是现代操作系统的核心主题。</p>
+<p>单道程序和多道程序性能对比：略。</p>
+<p>与简单的批处理系统一样，多道程序批处理系统必须依赖于某些计算机硬件特性。对多道程序设计最显著且有用的附加特性是支持 I/O 中断和 DMA（直接内存访问）的硬件。使用中断驱动的 I/O 或 DMA，处理器可以为一个作业发出 I/O 命令，并在设备控制器执行 I/O 操作的同时继续执行另一个作业。当 I/O 操作完成后，处理器将被中断，控制权将移交给操作系统中的中断处理程序。操作系统会在处理完中断后将控制权移交给另一个作业。</p>
+<p>与单道程序或单道程序系统相比，多道程序操作系统相当复杂。为了使多个作业准备就绪，必须将它们保存在主内存中，这需要某种形式的内存管理。此外，如果有多个作业准备运行，处理器必须决定运行哪个作业，而这个决定需要一个调度算法。</p>
+<h3 id="Time-Sharing-Systems"><a href="#Time-Sharing-Systems" class="headerlink" title="Time-Sharing Systems"></a>Time-Sharing Systems</h3><p>分时系统。</p>
+<p>通过使用多道程序设计，批处理可以非常高效。然而，对于许多作业来说，提供一种用户与计算机直接交互的模式是可取的。事实上，对于某些作业，例如事务处理，交互模式至关重要。</p>
+<p>如今，对交互式计算设施的需求通常可以通过使用专用个人计算机或工作站来满足。这种选择在 20 世纪 60 年代是不存在的，当时大多数计算机体积庞大且价格昂贵。因此，分时技术应运而生。</p>
+<p>正如多道程序设计允许处理器同时处理多个批处理作业一样，多道程序设计也可用于处理多个交互式作业。在后一种情况下，该技术称为分时，因为处理器时间由多个用户共享。在分时系统中，多个用户同时通过终端访问系统，操作系统在短脉冲或计算量中交错执行每个用户程序。因此，如果有 n 个用户同时主动请求服务，则每个用户平均只能看到计算机有效容量的 1/n，这还不包括操作系统开销。然而，考虑到人类的反应时间相对较慢，设计合理的系统的响应时间应该与专用计算机的响应时间相似。</p>
+<p>Both batch processing and time sharing use multiprogramming. The key differ- ences are listed in Table below.</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/time_sharing.png" alt="time_sharing"></p>
+<p>最早开发的分时操作系统之一是兼容分时系统 (CTSS)，由麻省理工学院一个名为 MAC 项目（机器辅助认知或多路访问计算机）的小组开发。该系统最初于 1961 年为 IBM 709 开发，后来移植到 IBM 7094。</p>
+<p>与后来的系统相比，CTSS 较为原始。该系统运行在一台拥有 32,000 个 36 位字的主存的计算机上，其中常驻监视器占用了 5,000 个字。当需要将控制权分配给交互用户时，用户的程序和数据会被加载到主存剩余的 27,000 个字中。程序总是从第 5,000 个字的位置开始加载；这简化了监视器和内存管理。系统时钟以大约每 0.2 秒一次的速率产生中断。每次时钟中断时，操作系统都会重新获得控制权，并将处理器分配给其他用户。这种技术被称为时间片。因此，每隔一定时间间隔，当前用户就会被抢占，另一个用户会被加载进来。为了保存旧用户程序的状态以供稍后恢复，在读入新用户程序和数据之前，旧用户程序和数据会被写入磁盘。随后，当该程序下次运行时，旧用户程序的代码和数据会被恢复到主内存中。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/disk_traffic.png" alt="disk_traffic"></p>
+<p>为了最大限度地减少磁盘流量，只有当传入程序会覆盖用户内存时，才会将其写出。该原则如图 2.7 所示。假设有四个交互用户，他们的内存需求如下：</p>
+<ul>
+<li>JOB1:15,000</li>
+<li>JOB2:20,000</li>
+<li>JOB3:5,000</li>
+<li>JOB4:10,000</li>
+</ul>
+<p>最初，监视器加载 JOB1 并将控制权转交给它（a）。随后，监视器决定将控制权转交给 JOB2。由于 JOB2 比 JOB1 需要更多内存，因此必须先写出 JOB1，然后再加载 JOB2（图 b）。接下来，加载并运行 JOB3。但是，由于 JOB3 小于 JOB2，因此 JOB2 的一部分可以保留在内存中，从而减少磁盘写入时间（c）。随后，监视器决定将控制权转回给 JOB1。在将 JOB1 加载回内存时，必须写出 JOB2 的额外部分（d）。加载 JOB4 时，将保留 JOB1 的一部分和 JOB2 剩余在内存中的部分（e）。此时，如果激活 JOB1 或 JOB2，则只需部分加载。在此示例中，接下来运行的是 JOB2。这要求写出 JOB4 和 JOB1 的剩余驻留部分，并读入 JOB2 的缺失部分（f）。</p>
+<p>与当今的分时技术相比，CTSS 方法略显原始，但却非常有效。它极其简单，最大限度地减少了监视器的大小。由于作业始终加载到内存中的相同位置，因此加载时无需重定位技术。只写出必要内容的技术最大限度地减少了磁盘活动。CTSS 在 7094 上运行，最多支持 32 位用户</p>
+<p>分时和多道程序设计给操作系统带来了一系列新问题。如果内存中存在多个作业，则必须保护它们免受干扰，例如修改彼此的数据。当有多个交互式用户时，必须保护文件系统，以便只有授权用户才能访问特定文件。必须处理对打印机和大容量存储设备等资源的争用。</p>
+<h2 id="Major-Achievements"><a href="#Major-Achievements" class="headerlink" title="Major Achievements"></a>Major Achievements</h2><p>操作系统是迄今为止最复杂的软件之一。这反映了操作系统在兼顾便捷性、效率和演进能力等目标时所面临的挑战，这些目标有时甚至相互冲突。有人认为，操作系统的发展经历了四大理论进步：</p>
+<ul>
+<li>Processes</li>
+<li>Memory management</li>
+<li>Information protection and security</li>
+<li>Scheduling and resource management</li>
+</ul>
+<p>每项进展都以解决实际难题而发展出的原则或抽象为特征。总的来说，这四个领域涵盖了现代操作系统的许多关键设计和实现问题。</p>
+<h3 id="The-Process"><a href="#The-Process" class="headerlink" title="The Process"></a>The Process</h3><p>操作系统设计的核心是“进程”的概念。这个术语最早由 Multics 的设计者在 20 世纪 60 年代使用。它比“作业” job 更为通用。“进程”一词有多种定义，包括：</p>
+<ul>
+<li>A program in execution</li>
+<li>An instance of a program running on a computer</li>
+<li>The entity that can be assigned to and executed on a processor</li>
+<li>A unit of activity characterized by a single sequential thread of execution, a current state, and an associated set of system resources</li>
+</ul>
+<p>计算机系统发展的三大主要方向引发了时间和同步方面的问题，并促成了进程概念的发展：多道程序批处理、分时和实时事务系统。正如我们所见，多道程序设计旨在使处理器和I/O设备（包括存储设备）同时处于忙碌状态，以实现最高效率。其关键机制如下：响应指示I/O事务完成的信号，处理器会在驻留在主存中的各种程序之间切换。</p>
+<p>第二条发展路线是通用分时系统。其关键设计目标是响应单个用户的需求，同时出于成本考虑，能够同时支持多个用户。由于用户的反应时间相对较慢，因此这些目标是可以兼容的。例如，如果一个典型用户平均每分钟需要 2 秒的处理时间，那么接近 30 个这样的用户应该能够共享同一个系统而不会受到明显的干扰。当然，操作系统开销必须计入此类计算中。</p>
+<p>第三个重要的发展方向是实时事务处理系统。在这种情况下，许多用户正在对数据库进行查询或更新。例如，航空预订系统。事务处理系统和分时系统之间的关键区别在于，前者仅限于一个或几个应用程序，而分时系统的用户可以参与程序开发、作业执行以及各种应用程序的使用。在这两种情况下，系统响应时间都至关重要。</p>
+<p>在开发早期多道程序设计和多用户交互系统时，系统程序员可用的主要工具是中断。任何作业的活动都可能因发生特定事件（例如 I/O 完成）而暂停。处理器会保存某种上下文（例如程序计数器和其他寄存器），并跳转到中断处理例程，该例程将确定中断的性质，处理中断，然后恢复用户处理被中断的作业或其他作业。</p>
+<p>设计用于协调这些不同活动的系统软件变得异常困难。由于任何时候都有许多作业在进行，每个作业都涉及按顺序执行的多个步骤，因此不可能分析所有可能的事件序列组合。由于缺乏系统性的活动协调与合作手段，程序员只能根据自己对操作系统控制环境的理解，采取临时方法。这些工作很容易受到细微编程错误的影响，这些错误的影响只有在某些相对罕见的操作序列发生时才能观察到。这些错误很难诊断，因为它们需要与应用程序软件错误和硬件错误区分开来。即使检测到错误，也很难确定原因，因为错误发生的确切条件很难重现。一般来说，此类错误主要有四个原因：</p>
+<ul>
+<li><p>同步不当：通常情况下，一个例程必须暂停，等待系统中其他事件的发生。例如，一个发起 I/O 读取的程序必须等到缓冲区中的数据可用后才能继续执行。在这种情况下，需要来自其他例程的信号。信号机制设计不当可能导致信号丢失或重复接收信号。</p>
+</li>
+<li><p>互斥失败：多个用户或程序经常会尝试同时使用共享资源。例如，两个用户可能同时尝试编辑同一个文件。如果这些访问不受控制，就会发生错误。必须存在某种互斥机制，确保每次只允许一个例程对文件执行更新操作。这种互斥机制的实现很难在所有可能的事件序列下验证其正确性。</p>
+</li>
+<li><p>不确定的程序操作：特定程序的结果通常仅取决于该程序的输入，而不取决于共享系统中其他程序的活动。但是，当程序共享内存，并且它们的执行被处理器交错时，它们可能会以不可预测的方式覆盖公共内存区域，从而相互干扰。因此，各个程序的调度顺序可能会影响任何特定程序的结果。</p>
+</li>
+<li><p>死锁：两个或多个程序可能会因为互相等待而挂起。例如，两个程序可能各自需要两个 I/O 设备来执行某些操作（例如，磁盘到磁带的复制）。其中一个程序控制了其中一个设备，而另一个程序控制了另一个设备。每个程序都在等待对方释放所需的资源。这种死锁可能取决于资源分配和释放的偶然时机。</p>
+</li>
+</ul>
+<p>解决这些问题需要一种系统的方法来监视和控制处理器上执行的各种程序。进程的概念提供了基础。我们可以将进程视为由三个部分组成：</p>
+<ol>
+<li>An executable program</li>
+<li>The associated data needed by the program(variables,workspace,buffers,etc.)</li>
+<li>The execution context of the program</li>
+</ol>
+<p>最后一个元素至关重要。执行上下文（或进程状态）是操作系统用来监督和控制进程的内部数据。这些内部信息与进程分离，因为操作系统包含进程不允许访问的信息。上下文包含操作系统管理进程所需的所有信息，以及处理器正确执行进程所需的所有信息。上下文包含各种处理器寄存器的内容，例如程序计数器和数据寄存器。它还包含操作系统有用的信息，例如进程的优先级以及进程是否正在等待特定 I/O 事件的完成。</p>
+<p>下图展示了一种进程管理方式。两个进程 A 和 B 存在于主存的某些部分中。也就是说，每个进程都会分配一块内存，其中包含程序、数据和上下文信息。每个进程都记录在由操作系统构建和维护的进程列表中。进程列表为每个进程包含一个条目，其中包含指向该进程所在内存块位置的指针。该条目还可能包含进程的部分或全部执行上下文。执行上下文的其余部分存储在其他位置，可能与进程本身一起存储（如图所示），也可能经常存储在单独的内存区域中。进程索引寄存器包含当前控制处理器的进程在进程列表中的索引。程序计数器指向该进程中要执行的下一条指令。基址寄存器和界限寄存器定义了进程占用的内存区域：基址寄存器是内存区域的起始地址，界限寄存器是区域的大小（以字节或字为单位）。程序计数器和所有数据引用均相对于基址寄存器进行解释，且不得超过限制寄存器中的值。这可以防止进程间干扰。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/process.png" alt="process"></p>
+<p>在图中，进程索引寄存器指示进程 B 正在执行。进程 A 之前正在执行，但被暂时中断。A 中断时所有寄存器的内容都记录在其执行上下文中。之后，操作系统可以执行进程切换并恢复进程 A 的执行。进程切换包括保存 B 的上下文并恢复 A 的上下文。当程序计数器加载指向 A 程序区域的值时，进程 A 将自动恢复执行。</p>
+<p>因此，进程被实现为一种数据结构。进程可以处于执行状态或等待执行状态。进程在任何时刻的完整状态都包含在其上下文中。这种结构允许开发强大的技术来确保进程之间的协调与合作。通过扩展上下文以包含支持该功能所需的任何新信息，可以设计新功能并将其合并到操作系统中（例如优先级）。</p>
+<h3 id="Memory-Management"><a href="#Memory-Management" class="headerlink" title="Memory Management"></a>Memory Management</h3><p>支持模块化编程和灵活数据使用的计算环境能够最大程度地满足用户的需求。系统管理员需要高效有序地控制存储分配。为了满足这些需求，操作系统承担了五项主要的存储管理职责：</p>
+<ol>
+<li>进程隔离：操作系统必须防止独立进程相互干扰彼此的内存（包括数据和指令）。</li>
+<li>自动分配和管理：程序应根据需要在内存层次结构中动态分配。分配过程应该对程序员透明。这样，程序员就无需担心内存限制，操作系统也可以根据需要为作业分配内存，从而提高效率。</li>
+<li>支持模块化编程：程序员应该能够定义程序模块，并动态地创建、销毁和改变模块的大小。</li>
+<li>保护和访问控制：在内存层次结构的任何层级上共享内存，都有可能使一个程序访问另一个程序的内存空间。当特定应用程序需要共享内存时，这种做法是可行的。但有时，这会威胁到程序的完整性，甚至操作系统本身的完整性。操作系统必须允许不同用户以各种方式访问​​部分内存。</li>
+<li>长期存储：许多应用程序需要在计算机关闭后长时间存储信息。</li>
+</ol>
+<p>通常，操作系统通过虚拟内存和文件系统功能来满足这些要求。文件系统实现长期存储，将信息存储在称为文件的命名对象中。文件对于程序员来说是一个方便的概念，也是操作系统访问控制和保护的有用单元。</p>
+<p>虚拟内存是一种允许程序从逻辑角度寻址内存的功能，而不必考虑物理上可用的主内存量。虚拟内存的设计目的是满足多个用户作业同时驻留在主内存中的要求，因此在一个进程写出到辅助存储器而后继进程读入时，连续进程的执行之间不会有中断。由于进程的大小各不相同，如果处理器在多个进程之间切换，则很难将它们紧凑地打包到主内存中。分页系统被引入，它允许进程由多个固定大小的块（称为页面）组成。程序通过由页号和页内偏移量组成的虚拟地址来引用字。进程的每个页面可能位于主内存中的任何位置。分页系统提供了程序中使用的虚拟地址和主内存中的实际地址或物理地址之间的动态映射。</p>
+<p>有了动态映射硬件，下一步逻辑上就是消除进程所有页面必须同时驻留在主存中的要求。进程的所有页面都维护在磁盘上。进程执行时，部分页面位于主存中。如果引用了不在主存中的页面，内存管理硬件会检测到这种情况，并与操作系统协调，安排加载缺失的页面。这种方案称为虚拟内存。</p>
+<p>虚拟内存系统需要硬件的支持，因为每次内存访问几乎都会进行地质转换，软件实现性能太差，所以需要 MMU，MMU 通常都集成到了CPU 中 。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/VM.png" alt="VM"></p>
+<p>处理器硬件与操作系统一起为用户提供了一个可以访问虚拟内存的“虚拟处理器”。该内存可以是线性地址空间，也可以是段的集合，段是长度可变的连续地址块。无论哪种情况，编程语言指令都可以引用虚拟内存区域中的程序和数据位置。通过为每个进程分配一个唯一的、不重叠的虚拟内存，可以实现进程隔离。通过重叠两个虚拟内存空间的部分区域，可以实现内存共享。文件保存在长期存储中。文件和文件的部分内容可以被复制到虚拟内存中，以供程序操作。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/VM_address.png" alt="VM_address"></p>
+<p>上图突出显示了虚拟内存方案中的寻址问题。存储由可直接寻址（通过机器指令）的主内存和低速辅助内存组成，后者通过将块加载到主内存来间接访问。地址转换硬件（内存管理单元）介于处理器和内存之间。程序使用虚拟地址引用位置，这些虚拟地址映射到真实的主内存地址。如果引用了不在实内存中的虚拟地址，则实内存的一部分内容将被换出到辅助内存，并将所需的数据块换入。在此活动期间，必须暂停生成地址引用的进程。操作系统设计人员需要开发一种开销较小的地址转换机制，以及一种可最大程度减少内存级别之间流量的存储分配策略。</p>
+<h3 id="Information-Protection-and-Security"><a href="#Information-Protection-and-Security" class="headerlink" title="Information Protection and Security"></a>Information Protection and Security</h3><p>着分时系统以及近年来计算机网络的使用日益增长，人们对信息保护的关注也日益加深。组织所面临的威胁性质会因具体情况而异。然而，有一些通用工具可以内置到支持各种保护和安全机制的计算机和操作系统中。总的来说，我们关注的是控制对计算机系统及其存储信息的访问的问题。</p>
+<p>与操作系统相关的安全和保护工作大致可分为四类：</p>
+<ol>
+<li>Availability 可用性：关注保护系统免受中断</li>
+<li>Confidentiality 保密性：确保用户无法读取未经授权的数据</li>
+<li>Data integrity 数据完整性：保护数据免遭未经授权的修改</li>
+<li>Authenticity 真实性：关注用户身份的正确验证以及消息或数据的有效性</li>
+</ol>
+<h3 id="Scheduling-and-Resource-Management"><a href="#Scheduling-and-Resource-Management" class="headerlink" title="Scheduling and Resource Management"></a>Scheduling and Resource Management</h3><p>操作系统的一项关键职责是管理各种可用资源（主内存空间、I/O设备、处理器），并调度各个活动进程使用这些资源。任何资源分配和调度策略都必须考虑三个因素：</p>
+<ol>
+<li>Fairness 公平性：通常希望所有竞争特定资源的进程都能获得大致平等且公平的资源使用权。对于同一类别的作业，即需求相似的作业，尤其如此。</li>
+<li>Differential responsiveness 差异化响应：另一方面，操作系统可能需要区分不同类别、具有不同服务需求的作业。操作系统应尝试做出分配和调度决策，以满足所有需求。操作系统还应动态地做出这些决策。例如，如果某个进程正在等待使用 I/O 设备，操作系统可能希望尽快安排该进程执行；这样，该进程就可以立即使用该设备，然后释放它以供其他进程稍后使用。</li>
+<li>Efficiency 效率：操作系统应该尝试最大化吞吐量，最小化响应时间，并且在分时的情况下，容纳尽可能多的用户。这些标准相互冲突；如何在特定情况下找到合适的平衡点，一直是操作系统研究中的难题。</li>
+</ol>
+<p>调度和资源管理本质上是运筹学问题，该学科的数学成果可以应用于此。此外，系统活动的测量对于监控性能和进行调整至关重要。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/shcedule.png" alt="shcedule"></p>
+<p>上图显示了在多道程序环境中涉及进程调度和资源分配的操作系统的主要元素。操作系统维护着许多队列，每个队列都是等待某种资源的进程列表。短期队列由位于主存中（或每个进程的至少基本最小部分位于主存中）的进程组成，这些进程一旦处理器可用即可运行。这些进程中的任何一个都可以接下来使用处理器。由短期调度程序或分派程序来选择一个。一种常见的策略是轮流给队列中的每个进程一些时间；这称为 round-robin 循环技术。实际上，循环技术采用了循环队列。另一种策略是为各个进程分配优先级，由调度程序按优先级顺序选择进程。</p>
+<p>长期队列是等待使用处理器的新作业列表。操作系统通过将进程从长期队列转移到短期队列来向系统添加作业。此时，必须为传入的进程分配一部分主内存。因此，操作系统必须确保不会因允许过多进程进入系统而导致内存或处理时间过量。每个 I/O 设备都有一个 I/O 队列。多个进程可能会请求使用同一个 I/O 设备。所有等待使用每个设备的进程都排在该设备的队列中。同样，操作系统必须确定将哪个进程分配给可用的 I/O 设备。</p>
+<p>如果发生中断，操作系统会在中断处理程序处接收处理器的控制权。进程可以通过服务调用来专门调用某些操作系统服务，例如 I/O 设备处理程序。在这种情况下，服务调用处理程序是操作系统的入口点。无论如何，一旦中断或服务调用被处理，就会调用短期调度程序来选择一个进程执行。</p>
+<table>
+<thead>
+<tr>
+<th>调度类型</th>
+<th>队列名称</th>
+<th>对象</th>
+<th>发生频率</th>
+<th>目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Long-term</td>
+<td>long-term queue（作业队列）</td>
+<td>磁盘上的作业（job pool）</td>
+<td>低（秒~分钟）</td>
+<td>控制系统负载，多道程序度</td>
+</tr>
+<tr>
+<td>Medium-term</td>
+<td>medium-term queue（挂起队列）</td>
+<td>挂起的进程</td>
+<td>中等（秒级）</td>
+<td>减少内存压力，提高效率</td>
+</tr>
+<tr>
+<td>Short-term</td>
+<td>short-term queue（就绪队列）</td>
+<td>内存中的就绪进程</td>
+<td>高（毫秒级）</td>
+<td>决定哪个进程上 CPU</td>
+</tr>
+</tbody></table>
+<p>以上只是功能描述；操作系统这部分的细节和模块化设计在不同系统中会有所不同。操作系统的大部分研发工作都致力于为此功能选择算法和数据结构，以提供公平性、差异化响应和效率。</p>
+<h2 id="迈向现代操作系统"><a href="#迈向现代操作系统" class="headerlink" title="迈向现代操作系统"></a>迈向现代操作系统</h2><p>多年来，操作系统的结构和功能一直在逐步演变。然而，近年来，许多新的设计元素被引入到新的操作系统和现有操作系统的新版本中，从而导致操作系统的性质发生了重大变化。这些现代操作系统响应了硬件的新发展、新的应用程序和新的安全威胁。关键的硬件驱动因素包括多处理器系统、大大提高的处理器速度、高速网络附件以及不断增加的内存存储设备的大小和种类。在应用领域，多媒体应用程序、互联网和 Web 访问以及客户端/服务器计算影响了操作系统的设计。在安全性方面，计算机的互联网访问大大增加了潜在的威胁，日益复杂的攻击（如病毒、蠕虫和黑客技术）对操作系统设计产生了深远的影响</p>
+<p>操作系统需求的变化速度不仅要求对现有架构进行修改和增强，还需要新的操作系统组织方式。无论是实验性操作系统还是商业操作系统，人们都尝试了各种不同的方法和设计元素，但大部分工作可以归结为以下几类：</p>
+<ul>
+<li>Microkernel architecture</li>
+<li>Multithreading</li>
+<li>Symmetric multiprocessing</li>
+<li>Distributed operating systems</li>
+<li>Object-oriented design</li>
+</ul>
+<p>直到最近，大多数操作系统都采用大型单片内核（宏内核 monolithic kernel）。这些大型内核提供了大多数被认为是 OS 功能的功能，包括调度、文件系统、网络、设备驱动程序、内存管理等。通常，单片内核作为单个进程实现，所有元素共享相同的地址空间。微内核架构仅将少数基本功能分配给内核，包括地址空间管理、进程间通信 (IPC) 和基本调度。其他 OS 服务由进程（有时称为服务器）提供，这些进程在用户模式下运行，并被微内核像对待其他任何应用程序一样处理。这种方法将内核和服务器的开发解耦。服务器可以根据特定的应用程序或环境要求进行定制。微内核方法简化了实现，提供了灵活性，并且非常适合分布式环境。本质上，微内核以相同的方式与本地和远程服务器进程交互，从而促进了分布式系统的构建。</p>
+<p>Tanenbaum–Torvalds debate.</p>
+<p>多线程是一种将执行应用程序的进程划分为可并发运行的线程的技术。我们可以做出以下区分：</p>
+<ul>
+<li>Thread: 可调度的工作单元。它包含一个处理器上下文（包含程序计数器和堆栈指针）以及一个用于堆栈的自身数据区域（用于启用子程序分支）。线程按顺序执行，并且<br>可中断，因此处理器可以切换到另一个线程。</li>
+<li>Process：一个或多个线程及其相关系统资源（例如包含代码和数据的内存、打开的文件和设备）的集合。这与正在执行的程序的概念非常相似。通过将单个应用程序拆分为多个线程，程序员可以更好地控制应用程序的模块化以及与应用程序相关的事件的时序。</li>
+</ul>
+<p>对于执行大量本质上独立且无需串行的任务的应用程序来说，多线程非常有用。例如，数据库服务器会监听并处理大量客户端请求。由于同一进程内运行多个线程，因此在线程之间来回切换比在不同进程之间进行大规模进程切换所需的处理器开销更小。线程对于构建操作系统内核中的进程也非常有用。</p>
+<p>对称多处理 (SMP) 是一个术语，指一种计算机硬件架构，也指利用该架构的操作系统行为。SMP 的操作系统负责在所有处理器上调度进程或线程。与单处理器架构相比，SMP 具有许多潜在优势，包括：</p>
+<ul>
+<li>Performance 性能：如果计算机要完成的工作能够被组织起来，使部分工作能够并行完成，那么拥有多个处理器的系统将比拥有同类型单个处理器的系统性能更高。如图所示。在多道程序设计中，一次只能执行一个进程；与此同时，所有其他进程都在等待处理器。在多处理系统中，多个进程可以同时运行，每个进程在不同的处理器上。</li>
+<li>Availability 可用性：在非对称多处理器系统中，由于所有处理器都能执行相同的功能，因此单个处理器的故障不会导致系统停止运行。相反，系统可以继续运行，但性能会降低。</li>
+<li>Incrementalgrowth 增量增长：用户可以通过添加额外的处理器来增强系统的性能。</li>
+<li>Scaling 扩展：供应商可以根据系统中配置的处理器数量提供一系列具有不同价格和性能特征的产品。</li>
+</ul>
+<p>需要注意的是，这些只是潜在的优势，而非必然的优势。操作系统必须提供工具和功能来充分利用 SMP 系统中的并行性。</p>
+<p>多线程和 SMP 经常被一起讨论，但两者是相互独立的功能。即使在单处理器系统上，多线程对于构建应用程序和内核进程也非常有用。SMP 系统甚至对非线程进程也很有用，因为多个进程可以并行运行。然而，这两个功能相辅相成，可以有效地结合使用。</p>
+<p><img src="/blog/2025/09/20/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-2/multiprocess.png" alt="multiprocess"></p>
+<p>SMP 的一个吸引人的特性是多处理器的存在对用户来说是透明的。操作系统负责在各个​​处理器上调度线程或进程，并负责处理器之间的同步。本书讨论了用于向用户提供单系统外观的调度和同步机制。另一个问题是为由独立计算机组成的集群（即多计算机系统）提供单系统的外观。在这种情况下，我们处理的是一组计算机，每台计算机都有自己的主存储器、辅助存储器和其他 I/O 模块。分布式操作系统提供了单个主存储器空间和单个辅助存储器空间的假象，以及其他统一的访问设施，例如分布式文件系统。尽管集群越来越流行，市场上也有许多集群产品，但分布式操作系统的现状仍然落后于单处理器和 SMP 操作系统。</p>
+<p>操作系统设计的另一项创新是面向对象技术的运用。面向对象设计使向小型内核添加模块化扩展的过程更加规范。在操作系统层面，基于对象的结构使程序员能够在不破坏系统完整性的情况下定制操作系统。面向对象技术还简化了分布式工具和成熟分布式操作系统的开发。</p>
+<h2 id="Fault-Tolerance"><a href="#Fault-Tolerance" class="headerlink" title="Fault Tolerance"></a>Fault Tolerance</h2><p>容错（Fault tolerance）是指一个系统或组件在存在硬件或软件故障的情况下，仍然能够继续正常运行的能力。这通常需要一定程度的冗余。容错的目的在于提高系统的可靠性。通常，增加容错性（也就是提高可靠性）会带来一定的代价，无论是经济上的成本，还是性能上的损耗，抑或两者兼有。因此，采用容错措施的程度必须取决于该资源有多关键。</p>
+<h3 id="Fundamental-Concepts"><a href="#Fundamental-Concepts" class="headerlink" title="Fundamental Concepts"></a>Fundamental Concepts</h3><p>与容错相关的衡量系统运行质量的三个基本指标是：可靠性（reliability）、平均失效时间（MTTF, Mean Time To Failure） 和 可用性（availability）。这些概念最初是专门针对硬件故障提出的，但更广泛地也适用于硬件和软件故障。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/OS/" rel="tag"><i class="fa fa-tag"></i> OS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2025/09/13/OS-%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E5%92%8C%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-part1-1/" rel="prev" title="OS 内部结构和设计原则-part1_1">
+      <i class="fa fa-chevron-left"></i> OS 内部结构和设计原则-part1_1
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Learning-Objectives"><span class="nav-number">1.</span> <span class="nav-text">Learning Objectives</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%9B%AE%E7%9A%84%E5%92%8C%E5%8A%9F%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">操作系统的目的和功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-OS-as-a-User-x2F-Computer-Interface"><span class="nav-number">2.1.</span> <span class="nav-text">The OS as a User&#x2F;Computer Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-OS-as-Resource-Manager"><span class="nav-number">2.2.</span> <span class="nav-text">The OS as Resource Manager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ease-of-Evolution-of-an-OS"><span class="nav-number">2.3.</span> <span class="nav-text">Ease of Evolution of an OS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%BC%94%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">操作系统的演化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial-Processing"><span class="nav-number">3.1.</span> <span class="nav-text">Serial Processing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Simple-Batch-Systems"><span class="nav-number">3.2.</span> <span class="nav-text">Simple Batch Systems</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multiprogrammed-Batch-Systems"><span class="nav-number">3.3.</span> <span class="nav-text">Multiprogrammed Batch Systems</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-Sharing-Systems"><span class="nav-number">3.4.</span> <span class="nav-text">Time-Sharing Systems</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Major-Achievements"><span class="nav-number">4.</span> <span class="nav-text">Major Achievements</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Process"><span class="nav-number">4.1.</span> <span class="nav-text">The Process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-Management"><span class="nav-number">4.2.</span> <span class="nav-text">Memory Management</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Information-Protection-and-Security"><span class="nav-number">4.3.</span> <span class="nav-text">Information Protection and Security</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scheduling-and-Resource-Management"><span class="nav-number">4.4.</span> <span class="nav-text">Scheduling and Resource Management</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%88%E5%90%91%E7%8E%B0%E4%BB%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">5.</span> <span class="nav-text">迈向现代操作系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fault-Tolerance"><span class="nav-number">6.</span> <span class="nav-text">Fault Tolerance</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Fundamental-Concepts"><span class="nav-number">6.1.</span> <span class="nav-text">Fundamental Concepts</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="朱佳东"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">朱佳东</p>
+  <div class="site-description" itemprop="description">melon</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjd-melo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjd-melo" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:826695779@qq.com" title="E-Mail → mailto:826695779@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朱佳东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">384k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">5:49</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
