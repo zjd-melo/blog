@@ -285,7 +285,7 @@
 <p>当程序存储在独立的源文件中时，源代码修改后，只需要重新编译发生变化的文件。在这种方法中，源文件被单独编译，然后链接 linked 在一起，这是一个两阶段的过程 two stage process。在第一阶段，编译一个文件而不创建可执行文件，编译结果称为目标文件 object file，使用 GCC 时 obj 文件扩展名为<code>.o</code>。</p>
 <p>在第二阶段，目标文件由一个称为链接器的单独程序合并在一起。链接器将所有目标文件组合在一起以创建单个可执行文件。</p>
 <p>目标文件包含机器代码，其中对其他文件中函数（或变量）的内存地址的任何引用均未定义。这样，源文件就可以在不直接引用彼此的情况下进行编译。链接器在生成可执行文件时会填充这些缺失的地址。</p>
-<p>An object file contains machine code where any references to the mem- ory addresses of functions (or variables) in other files are left undefined. This allows source files to be compiled without direct reference to each other. The linker fills in these missing addresses when it produces the executable.</p>
+<p>An object file contains machine code where any references to the memory addresses of functions (or variables) in other files are left undefined. This allows source files to be compiled without direct reference to each other. The linker fills in these missing addresses when it produces the executable.</p>
 <h4 id="从源文件创建目标文件"><a href="#从源文件创建目标文件" class="headerlink" title="从源文件创建目标文件"></a>从源文件创建目标文件</h4><p>gcc 命令选项 <code>-c</code> 就是用来把单个源文件生成目标文件的，比如 <code>gcc -Wall -c main.c</code> 这个命令使用 <code>main.c</code> 生成了目标文件 <code>main.o</code>，这个目标文件包含了 <code>main</code> 函数的机器码，并且包含一个对外部函数 <code>hello</code> 的引用，但是在这一阶段目标文件中对外部函数 <code>hello</code> 的引用的内存地址还未确定（undefined），之后会被 <code>**linker**</code> 填充。</p>
 <p>注意在生成目标文件时没必要使用 <code>-o</code> 指定目标文件的名称，当使用 <code>-c</code> 进行编译时，编译器会自动创建一个与源文件同名的目标文件，但用 <code>.o</code> 代替原始扩展名。</p>
 <p>不需要在命令行上放置头文件 <code>hello.h</code>，因为它会被 <code>main.c</code> 和 <code>hello_fn.c</code> 中的 <code>#include</code> 预处理指定自动包含。</p>
