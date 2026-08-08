@@ -147,17 +147,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">22</span></a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">23</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">89</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">90</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -238,20 +238,6 @@
               </span>
               <span class="post-meta-item-text">Views: </span>
               <span id="busuanzi_value_page_pv"></span>
-            </span><br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.7k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
             </span>
             <div class="post-description">计算机网络局域网</div>
 
@@ -264,7 +250,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="MAC-Medium-x2F-Meida-Access-Control-地址"><a href="#MAC-Medium-x2F-Meida-Access-Control-地址" class="headerlink" title="MAC Medium/Meida Access Control 地址"></a>MAC Medium/Meida Access Control 地址</h2><p>或称为 LAN 地址、物理地址、以太网地址，作用是用于局域网内标识一个帧从哪个<br>接口发出，到达哪个物理相连的其他接口。</p>
+        <h2 id="MAC-Medium-Meida-Access-Control-地址"><a href="#MAC-Medium-Meida-Access-Control-地址" class="headerlink" title="MAC Medium/Meida Access Control 地址"></a>MAC Medium/Meida Access Control 地址</h2><p>或称为 LAN 地址、物理地址、以太网地址，作用是用于局域网内标识一个帧从哪个<br>接口发出，到达哪个物理相连的其他接口。</p>
 <p>48位 MAC 地址（用于大部分LANS），固化在网卡的 ROM 中，有时也可以软件设置（要至少保证在本地局域网中唯一）。</p>
 <p>MAC 地址由 IEEE 统一管理与分配，网卡生产厂商需要购买 MAC 地址空间（前24比特）。</p>
 <h3 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h3><p>MAC 地址 == 身份证号  IP 地址 == 邮政地址。</p>
@@ -290,7 +276,7 @@
 <li>不可靠（unreliable）：接收网卡不向发送网卡进行确认，差错帧直接丢弃，丢弃帧中的数据恢复依靠高层协议，否则发生数据丢失。</li>
 <li>以太网的 MAC 协议：采用二进制指数退避算法的 CSMA/CD 协议。</li>
 </ul>
-<h3 id="以太网-CSMA-x2F-CD-算法"><a href="#以太网-CSMA-x2F-CD-算法" class="headerlink" title="以太网 CSMA/CD 算法"></a>以太网 CSMA/CD 算法</h3><ol>
+<h3 id="以太网-CSMA-CD-算法"><a href="#以太网-CSMA-CD-算法" class="headerlink" title="以太网 CSMA/CD 算法"></a>以太网 CSMA/CD 算法</h3><ol>
 <li>NIC（网卡）从网络层接收数据报，创建数据帧。</li>
 <li>监听信道：如果 NIC 监听到信道空闲，则开始发送帧；如果信道忙，则一致等待到信道空闲（1坚持），然后发送帧。</li>
 <li>NIC 发送完整个帧，而没有检测到其他结点的数据发送，则 NIC 确认帧发送成功。</li>
@@ -312,7 +298,7 @@
 <p>Q：交换表入口信息如何创建和维护？</p>
 <p>A：自学习</p>
 <h3 id="自学习"><a href="#自学习" class="headerlink" title="自学习"></a>自学习</h3><p>交换机通过自学习，获知到达主机的接口信息，当收到帧时，交换机学习到发送帧的主机（通过帧的源 MAC地址），<br>位于收到该帧的接口所连接的 LAN 网段，将发送主机 MAC 地址/接口信息记录到交换表中。<br>如果此时有伪造 MAC 地址怎么处理？</p>
-<h3 id="帧过滤-x2F-转发"><a href="#帧过滤-x2F-转发" class="headerlink" title="帧过滤/转发"></a>帧过滤/转发</h3><p>当交换机收到帧：</p>
+<h3 id="帧过滤-转发"><a href="#帧过滤-转发" class="headerlink" title="帧过滤/转发"></a>帧过滤/转发</h3><p>当交换机收到帧：</p>
 <ol>
 <li>记录帧的源 MAC 地址与输入链路接口</li>
 <li>利用目的 MAC 地址检索交换表</li>
@@ -445,7 +431,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="CSMA-x2F-CA"><a href="#CSMA-x2F-CA" class="headerlink" title="CSMA/CA"></a>CSMA/CA</h3><p>基本思想：允许发送端预约信道，而不是随机发送数据帧，从而避免长数据帧的冲突。</p>
+<h3 id="CSMA-CA"><a href="#CSMA-CA" class="headerlink" title="CSMA/CA"></a>CSMA/CA</h3><p>基本思想：允许发送端预约信道，而不是随机发送数据帧，从而避免长数据帧的冲突。</p>
 <ul>
 <li>发送端首先利用 CSMA 向 BS 发送一个很短的 RTS（request to send）帧<ul>
 <li>RTS帧仍可能彼此冲突（但RTS帧很短，影响比数据帧冲突小）</li>
@@ -545,7 +531,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MAC-Medium-x2F-Meida-Access-Control-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.</span> <span class="nav-text">MAC Medium&#x2F;Meida Access Control 地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E6%AF%94"><span class="nav-number">1.1.</span> <span class="nav-text">类比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARP-%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.</span> <span class="nav-text">ARP 地址解析协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E4%B8%80%E4%B8%AA%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85"><span class="nav-number">2.1.</span> <span class="nav-text">同一个局域网内</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%9C%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85"><span class="nav-number">2.2.</span> <span class="nav-text">不在同一个局域网内</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91-ETHERNET"><span class="nav-number">3.</span> <span class="nav-text">以太网 ETHERNET</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E6%8B%93%E6%89%91"><span class="nav-number">3.1.</span> <span class="nav-text">物理拓扑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E9%9D%A0%E3%80%81%E6%97%A0%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">不可靠、无连接服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91-CSMA-x2F-CD-%E7%AE%97%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">以太网 CSMA&#x2F;CD 算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7%E7%BB%93%E6%9E%84"><span class="nav-number">3.4.</span> <span class="nav-text">以太网帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%AF%BC%E7%A0%81-preabmle"><span class="nav-number">3.4.1.</span> <span class="nav-text">前导码 preabmle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE-%E6%BA%90-MAC"><span class="nav-number">3.4.2.</span> <span class="nav-text">目-源 MAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B-Type"><span class="nav-number">3.4.3.</span> <span class="nav-text">类型 Type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE-data"><span class="nav-number">3.4.4.</span> <span class="nav-text">数据 data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CRC"><span class="nav-number">3.4.5.</span> <span class="nav-text">CRC</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E4%BA%A4%E6%8D%A2%E6%9C%BA-switch"><span class="nav-number">4.</span> <span class="nav-text">以太网交换机 switch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%AB%AF%E5%8F%A3%E9%97%B4%E5%90%8C%E6%97%B6%E4%BC%A0%E8%BE%93"><span class="nav-number">4.1.</span> <span class="nav-text">多端口间同时传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E8%BD%AC%E5%8F%91%E8%A1%A8-%E4%BA%A4%E6%8D%A2%E8%A1%A8"><span class="nav-number">4.2.</span> <span class="nav-text">交换机转发表-交换表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.3.</span> <span class="nav-text">自学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A7%E8%BF%87%E6%BB%A4-x2F-%E8%BD%AC%E5%8F%91"><span class="nav-number">4.4.</span> <span class="nav-text">帧过滤&#x2F;转发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E4%BA%92%E8%81%94"><span class="nav-number">4.5.</span> <span class="nav-text">交换机互联</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84-institutional-%E7%BD%91%E7%BB%9C"><span class="nav-number">4.6.</span> <span class="nav-text">组织机构 institutional 网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA-vs-%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">4.7.</span> <span class="nav-text">交换机 vs 路由器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%B1%80%E5%9F%9F%E7%BD%91-VLANs"><span class="nav-number">5.</span> <span class="nav-text">虚拟局域网 VLANs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA"><span class="nav-number">5.1.</span> <span class="nav-text">动机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VLANS"><span class="nav-number">5.2.</span> <span class="nav-text">VLANS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%AB%AF%E5%8F%A3%E7%9A%84-VLAN"><span class="nav-number">5.3.</span> <span class="nav-text">基于端口的 VLAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E8%B6%8A%E5%A4%9A%E4%B8%AA%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9A%84-VLAN"><span class="nav-number">5.4.</span> <span class="nav-text">跨越多个交换机的 VLAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-1Q-VLAN-%E5%B8%A7%E6%A0%BC%E5%BC%8F"><span class="nav-number">5.5.</span> <span class="nav-text">802.1Q VLAN 帧格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PPP"><span class="nav-number">6.</span> <span class="nav-text">PPP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E9%93%BE%E8%B7%AF%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE"><span class="nav-number">6.1.</span> <span class="nav-text">点对点链路控制协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PPP-%E8%AE%BE%E8%AE%A1%E9%9C%80%E6%B1%82"><span class="nav-number">6.2.</span> <span class="nav-text">PPP 设计需求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E6%94%AF%E6%8C%81%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">6.2.1.</span> <span class="nav-text">需要支持的功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E9%9C%80%E6%94%AF%E6%8C%81%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">6.2.2.</span> <span class="nav-text">无需支持的功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IEEE-802-11-%E6%97%A0%E7%BA%BF%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="nav-number">7.</span> <span class="nav-text">IEEE 802.11 无线局域网</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11b"><span class="nav-number">7.1.</span> <span class="nav-text">802.11b</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11a"><span class="nav-number">7.2.</span> <span class="nav-text">802.11a</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11g"><span class="nav-number">7.3.</span> <span class="nav-text">802.11g</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11n"><span class="nav-number">7.4.</span> <span class="nav-text">802.11n</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IEEE-802-11-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">7.5.</span> <span class="nav-text">IEEE 802.11 体系结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11-%E4%BF%A1%E9%81%93%E4%B8%8E-AP-%E5%85%B3%E8%81%94"><span class="nav-number">7.6.</span> <span class="nav-text">802.11 信道与 AP 关联</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11-AP-%E5%85%B3%E8%81%94"><span class="nav-number">7.7.</span> <span class="nav-text">802.11 AP 关联</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A2%AB%E5%8A%A8%E6%89%AB%E6%8F%8F-scanning"><span class="nav-number">7.7.1.</span> <span class="nav-text">被动扫描 scanning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%89%AB%E6%8F%8F"><span class="nav-number">7.7.2.</span> <span class="nav-text">主动扫描</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11-%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">7.8.</span> <span class="nav-text">802.11 多路访问控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSMA-x2F-CA"><span class="nav-number">7.9.</span> <span class="nav-text">CSMA&#x2F;CA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IEEE-802-11-MAC-%E5%B8%A7"><span class="nav-number">7.10.</span> <span class="nav-text">IEEE 802.11 MAC 帧</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MAC-Medium-Meida-Access-Control-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.</span> <span class="nav-text">MAC Medium&#x2F;Meida Access Control 地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E6%AF%94"><span class="nav-number">1.1.</span> <span class="nav-text">类比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARP-%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.</span> <span class="nav-text">ARP 地址解析协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E4%B8%80%E4%B8%AA%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85"><span class="nav-number">2.1.</span> <span class="nav-text">同一个局域网内</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%9C%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85"><span class="nav-number">2.2.</span> <span class="nav-text">不在同一个局域网内</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91-ETHERNET"><span class="nav-number">3.</span> <span class="nav-text">以太网 ETHERNET</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E6%8B%93%E6%89%91"><span class="nav-number">3.1.</span> <span class="nav-text">物理拓扑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E9%9D%A0%E3%80%81%E6%97%A0%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">不可靠、无连接服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91-CSMA-CD-%E7%AE%97%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">以太网 CSMA&#x2F;CD 算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E5%B8%A7%E7%BB%93%E6%9E%84"><span class="nav-number">3.4.</span> <span class="nav-text">以太网帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%AF%BC%E7%A0%81-preabmle"><span class="nav-number">3.4.1.</span> <span class="nav-text">前导码 preabmle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE-%E6%BA%90-MAC"><span class="nav-number">3.4.2.</span> <span class="nav-text">目-源 MAC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B-Type"><span class="nav-number">3.4.3.</span> <span class="nav-text">类型 Type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE-data"><span class="nav-number">3.4.4.</span> <span class="nav-text">数据 data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CRC"><span class="nav-number">3.4.5.</span> <span class="nav-text">CRC</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E4%BA%A4%E6%8D%A2%E6%9C%BA-switch"><span class="nav-number">4.</span> <span class="nav-text">以太网交换机 switch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%AB%AF%E5%8F%A3%E9%97%B4%E5%90%8C%E6%97%B6%E4%BC%A0%E8%BE%93"><span class="nav-number">4.1.</span> <span class="nav-text">多端口间同时传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E8%BD%AC%E5%8F%91%E8%A1%A8-%E4%BA%A4%E6%8D%A2%E8%A1%A8"><span class="nav-number">4.2.</span> <span class="nav-text">交换机转发表-交换表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.3.</span> <span class="nav-text">自学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A7%E8%BF%87%E6%BB%A4-%E8%BD%AC%E5%8F%91"><span class="nav-number">4.4.</span> <span class="nav-text">帧过滤&#x2F;转发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E4%BA%92%E8%81%94"><span class="nav-number">4.5.</span> <span class="nav-text">交换机互联</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84-institutional-%E7%BD%91%E7%BB%9C"><span class="nav-number">4.6.</span> <span class="nav-text">组织机构 institutional 网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA-vs-%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">4.7.</span> <span class="nav-text">交换机 vs 路由器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%B1%80%E5%9F%9F%E7%BD%91-VLANs"><span class="nav-number">5.</span> <span class="nav-text">虚拟局域网 VLANs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA"><span class="nav-number">5.1.</span> <span class="nav-text">动机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VLANS"><span class="nav-number">5.2.</span> <span class="nav-text">VLANS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%AB%AF%E5%8F%A3%E7%9A%84-VLAN"><span class="nav-number">5.3.</span> <span class="nav-text">基于端口的 VLAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E8%B6%8A%E5%A4%9A%E4%B8%AA%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9A%84-VLAN"><span class="nav-number">5.4.</span> <span class="nav-text">跨越多个交换机的 VLAN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-1Q-VLAN-%E5%B8%A7%E6%A0%BC%E5%BC%8F"><span class="nav-number">5.5.</span> <span class="nav-text">802.1Q VLAN 帧格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PPP"><span class="nav-number">6.</span> <span class="nav-text">PPP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E9%93%BE%E8%B7%AF%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE"><span class="nav-number">6.1.</span> <span class="nav-text">点对点链路控制协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PPP-%E8%AE%BE%E8%AE%A1%E9%9C%80%E6%B1%82"><span class="nav-number">6.2.</span> <span class="nav-text">PPP 设计需求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E6%94%AF%E6%8C%81%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">6.2.1.</span> <span class="nav-text">需要支持的功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E9%9C%80%E6%94%AF%E6%8C%81%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">6.2.2.</span> <span class="nav-text">无需支持的功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IEEE-802-11-%E6%97%A0%E7%BA%BF%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="nav-number">7.</span> <span class="nav-text">IEEE 802.11 无线局域网</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11b"><span class="nav-number">7.1.</span> <span class="nav-text">802.11b</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11a"><span class="nav-number">7.2.</span> <span class="nav-text">802.11a</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11g"><span class="nav-number">7.3.</span> <span class="nav-text">802.11g</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11n"><span class="nav-number">7.4.</span> <span class="nav-text">802.11n</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IEEE-802-11-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">7.5.</span> <span class="nav-text">IEEE 802.11 体系结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11-%E4%BF%A1%E9%81%93%E4%B8%8E-AP-%E5%85%B3%E8%81%94"><span class="nav-number">7.6.</span> <span class="nav-text">802.11 信道与 AP 关联</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11-AP-%E5%85%B3%E8%81%94"><span class="nav-number">7.7.</span> <span class="nav-text">802.11 AP 关联</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A2%AB%E5%8A%A8%E6%89%AB%E6%8F%8F-scanning"><span class="nav-number">7.7.1.</span> <span class="nav-text">被动扫描 scanning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%89%AB%E6%8F%8F"><span class="nav-number">7.7.2.</span> <span class="nav-text">主动扫描</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#802-11-%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">7.8.</span> <span class="nav-text">802.11 多路访问控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSMA-CA"><span class="nav-number">7.9.</span> <span class="nav-text">CSMA&#x2F;CA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IEEE-802-11-MAC-%E5%B8%A7"><span class="nav-number">7.10.</span> <span class="nav-text">IEEE 802.11 MAC 帧</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -561,20 +547,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">90</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -609,23 +595,11 @@
 <div class="copyright">
   
   &copy; 2017 – 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">朱佳东</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-      <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">385k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-      <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">5:50</span>
 </div>
 
         

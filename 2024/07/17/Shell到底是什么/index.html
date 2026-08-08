@@ -135,17 +135,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">22</span></a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">23</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">89</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">90</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -226,20 +226,6 @@
               </span>
               <span class="post-meta-item-text">Views: </span>
               <span id="busuanzi_value_page_pv"></span>
-            </span><br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.6k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
             </span>
             <div class="post-description">Shell 到底是什么</div>
 
@@ -292,7 +278,7 @@
 <h3 id="Variable-and-Filename-Substitution"><a href="#Variable-and-Filename-Substitution" class="headerlink" title="Variable and Filename Substitution"></a>Variable and Filename Substitution</h3><p>变量（$符号）和文件名替换。</p>
 <p><code>shell</code> 会在命令行上进行文件名的替换，事实上，<code>shell</code> 在决定执行文件名称和参数之前会扫描命令行并寻找文件名替换字符：<code>*</code>、<code>?</code>、<code>[...]</code>。</p>
 <p>比如：一个目录下有 4 个文件，那么 <code>echo *</code> 命令有几个参数呢？答案是四个，<code>shell</code> 会进行文件名替换。</p>
-<h3 id="I-x2F-O-Redirection"><a href="#I-x2F-O-Redirection" class="headerlink" title="I/O Redirection"></a>I/O Redirection</h3><p><code>shell</code> 还负责处理输入和输出重定向。</p>
+<h3 id="I-O-Redirection"><a href="#I-O-Redirection" class="headerlink" title="I/O Redirection"></a>I/O Redirection</h3><p><code>shell</code> 还负责处理输入和输出重定向。</p>
 <p>一个很经典的例子：</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wc -l users  # 从文件读</span><br><span class="line">wc -l &lt; users # 从标准输入读</span><br></pre></td></tr></tbody></table></figure>
 
@@ -389,7 +375,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Kernel-and-the-Utilities"><span class="nav-number">1.</span> <span class="nav-text">The Kernel and the Utilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Login-Shell"><span class="nav-number">2.</span> <span class="nav-text">The Login Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Typing-Commands-to-the-Shell"><span class="nav-number">3.</span> <span class="nav-text">Typing Commands to the Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell-%E7%9A%84%E8%81%8C%E8%B4%A3"><span class="nav-number">4.</span> <span class="nav-text">shell 的职责</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Execution"><span class="nav-number">4.1.</span> <span class="nav-text">Program Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable-and-Filename-Substitution"><span class="nav-number">4.2.</span> <span class="nav-text">Variable and Filename Substitution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-x2F-O-Redirection"><span class="nav-number">4.3.</span> <span class="nav-text">I&#x2F;O Redirection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hooking-up-a-Pipeline"><span class="nav-number">4.4.</span> <span class="nav-text">Hooking up a Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enviromment-Control"><span class="nav-number">4.5.</span> <span class="nav-text">Enviromment Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interpreted-Programming-Language"><span class="nav-number">4.6.</span> <span class="nav-text">Interpreted Programming Language</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tty"><span class="nav-number">5.</span> <span class="nav-text">tty</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Kernel-and-the-Utilities"><span class="nav-number">1.</span> <span class="nav-text">The Kernel and the Utilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Login-Shell"><span class="nav-number">2.</span> <span class="nav-text">The Login Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Typing-Commands-to-the-Shell"><span class="nav-number">3.</span> <span class="nav-text">Typing Commands to the Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell-%E7%9A%84%E8%81%8C%E8%B4%A3"><span class="nav-number">4.</span> <span class="nav-text">shell 的职责</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Execution"><span class="nav-number">4.1.</span> <span class="nav-text">Program Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable-and-Filename-Substitution"><span class="nav-number">4.2.</span> <span class="nav-text">Variable and Filename Substitution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O-Redirection"><span class="nav-number">4.3.</span> <span class="nav-text">I&#x2F;O Redirection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hooking-up-a-Pipeline"><span class="nav-number">4.4.</span> <span class="nav-text">Hooking up a Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enviromment-Control"><span class="nav-number">4.5.</span> <span class="nav-text">Enviromment Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interpreted-Programming-Language"><span class="nav-number">4.6.</span> <span class="nav-text">Interpreted Programming Language</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tty"><span class="nav-number">5.</span> <span class="nav-text">tty</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -405,20 +391,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">90</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -453,23 +439,11 @@
 <div class="copyright">
   
   &copy; 2017 – 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">朱佳东</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-      <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">385k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-      <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">5:50</span>
 </div>
 
         

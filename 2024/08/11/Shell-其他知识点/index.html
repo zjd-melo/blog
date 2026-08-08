@@ -129,17 +129,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">22</span></a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">23</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">89</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">90</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -220,20 +220,6 @@
               </span>
               <span class="post-meta-item-text">Views: </span>
               <span id="busuanzi_value_page_pv"></span>
-            </span><br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.5k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
             </span>
             <div class="post-description">Shell 其他知识点</div>
 
@@ -276,10 +262,10 @@
 <p>如果忽略某个信号，所有子 shell 也会忽略该信号。但是，如果指定信号处理程序操作，则所有子 shell 在收到该信号时都会自动采取默认操作，而不是新的代码序列（trap handlers）。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在父 Shell 中设置一个 <span class="built_in">trap</span>，捕获 SIGINT（Ctrl+C）</span></span><br><span class="line">trap "echo '父 Shell 捕获到 SIGINT'" SIGINT</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动子 Shell</span></span><br><span class="line">(</span><br><span class="line">    # 子 Shell 中没有设置 trap</span><br><span class="line">    echo "子 Shell 中，按 Ctrl+C"</span><br><span class="line">    sleep 10</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">echo "子 Shell 结束，回到父 Shell，按 Ctrl+C"</span><br><span class="line">sleep 10</span><br></pre></td></tr></tbody></table></figure>
 <h3 id="恢复-traps"><a href="#恢复-traps" class="headerlink" title="恢复 traps"></a>恢复 traps</h3><p><code>trap HUP INT</code> 如果忽略 handlers，就意味着使用系统默认的处理程序。</p>
-<h2 id="I-x2F-O"><a href="#I-x2F-O" class="headerlink" title="I/O"></a>I/O</h2><p>在 Shell 编程中，<code>&gt;&amp;</code> 是一种用于重定向输出和错误的语法，通常与文件描述符（file descriptor）结合使用。符号 <code>&gt;&amp;</code> 指定输出重定向到与后面的文件描述符关联的文件。</p>
+<h2 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h2><p>在 Shell 编程中，<code>&gt;&amp;</code> 是一种用于重定向输出和错误的语法，通常与文件描述符（file descriptor）结合使用。符号 <code>&gt;&amp;</code> 指定输出重定向到与后面的文件描述符关联的文件。</p>
 <p><code>&gt;&amp;2</code> 把标准输出重定向到标准错误输出，如果想把标准输出和标准错误都重定向到文件可以使用 <code>command &gt; foo 2&gt;&gt; foo</code> 或者 <code>command &gt; foo 2&gt;&amp;1</code>，第二个是说把标准输出定向到文件，再把标准错误输出重定向到标准输出也就是标准输出。<br>shell 从左到右进行解析，所以不能写成 <code>command 2&gt;&amp;1 &gt; foo</code>。</p>
 <p>如果想重定向当前 shell 的 I/O 怎么办？使用 <code>exec</code>，<code>exec &lt; datafile</code>，<code>exec &gt; /tmp/output</code>，<code>exec 2&gt; /tmp/errors</code>，会影响后续所有命令的 I/O 行为。</p>
-<h3 id="lt-amp-and-gt-amp"><a href="#lt-amp-and-gt-amp" class="headerlink" title="<&amp;- and >&amp;-"></a>&lt;&amp;- and &gt;&amp;-</h3><p>用来关闭标准输入和输出，如果前面跟一个文件描述符相关的文件就会被关闭。</p>
+<h3 id="-1"><a href="#-1" class="headerlink" title="<&amp;- and >&amp;-"></a>&lt;&amp;- and &gt;&amp;-</h3><p>用来关闭标准输入和输出，如果前面跟一个文件描述符相关的文件就会被关闭。</p>
 <p><code>ls &gt;&amp;-</code>，没有任何输出，不是很常用。</p>
 <h3 id="In-line-input-Redirection"><a href="#In-line-input-Redirection" class="headerlink" title="In-line input Redirection"></a>In-line input Redirection</h3><p><code>&gt;&gt;</code> 和 <code>&lt;&lt;</code> 是不同的，前者是追加重定向；后者是 here document，将多行文本作为输入传递给命令。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">EOF 可以换成其他东西，首尾要一样</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">wc</span> -l &lt;&lt;<span class="string">EOF</span></span></span><br><span class="line"><span class="meta prompt_">heredoc&gt; </span><span class="language-bash"><span class="string">line 1</span></span></span><br><span class="line"><span class="meta prompt_">heredoc&gt; </span><span class="language-bash"><span class="string">line 2</span></span></span><br><span class="line"><span class="meta prompt_">heredoc&gt; </span><span class="language-bash"><span class="string">EOF</span></span></span><br></pre></td></tr></tbody></table></figure>
@@ -388,7 +374,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#eval"><span class="nav-number">1.</span> <span class="nav-text">eval</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wait"><span class="nav-number">2.</span> <span class="nav-text">wait</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">$!</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#trap"><span class="nav-number">3.</span> <span class="nav-text">trap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E5%8F%82%E6%95%B0%E7%9A%84-trap"><span class="nav-number">3.1.</span> <span class="nav-text">没有参数的 trap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5%E4%BF%A1%E5%8F%B7"><span class="nav-number">3.2.</span> <span class="nav-text">忽略信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D-traps"><span class="nav-number">3.3.</span> <span class="nav-text">恢复 traps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#I-x2F-O"><span class="nav-number">4.</span> <span class="nav-text">I&#x2F;O</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-amp-and-gt-amp"><span class="nav-number">4.1.</span> <span class="nav-text">&lt;&amp;- and &gt;&amp;-</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#In-line-input-Redirection"><span class="nav-number">4.2.</span> <span class="nav-text">In-line input Redirection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell-Archives"><span class="nav-number">4.3.</span> <span class="nav-text">Shell Archives</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Functions"><span class="nav-number">5.</span> <span class="nav-text">Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Removing-a-function-definition"><span class="nav-number">5.1.</span> <span class="nav-text">Removing a function definition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#return"><span class="nav-number">5.2.</span> <span class="nav-text">return</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#type"><span class="nav-number">6.</span> <span class="nav-text">type</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#eval"><span class="nav-number">1.</span> <span class="nav-text">eval</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wait"><span class="nav-number">2.</span> <span class="nav-text">wait</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">$!</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#trap"><span class="nav-number">3.</span> <span class="nav-text">trap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E5%8F%82%E6%95%B0%E7%9A%84-trap"><span class="nav-number">3.1.</span> <span class="nav-text">没有参数的 trap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5%E4%BF%A1%E5%8F%B7"><span class="nav-number">3.2.</span> <span class="nav-text">忽略信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D-traps"><span class="nav-number">3.3.</span> <span class="nav-text">恢复 traps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#I-O"><span class="nav-number">4.</span> <span class="nav-text">I&#x2F;O</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#-1"><span class="nav-number">4.1.</span> <span class="nav-text">&lt;&amp;- and &gt;&amp;-</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#In-line-input-Redirection"><span class="nav-number">4.2.</span> <span class="nav-text">In-line input Redirection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell-Archives"><span class="nav-number">4.3.</span> <span class="nav-text">Shell Archives</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Functions"><span class="nav-number">5.</span> <span class="nav-text">Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Removing-a-function-definition"><span class="nav-number">5.1.</span> <span class="nav-text">Removing a function definition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#return"><span class="nav-number">5.2.</span> <span class="nav-text">return</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#type"><span class="nav-number">6.</span> <span class="nav-text">type</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -404,20 +390,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">90</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -452,23 +438,11 @@
 <div class="copyright">
   
   &copy; 2017 – 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">朱佳东</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-      <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">385k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-      <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">5:50</span>
 </div>
 
         

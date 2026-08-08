@@ -129,17 +129,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">22</span></a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">23</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">89</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">90</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -220,20 +220,6 @@
               </span>
               <span class="post-meta-item-text">Views: </span>
               <span id="busuanzi_value_page_pv"></span>
-            </span><br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>10k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>9 mins.</span>
             </span>
             <div class="post-description">how linux work 03 - devices</div>
 
@@ -284,7 +270,7 @@
 <p>总结：sysfs 是一个虚拟文件系统，主要用于以文件系统的形式向用户空间暴露内核对象的信息和控制接口。它提供了系统中几乎所有设备、驱动程序、内核模块的详细信息，并允许用户在某些情况下通过修改 sysfs 中的文件来控制系统行为。sysfs 通常与 udev 协同工作，用于动态管理设备文件。通过 sysfs，用户和系统管理员可以直接访问内核对象的信息，进行系统配置和设备管理，这是 Linux 内核对外提供的重要接口之一。</p>
 <h2 id="dd-and-devices"><a href="#dd-and-devices" class="headerlink" title="dd and devices"></a>dd and devices</h2><p>程序 dd 在使用块设备和字符设备时非常有用。该程序的唯一功能是从输入文件或流中读取并写入输出文件或流，可能会在此过程中进行一些编码转换。</p>
 <p><code>dd if=/dev/zero of=new_file bs=1024 count=1</code>，可以看到 dd 的参数命令风格和其他的不一样，它使用 <code>=</code> 号而不是 <code>-</code>。</p>
-<h2 id="x2F-dev-x2F-zero"><a href="#x2F-dev-x2F-zero" class="headerlink" title="/dev/zero"></a>/dev/zero</h2><p><code>/dev/zero</code> 是 Linux 和其他类 Unix 操作系统中的一个特殊文件，它是一个伪设备文件，用于生成无限量的零字节流（0x00 字节）。读取 <code>/dev/zero</code> 的时候，系统会返回无限个零字节，而写入 <code>/dev/zero</code> 则会被系统丢弃。</p>
+<h2 id="dev-zero"><a href="#dev-zero" class="headerlink" title="/dev/zero"></a>/dev/zero</h2><p><code>/dev/zero</code> 是 Linux 和其他类 Unix 操作系统中的一个特殊文件，它是一个伪设备文件，用于生成无限量的零字节流（0x00 字节）。读取 <code>/dev/zero</code> 的时候，系统会返回无限个零字节，而写入 <code>/dev/zero</code> 则会被系统丢弃。</p>
 <p>主要用途：<strong>初始化文件或内存</strong>。</p>
 <p>dd 命令可以通过读取 <code>/dev/zero</code> 来创建一个指定大小的文件并将其全部填充为零。这在初始化存储空间或测试磁盘性能时非常有用。<code>dd if=/dev/zero of=emptyfile bs=1M count=10</code> 这个命令会创建一个名为 emptyfile 的文件，大小为 10 MB，文件内容全部为零。</p>
 <p>分区和文件系统初始化： 在创建新的分区或文件系统时，<code>/dev/zero</code> 可以用于清除磁盘上的数据，确保没有残留的旧数据影响新的文件系统。<code>dd if=/dev/zero of=/dev/sdX bs=1M</code> 这个命令会将 /dev/sdX 磁盘上的所有内容都写为零，通常在完全擦除磁盘时使用。</p>
@@ -306,7 +292,7 @@
 </ol>
 <p>这些命令中只有第一个是可靠的，但是它需要有 <code>udev</code> 才行。如果没有的话，可以尝试使用其他办法，但是得记住，内核可能没有适用于某些硬件的设备文件。</p>
 <p>以下部分列出了最常见的 Linux 设备及其命名约定。</p>
-<h3 id="Hard-Disk-x2F-dev-x2F-sd"><a href="#Hard-Disk-x2F-dev-x2F-sd" class="headerlink" title="Hard Disk /dev/sd*"></a>Hard Disk /dev/sd*</h3><p>当前Linux系统挂接的大多数硬盘都对应带有sd前缀的设备名称，例如 <code>/dev/sda</code>、<code>/dev/sdb</code> 等，这些代表了整个磁盘，内核为磁盘上的分区创建单独的设备文件，例如 <code>/dev/sda1</code> 和 <code>/dev/sda2</code>。名称的 sd 部分代表 <code>SCSI disk</code>。</p>
+<h3 id="Hard-Disk-dev-sd"><a href="#Hard-Disk-dev-sd" class="headerlink" title="Hard Disk /dev/sd*"></a>Hard Disk /dev/sd*</h3><p>当前Linux系统挂接的大多数硬盘都对应带有sd前缀的设备名称，例如 <code>/dev/sda</code>、<code>/dev/sdb</code> 等，这些代表了整个磁盘，内核为磁盘上的分区创建单独的设备文件，例如 <code>/dev/sda1</code> 和 <code>/dev/sda2</code>。名称的 sd 部分代表 <code>SCSI disk</code>。</p>
 <p>小型计算机系统接口 <code>Small Computer System Interface</code> (SCSI) 最初是作为磁盘和其他外围设备等设备之间通信的硬件和协议标准而开发的。尽管大多数现代机器中并未使用传统的 SCSI 硬件，但 SCSI 协议由于其适应性而无处不在。例如，USB 存储设备就使用它来进行通信。 SATA 磁盘的情况稍微复杂一些，但 Linux 内核在与它们通信时在某个时刻仍然使用 SCSI 命令。</p>
 <p>要列出系统上的 SCSI 设备，请使用一个实用程序来遍历 sysfs 提供的设备路径。最简洁的工具之一是 <code>lsscsi</code>。</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> lsscsi</span><br><span class="line">[0:0:0:0] diskv ATA WDC WD3200AAJS-2 01.0 /dev/sdaw </span><br><span class="line">[1:0:0:0] cd/dvd Slimtype DVD A DS8A5SH XA15 /dev/sr0 </span><br><span class="line">[2:0:0:0] disk FLASH Drive UT_USB20 0.00 /dev/sdb</span><br></pre></td></tr></tbody></table></figure>
@@ -314,18 +300,18 @@
 <p>第一列是设备在系统上的地址，第二列描述了具体的设备是什么，最后一列是设备文件地址，其他是供应商信息。</p>
 <p>Linux 按照其驱动程序遇到设备的顺序将设备分配给设备文件。Linux assigns devices to device files in the order in which its drivers encounter devices。所以上面的例子表明内核先发现了磁盘。然后是光盘，最后是 flash 磁盘。</p>
 <p>这种方式是有问题的，比如，有三个磁盘 <code>/dev/sda</code>、<code>/dev/sdb</code>、<code>/dev/sdc</code>，如果 <code>/dev/sdb</code>坏了，把这个磁盘拿走后，<code>/dev/sdc</code> 就变成了 <code>/dev/sdb</code>，如果在 <code>fstab</code> 文件中用这种方式引用磁盘，机会有问题，现代的系统使用 Universally Unique Identifier (UUID) 来解决这个问题。</p>
-<h3 id="CD-and-DVD-Drivers-x2F-dev-x2F-sr"><a href="#CD-and-DVD-Drivers-x2F-dev-x2F-sr" class="headerlink" title="CD and DVD Drivers /dev/sr*"></a>CD and DVD Drivers /dev/sr*</h3><p>Linux 将大多数光存储驱动器识别为 SCSI 设备 <code>/dev/sr0</code>、<code>/dev/sr1</code> 等。但是，如果驱动器使用较旧的接口，它可能会显示为 PATA 设备，如下所述。 <code>/dev/sr*</code> 设备是只读的，它们仅用于从光盘读取。对于光学设备的写入和重写功能，将使用通用 SCSI 设备，例如 <code>/dev/sg0</code>。</p>
-<h3 id="PATA-Hard-Disks-x2F-dev-x2F-hd"><a href="#PATA-Hard-Disks-x2F-dev-x2F-hd" class="headerlink" title="PATA Hard Disks /dev/hd*"></a>PATA Hard Disks /dev/hd*</h3><p>Linux 块设备 <code>/dev/hda</code>、<code>/dev/hdb</code>、<code>/dev/hdc</code> 和 <code>/dev/hdd</code> 在旧版本的 Linux 内核和旧硬件上很常见。这些是基于接口 0 和 1 上的主设备和从设备的固定分配。有时，可能会发现 SATA 驱动器被识别为这些磁盘之一。这意味着 SATA 驱动器正在兼容模式下运行，这会影响性能。检查 BIOS 设置，看是否可以将 SATA 控制器切换到其本机模式。</p>
-<h3 id="Terminals-x2F-dev-x2F-tty-x2F-dev-x2F-pts-x2F-and-x2F-dev-x2F-tty"><a href="#Terminals-x2F-dev-x2F-tty-x2F-dev-x2F-pts-x2F-and-x2F-dev-x2F-tty" class="headerlink" title="Terminals: /dev/tty*, /dev/pts/*, and /dev/tty"></a>Terminals: /dev/tty*, /dev/pts/*, and /dev/tty</h3><p>终端是用于在用户进程和 I/O 设备之间移动字符的设备，通常用于将文本输出到终端屏幕。终端设备接口可以追溯到很久以前，当时终端是基于打字机的设备。</p>
+<h3 id="CD-and-DVD-Drivers-dev-sr"><a href="#CD-and-DVD-Drivers-dev-sr" class="headerlink" title="CD and DVD Drivers /dev/sr*"></a>CD and DVD Drivers /dev/sr*</h3><p>Linux 将大多数光存储驱动器识别为 SCSI 设备 <code>/dev/sr0</code>、<code>/dev/sr1</code> 等。但是，如果驱动器使用较旧的接口，它可能会显示为 PATA 设备，如下所述。 <code>/dev/sr*</code> 设备是只读的，它们仅用于从光盘读取。对于光学设备的写入和重写功能，将使用通用 SCSI 设备，例如 <code>/dev/sg0</code>。</p>
+<h3 id="PATA-Hard-Disks-dev-hd"><a href="#PATA-Hard-Disks-dev-hd" class="headerlink" title="PATA Hard Disks /dev/hd*"></a>PATA Hard Disks /dev/hd*</h3><p>Linux 块设备 <code>/dev/hda</code>、<code>/dev/hdb</code>、<code>/dev/hdc</code> 和 <code>/dev/hdd</code> 在旧版本的 Linux 内核和旧硬件上很常见。这些是基于接口 0 和 1 上的主设备和从设备的固定分配。有时，可能会发现 SATA 驱动器被识别为这些磁盘之一。这意味着 SATA 驱动器正在兼容模式下运行，这会影响性能。检查 BIOS 设置，看是否可以将 SATA 控制器切换到其本机模式。</p>
+<h3 id="Terminals-dev-tty-dev-pts-and-dev-tty"><a href="#Terminals-dev-tty-dev-pts-and-dev-tty" class="headerlink" title="Terminals: /dev/tty*, /dev/pts/*, and /dev/tty"></a>Terminals: /dev/tty*, /dev/pts/*, and /dev/tty</h3><p>终端是用于在用户进程和 I/O 设备之间移动字符的设备，通常用于将文本输出到终端屏幕。终端设备接口可以追溯到很久以前，当时终端是基于打字机的设备。</p>
 <p>伪终端设备是模拟终端，它了解真实终端的 I/O 功能。但内核不是与真实的硬件对话，而是向软件提供 I/O 接口，例如你可能在其中输入大部分命令的 shell 终端窗口。</p>
 <p>两个常见的终端设备是/dev/tty1（第一个虚拟控制台）和/dev/pts/0（第一个伪终端设备）。 /dev/pts 目录本身是一个专用文件系统。</p>
 <p><code>/dev/tty</code> 设备是当前进程的控制终端。如果程序当前正在读取和写入终端，则该设备是该终端的相同东西。进程不需要附加到终端。</p>
 <h4 id="Display-mode-and-virtual-console"><a href="#Display-mode-and-virtual-console" class="headerlink" title="Display mode and virtual console"></a>Display mode and virtual console</h4><p>Linux 有两种主要的显示模式：text mode 和 X Window System Server（graphics mode，usually via a display manager）。</p>
 <p>尽管 Linux 系统传统上以文本模式启动，但现在大多数发行版都使用内核参数和临时图形显示机制（如 plymouth 等的启动启动画面）来在系统启动时完全隐藏文本模式。在这种情况下，系统会在启动过程接近结束时切换到全图形模式。</p>
 <p>Linux 支持虚拟控制台 virtual console 来复用显示器。每个虚拟控制台可以以图形或文本模式运行。在文本模式 text mode 下，可以使用 alt-Function 组合键在控制台之间切换，例如，alt-F1 将转到 <code>/dev/tty1</code>，alt-F2 将转到 <code>/dev/tty2</code>，依此类推。其中许多可能被运行登录提示的 getty 进程占用。</p>
-<h3 id="Serial-Ports-x2F-dev-x2F-ttyS"><a href="#Serial-Ports-x2F-dev-x2F-ttyS" class="headerlink" title="Serial Ports /dev/ttyS*"></a>Serial Ports /dev/ttyS*</h3><p>较旧的 RS-232 类型和类似的串行端口是特殊的终端设备。无法在命令行上对串行端口设备执行太多操作，因为有太多设置需要担心，例如波特率和流量控制。</p>
-<h3 id="Parallel-Ports-x2F-dev-x2F-lp0-and-x2F-dev-x2F-lp1"><a href="#Parallel-Ports-x2F-dev-x2F-lp0-and-x2F-dev-x2F-lp1" class="headerlink" title="Parallel Ports: /dev/lp0 and /dev/lp1"></a>Parallel Ports: /dev/lp0 and /dev/lp1</h3><p>单向并行端口设备 <code>/dev/lp0</code> 和 <code>/dev/lp1</code> 代表已被 USB 很大程度上取代的接口类型。</p>
-<h3 id="Audio-Devices-x2F-dev-x2F-snd-x2F-x2F-dev-x2F-dsp-x2F-dev-x2F-audio-and-More"><a href="#Audio-Devices-x2F-dev-x2F-snd-x2F-x2F-dev-x2F-dsp-x2F-dev-x2F-audio-and-More" class="headerlink" title="Audio Devices: /dev/snd/*, /dev/dsp, /dev/audio, and More"></a>Audio Devices: /dev/snd/*, /dev/dsp, /dev/audio, and More</h3><p>音频设备。</p>
+<h3 id="Serial-Ports-dev-ttyS"><a href="#Serial-Ports-dev-ttyS" class="headerlink" title="Serial Ports /dev/ttyS*"></a>Serial Ports /dev/ttyS*</h3><p>较旧的 RS-232 类型和类似的串行端口是特殊的终端设备。无法在命令行上对串行端口设备执行太多操作，因为有太多设置需要担心，例如波特率和流量控制。</p>
+<h3 id="Parallel-Ports-dev-lp0-and-dev-lp1"><a href="#Parallel-Ports-dev-lp0-and-dev-lp1" class="headerlink" title="Parallel Ports: /dev/lp0 and /dev/lp1"></a>Parallel Ports: /dev/lp0 and /dev/lp1</h3><p>单向并行端口设备 <code>/dev/lp0</code> 和 <code>/dev/lp1</code> 代表已被 USB 很大程度上取代的接口类型。</p>
+<h3 id="Audio-Devices-dev-snd-dev-dsp-dev-audio-and-More"><a href="#Audio-Devices-dev-snd-dev-dsp-dev-audio-and-More" class="headerlink" title="Audio Devices: /dev/snd/*, /dev/dsp, /dev/audio, and More"></a>Audio Devices: /dev/snd/*, /dev/dsp, /dev/audio, and More</h3><p>音频设备。</p>
 <h3 id="create-device-files"><a href="#create-device-files" class="headerlink" title="create device files"></a>create device files</h3><p>在现代 Linux 系统中，不需要创建自己的设备文件；而是创建自己的设备文件。这是通过 <code>devtmpfs</code> 和 <code>udev</code> 完成的。但是，了解它是如何完成的很有启发性，并且在极少数情况下，可能需要创建命名管道。 <code>mknod</code> 命令创建一台设备。必须知道设备名称及其主设备号和次设备号。例如，创建 <code>/dev/sda1</code> 需要使用以下命令：<code>mknod /dev/sda1 b 8 2</code>。<br>The b 8 2 specifies a block device with a major number 8 and a minor number 2.</p>
 <p>如前所述，<code>mknod</code> 命令仅对于创建偶尔使用的命名管道有用。曾经，它有时对于在系统恢复期间以单用户模式创建丢失的设备也很有用。</p>
 <h2 id="udev"><a href="#udev" class="headerlink" title="udev"></a>udev</h2><p><code>udev</code> 是 Linux 系统中的一个设备管理系统，用于动态管理设备节点和设备文件的创建和删除。它是 Linux 内核设备管理子系统的一部分，负责处理内核生成的设备事件并在用户空间执行相应的操作。</p>
@@ -471,7 +457,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Device-files-%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">Device files 设备文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">设备类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-device"><span class="nav-number">2.1.</span> <span class="nav-text">Block device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Character-device"><span class="nav-number">2.2.</span> <span class="nav-text">Character device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipe-device"><span class="nav-number">2.3.</span> <span class="nav-text">Pipe device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket-device"><span class="nav-number">2.4.</span> <span class="nav-text">Socket device</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sysfs-device-path"><span class="nav-number">3.</span> <span class="nav-text">sysfs device path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sysfs"><span class="nav-number">3.1.</span> <span class="nav-text">sysfs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dd-and-devices"><span class="nav-number">4.</span> <span class="nav-text">dd and devices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x2F-dev-x2F-zero"><span class="nav-number">5.</span> <span class="nav-text">&#x2F;dev&#x2F;zero</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Device-name-summary"><span class="nav-number">6.</span> <span class="nav-text">Device name summary</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hard-Disk-x2F-dev-x2F-sd"><span class="nav-number">6.1.</span> <span class="nav-text">Hard Disk &#x2F;dev&#x2F;sd*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CD-and-DVD-Drivers-x2F-dev-x2F-sr"><span class="nav-number">6.2.</span> <span class="nav-text">CD and DVD Drivers &#x2F;dev&#x2F;sr*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PATA-Hard-Disks-x2F-dev-x2F-hd"><span class="nav-number">6.3.</span> <span class="nav-text">PATA Hard Disks &#x2F;dev&#x2F;hd*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Terminals-x2F-dev-x2F-tty-x2F-dev-x2F-pts-x2F-and-x2F-dev-x2F-tty"><span class="nav-number">6.4.</span> <span class="nav-text">Terminals: &#x2F;dev&#x2F;tty*, &#x2F;dev&#x2F;pts&#x2F;*, and &#x2F;dev&#x2F;tty</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Display-mode-and-virtual-console"><span class="nav-number">6.4.1.</span> <span class="nav-text">Display mode and virtual console</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial-Ports-x2F-dev-x2F-ttyS"><span class="nav-number">6.5.</span> <span class="nav-text">Serial Ports &#x2F;dev&#x2F;ttyS*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parallel-Ports-x2F-dev-x2F-lp0-and-x2F-dev-x2F-lp1"><span class="nav-number">6.6.</span> <span class="nav-text">Parallel Ports: &#x2F;dev&#x2F;lp0 and &#x2F;dev&#x2F;lp1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Devices-x2F-dev-x2F-snd-x2F-x2F-dev-x2F-dsp-x2F-dev-x2F-audio-and-More"><span class="nav-number">6.7.</span> <span class="nav-text">Audio Devices: &#x2F;dev&#x2F;snd&#x2F;*, &#x2F;dev&#x2F;dsp, &#x2F;dev&#x2F;audio, and More</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-device-files"><span class="nav-number">6.8.</span> <span class="nav-text">create device files</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#udev"><span class="nav-number">7.</span> <span class="nav-text">udev</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD"><span class="nav-number">7.1.</span> <span class="nav-text">主要功能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%AE%BE%E5%A4%87%E8%8A%82%E7%82%B9%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.1.</span> <span class="nav-text">动态设备节点管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86"><span class="nav-number">7.1.2.</span> <span class="nav-text">设备事件处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.3.</span> <span class="nav-text">设备属性管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">7.1.4.</span> <span class="nav-text">udev 的工作流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E8%A7%84%E5%88%99"><span class="nav-number">7.1.5.</span> <span class="nav-text">udev 规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="nav-number">7.1.6.</span> <span class="nav-text">udev 的历史</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udevadm"><span class="nav-number">7.1.8.</span> <span class="nav-text">udevadm</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%92%8C%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="nav-number">7.1.8.1.</span> <span class="nav-text">主要功能和常见用法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">7.1.8.2.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98"><span class="nav-number">8.</span> <span class="nav-text">怎么查看磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%8F%B7"><span class="nav-number">9.</span> <span class="nav-text">设备号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">9.1.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Major-%E5%92%8C-Minor-%E8%AE%BE%E5%A4%87%E5%8F%B7%E7%9A%84%E5%88%86%E9%85%8D"><span class="nav-number">9.2.</span> <span class="nav-text">Major 和 Minor 设备号的分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">9.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Device-files-%E8%AE%BE%E5%A4%87%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">Device files 设备文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">设备类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-device"><span class="nav-number">2.1.</span> <span class="nav-text">Block device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Character-device"><span class="nav-number">2.2.</span> <span class="nav-text">Character device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipe-device"><span class="nav-number">2.3.</span> <span class="nav-text">Pipe device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket-device"><span class="nav-number">2.4.</span> <span class="nav-text">Socket device</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sysfs-device-path"><span class="nav-number">3.</span> <span class="nav-text">sysfs device path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sysfs"><span class="nav-number">3.1.</span> <span class="nav-text">sysfs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dd-and-devices"><span class="nav-number">4.</span> <span class="nav-text">dd and devices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dev-zero"><span class="nav-number">5.</span> <span class="nav-text">&#x2F;dev&#x2F;zero</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Device-name-summary"><span class="nav-number">6.</span> <span class="nav-text">Device name summary</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hard-Disk-dev-sd"><span class="nav-number">6.1.</span> <span class="nav-text">Hard Disk &#x2F;dev&#x2F;sd*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CD-and-DVD-Drivers-dev-sr"><span class="nav-number">6.2.</span> <span class="nav-text">CD and DVD Drivers &#x2F;dev&#x2F;sr*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PATA-Hard-Disks-dev-hd"><span class="nav-number">6.3.</span> <span class="nav-text">PATA Hard Disks &#x2F;dev&#x2F;hd*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Terminals-dev-tty-dev-pts-and-dev-tty"><span class="nav-number">6.4.</span> <span class="nav-text">Terminals: &#x2F;dev&#x2F;tty*, &#x2F;dev&#x2F;pts&#x2F;*, and &#x2F;dev&#x2F;tty</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Display-mode-and-virtual-console"><span class="nav-number">6.4.1.</span> <span class="nav-text">Display mode and virtual console</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serial-Ports-dev-ttyS"><span class="nav-number">6.5.</span> <span class="nav-text">Serial Ports &#x2F;dev&#x2F;ttyS*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parallel-Ports-dev-lp0-and-dev-lp1"><span class="nav-number">6.6.</span> <span class="nav-text">Parallel Ports: &#x2F;dev&#x2F;lp0 and &#x2F;dev&#x2F;lp1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Devices-dev-snd-dev-dsp-dev-audio-and-More"><span class="nav-number">6.7.</span> <span class="nav-text">Audio Devices: &#x2F;dev&#x2F;snd&#x2F;*, &#x2F;dev&#x2F;dsp, &#x2F;dev&#x2F;audio, and More</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-device-files"><span class="nav-number">6.8.</span> <span class="nav-text">create device files</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#udev"><span class="nav-number">7.</span> <span class="nav-text">udev</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD"><span class="nav-number">7.1.</span> <span class="nav-text">主要功能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%AE%BE%E5%A4%87%E8%8A%82%E7%82%B9%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.1.</span> <span class="nav-text">动态设备节点管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86"><span class="nav-number">7.1.2.</span> <span class="nav-text">设备事件处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.3.</span> <span class="nav-text">设备属性管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">7.1.4.</span> <span class="nav-text">udev 的工作流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E8%A7%84%E5%88%99"><span class="nav-number">7.1.5.</span> <span class="nav-text">udev 规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udev-%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="nav-number">7.1.6.</span> <span class="nav-text">udev 的历史</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#udevadm"><span class="nav-number">7.1.8.</span> <span class="nav-text">udevadm</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%92%8C%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="nav-number">7.1.8.1.</span> <span class="nav-text">主要功能和常见用法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">7.1.8.2.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98"><span class="nav-number">8.</span> <span class="nav-text">怎么查看磁盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E5%8F%B7"><span class="nav-number">9.</span> <span class="nav-text">设备号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">9.1.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Major-%E5%92%8C-Minor-%E8%AE%BE%E5%A4%87%E5%8F%B7%E7%9A%84%E5%88%86%E9%85%8D"><span class="nav-number">9.2.</span> <span class="nav-text">Major 和 Minor 设备号的分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">9.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -487,20 +473,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">90</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -535,23 +521,11 @@
 <div class="copyright">
   
   &copy; 2017 – 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">朱佳东</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-      <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">385k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-      <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">5:50</span>
 </div>
 
         

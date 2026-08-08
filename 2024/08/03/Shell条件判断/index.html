@@ -129,17 +129,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">22</span></a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">23</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">16</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">89</span></a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">90</span></a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
@@ -220,20 +220,6 @@
               </span>
               <span class="post-meta-item-text">Views: </span>
               <span id="busuanzi_value_page_pv"></span>
-            </span><br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>6k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
             </span>
             <div class="post-description">Shell 条件判断</div>
 
@@ -383,7 +369,7 @@
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">greetings</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Program to print a greeting -- case version</span></span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash">hour=$(<span class="built_in">date</span> +%H)</span></span><br><span class="line"></span><br><span class="line">case "$hour"</span><br><span class="line">in </span><br><span class="line">    0? | 1[01] ) echo "Good morning";;</span><br><span class="line">    1[2-7]     ) echo "Good afternoon";;</span><br><span class="line">    *          ) echo "Good evening";;</span><br><span class="line">esac</span><br></pre></td></tr></tbody></table></figure>
 
 <h2 id="The-Null-Command"><a href="#The-Null-Command" class="headerlink" title="The Null Command"></a>The Null Command</h2><p>空命令，类似于 python 中的 pass。</p>
-<h2 id="The-amp-amp-and-Constructs"><a href="#The-amp-amp-and-Constructs" class="headerlink" title="The &amp;&amp; and || Constructs"></a>The &amp;&amp; and || Constructs</h2><p>shell 有两个特殊的结构，能够根据前面的命令是成功还是失败来执行命令。是 if 语句的简写形式。</p>
+<h2 id="The-and-Constructs"><a href="#The-and-Constructs" class="headerlink" title="The &amp;&amp; and || Constructs"></a>The &amp;&amp; and || Constructs</h2><p>shell 有两个特殊的结构，能够根据前面的命令是成功还是失败来执行命令。是 if 语句的简写形式。</p>
 <p><code>commad1 &amp;&amp; command2</code>，第一个命令返回 0 才执行第二个命令，如果是非 0，那么忽略第二个命令。</p>
 <p><code>commad1 || command2</code>，第一个命令返回非 0 才执行第二个命令，如果是 0，那么忽略第二个命令。</p>
 
@@ -470,7 +456,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.</span> <span class="nav-text">条件语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exit-Status"><span class="nav-number">2.</span> <span class="nav-text">Exit Status</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">$?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#test"><span class="nav-number">3.</span> <span class="nav-text">test</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String-Operators"><span class="nav-number">3.1.</span> <span class="nav-text">String Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#An-Alternative-Format-for-test"><span class="nav-number">3.2.</span> <span class="nav-text">An Alternative Format for test</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Integer-Operator"><span class="nav-number">3.3.</span> <span class="nav-text">Integer Operator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Operators"><span class="nav-number">3.4.</span> <span class="nav-text">File Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Logical-Negation-Operator"><span class="nav-number">3.5.</span> <span class="nav-text">The Logical Negation Operator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Logical-AND-Operator-a"><span class="nav-number">3.6.</span> <span class="nav-text">The Logical AND Operator -a</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parentheses"><span class="nav-number">3.7.</span> <span class="nav-text">Parentheses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Logical-OR-Operator-o"><span class="nav-number">3.8.</span> <span class="nav-text">The Logical OR Operator -o</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-else"><span class="nav-number">4.</span> <span class="nav-text">The else</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-exit-Command"><span class="nav-number">5.</span> <span class="nav-text">The exit Command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-elif-Construct"><span class="nav-number">6.</span> <span class="nav-text">The elif Construct</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rem-%E6%94%B9%E8%BF%9B"><span class="nav-number">6.1.</span> <span class="nav-text">rem 改进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-case-command"><span class="nav-number">7.</span> <span class="nav-text">The case command</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-x-Option-for-Debugging-Programs"><span class="nav-number">7.1.</span> <span class="nav-text">The -x Option for Debugging Programs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Null-Command"><span class="nav-number">8.</span> <span class="nav-text">The Null Command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-amp-amp-and-Constructs"><span class="nav-number">9.</span> <span class="nav-text">The &amp;&amp; and || Constructs</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.</span> <span class="nav-text">条件语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exit-Status"><span class="nav-number">2.</span> <span class="nav-text">Exit Status</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">$?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#test"><span class="nav-number">3.</span> <span class="nav-text">test</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String-Operators"><span class="nav-number">3.1.</span> <span class="nav-text">String Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#An-Alternative-Format-for-test"><span class="nav-number">3.2.</span> <span class="nav-text">An Alternative Format for test</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Integer-Operator"><span class="nav-number">3.3.</span> <span class="nav-text">Integer Operator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#File-Operators"><span class="nav-number">3.4.</span> <span class="nav-text">File Operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Logical-Negation-Operator"><span class="nav-number">3.5.</span> <span class="nav-text">The Logical Negation Operator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Logical-AND-Operator-a"><span class="nav-number">3.6.</span> <span class="nav-text">The Logical AND Operator -a</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parentheses"><span class="nav-number">3.7.</span> <span class="nav-text">Parentheses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Logical-OR-Operator-o"><span class="nav-number">3.8.</span> <span class="nav-text">The Logical OR Operator -o</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-else"><span class="nav-number">4.</span> <span class="nav-text">The else</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-exit-Command"><span class="nav-number">5.</span> <span class="nav-text">The exit Command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-elif-Construct"><span class="nav-number">6.</span> <span class="nav-text">The elif Construct</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rem-%E6%94%B9%E8%BF%9B"><span class="nav-number">6.1.</span> <span class="nav-text">rem 改进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-case-command"><span class="nav-number">7.</span> <span class="nav-text">The case command</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-x-Option-for-Debugging-Programs"><span class="nav-number">7.1.</span> <span class="nav-text">The -x Option for Debugging Programs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Null-Command"><span class="nav-number">8.</span> <span class="nav-text">The Null Command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-and-Constructs"><span class="nav-number">9.</span> <span class="nav-text">The &amp;&amp; and || Constructs</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -486,20 +472,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/blog/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">90</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/blog/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/blog/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -534,23 +520,11 @@
 <div class="copyright">
   
   &copy; 2017 – 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">朱佳东</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-      <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">385k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-      <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">5:50</span>
 </div>
 
         
